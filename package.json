@@ -4,11 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node node_modules/.bin/webpack --display-error-details",
+    "build2": "tsc -w ll.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "phaser": "^2.6.2"
+    "sat": "git+https://github.com/jriecken/sat-js.git"
+  },
+  "devDependencies": {
+    "ts-loader": "^1.3.3",
+    "typescript": "^2.1.4",
+    "webpack": "^1.14.0"
   }
 }
