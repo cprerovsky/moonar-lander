@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "sourceMap": true,
+    "target": "es5",
+    "experimentalDecorators": true,
+    "moduleResolution": "node"
+  },
+  "files": [
+    "node_modules/phaser/typescript/phaser.d.ts",
+    "./src/midpoint.ts",
+    "index.ts"
+  ]
+}
