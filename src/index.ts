@@ -1,11 +1,9 @@
 import Lander from "./lander";
 
-let canvas: any = document.getElementById("game");
-let context = (canvas as any).getContext("2d");
+let canvas:HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
+let context = canvas.getContext("2d");
 
 let spaceship = new Lander();
-
-
 
 function drawFloor() {
     context.strokeStyle = 'red';

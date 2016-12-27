@@ -1,18 +1,22 @@
 const GRAVITY = -0.02;
 
+export class Vector {
+    constructor(public x: number = 0, public y: number = 0) { }
+    rotate(angle) {
+        return new Vector(
+            this.y * Math.sin(angle) + this.x * Math.cos(angle),
+            this.y * Math.cos(angle) - this.x * Math.sin(angle)
+        );
+    }
+}
+
 export default class Lander {
     width = 12
     height = 16
     thrust = 0.1
-    position = {
-        x: 50,
-        y: 50
-    }
+    position = new Vector(50, 50);
     angle = 0
-    velocity = {
-        x: 0,
-        y: 0
-    }
+    velocity = new Vector();
     engine: "off" | "half" | "full"
     rotate: "off" | "left" | "right"
 
@@ -36,6 +40,31 @@ export default class Lander {
             this.velocity.y += this.thrust * Math.cos(this.angle) * -1;
         }
         this.velocity.y -= GRAVITY;
+    }
+
+    protected getPoint(name: "bl" | "ul" | "ur" | "br"): Vector {
+        switch (name) {
+            case "bl":
+                return new Vector(
+                    this.position.x + this.width / -2,
+                    this.position.y + this.height / 2)
+                    .rotate(this.angle);
+            case "br":
+                return new Vector(
+                    this.position.x + this.width / 2,
+                    this.position.y + this.height / 2)
+                    .rotate(this.angle);
+            case "ul":
+                return new Vector(
+                    this.position.x + this.width / -2.4,
+                    this.position.y + this.height / -2)
+                    .rotate(this.angle);
+            case "ur":
+                return new Vector(
+                    this.position.x + this.width / 2.4,
+                    this.position.y + this.height / -2)
+                    .rotate(this.angle);
+        }
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
