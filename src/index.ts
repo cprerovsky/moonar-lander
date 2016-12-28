@@ -22,12 +22,12 @@ function updateCanvas() {
     context.font = "16px monospace";
     context.fillStyle = "white";
     let l = 0;
-    context.fillText("angle: " + lander.angle, 20, ++l*20);
-    context.fillText("rotation: " + lander.angle, 20, ++l*20);
-    // context.fillText("x: " + lander.position.x, 20, 40);
-    // context.fillText("y: " + lander.position.y, 20, 60);
-    // context.fillText("vx: " + lander.velocity.x, 20, 80);
-    // context.fillText("vy: " + lander.velocity.y, 20, 100);
+    // context.fillText("angle: " + lander.angle, 20, ++l*20);
+    // context.fillText("rotationSpeed: " + lander.rotationSpeed, 20, ++l*20);
+    // context.fillText("x: " + lander.position.x, 20, ++l*20);
+    // context.fillText("y: " + lander.position.y, 20, ++l*20);
+    context.fillText("vx: " + lander.velocity.x, 20, ++l*20);
+    // context.fillText("vy: " + lander.velocity.y, 20, ++l*20);
 
     requestAnimationFrame(updateCanvas);
 }

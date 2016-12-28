@@ -3,12 +3,15 @@ import { EngineState, RotationDirection } from './lander';
 import { isOverlap } from './geometry';
 import Lander from './lander';
 
-let MAX_ROTATION_SPEED = 0.2;
-let ROTATION_DAMPING = 0.0002;
-let ROTATION_ACCELERATION = 0.002;
-
 export default class Physics {
-    constructor(public groundGeometry: Vector[], public gravity: number = -0.02) { }
+
+    public MAX_ROTATION_SPEED = 0.2
+    public ROTATION_DAMPING = 0.0002
+    public ROTATION_ACCELERATION = 0.002
+    public FRICTION = 0.2;
+    public GRAVITY = -0.02
+
+    constructor(public groundGeometry: Vector[]) { }
 
     /**
      * collision detection between lander vehicle and ground geometry
@@ -22,6 +25,14 @@ export default class Physics {
                 lander.velocity.y = 0;
             }
             lander.position.y -= 0.2;
+            
+            if (lander.velocity.x > this.FRICTION) {
+                lander.velocity.x -= this.FRICTION;
+            } else if (lander.velocity.x < -this.FRICTION) {
+                lander.velocity.y += this.FRICTION;
+            } else {
+                lander.velocity.x = 0;
+            }
         }
     }
 
@@ -41,14 +52,14 @@ export default class Physics {
     rotate(rotation: RotationDirection, rotationSpeed: number): number {
         switch (rotation) {
             case "cw":
-                return (rotationSpeed <= MAX_ROTATION_SPEED) ?
-                    rotationSpeed + ROTATION_ACCELERATION : rotationSpeed;
+                return (rotationSpeed <= this.MAX_ROTATION_SPEED) ?
+                    rotationSpeed + this.ROTATION_ACCELERATION : rotationSpeed;
             case "ccw":
-                return (rotationSpeed >= -MAX_ROTATION_SPEED) ?
-                    rotationSpeed - ROTATION_ACCELERATION : rotationSpeed;
+                return (rotationSpeed >= -this.MAX_ROTATION_SPEED) ?
+                    rotationSpeed - this.ROTATION_ACCELERATION : rotationSpeed;
             case "off":
                 return (rotationSpeed > 0) ?
-                    rotationSpeed - ROTATION_DAMPING : rotationSpeed + ROTATION_DAMPING;
+                    rotationSpeed - this.ROTATION_DAMPING : rotationSpeed + this.ROTATION_DAMPING;
         }
     }
 
@@ -69,7 +80,7 @@ export default class Physics {
             vx = velocity.x + thrust * Math.sin(-angle) * -1;
             vy = velocity.y + thrust * Math.cos(angle) * -1;
         }
-        vy -= this.gravity;
+        vy -= this.GRAVITY;
         return new Vector(vx, vy);
     }
 }
