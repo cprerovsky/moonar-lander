@@ -1,6 +1,6 @@
 import { Point } from './geometry';
 
-export default function updateCanvas (ctx: CanvasRenderingContext2D, geometry: Point[], strokeStyle: string, closePath: boolean = false) {
+export default function draw (ctx: CanvasRenderingContext2D, geometry: Point[], strokeStyle: string, closePath: boolean = false) {
     if (geometry.length === 0) return;
     ctx.beginPath();
     geometry.map((p, i) => {

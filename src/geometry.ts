@@ -3,7 +3,7 @@
  */
 export class Point {
     constructor(public x: number = 0, public y: number = 0) { }
-    
+
     /**
      * rotate the vector around a pivot point and return a new result vector
      */
@@ -17,6 +17,27 @@ export class Point {
             sinA * (this.x - pivot.x) + cosA * (this.y - pivot.y) + pivot.y
         );
     }
+    
+    /**
+     * generate a result vector by adding v
+     */
+    public add(v: Point): Vector {
+        return new Vector(this.x + v.x, this.y + v.y);
+    }
+
+    /**
+     * multiply by n
+     */
+    public multiply(n: number): Vector {
+        return new Vector(this.x * n, this.y * n);
+    }
+
+    /**
+     * subtract vector v
+     */
+    public subtract(v: Point): Vector {
+        return new Vector(this.x - v.x, this.y - v.y);
+    }
 }
 
 /**
@@ -26,14 +47,14 @@ export class Vector extends Point {
     /**
      * generates the Normal A Vector
      */
-    public normalA():Vector {
+    public normalA(): Vector {
         return new Vector(-this.y, this.x);
     }
 
     /**
      * generates the Normal B Vector
      */
-    public normalB():Vector {
+    public normalB(): Vector {
         return new Vector(this.y, -this.x);
     }
 }
@@ -61,4 +82,11 @@ export function isOverlap(lander: Point[], terrain: Point[]): number[] {
         }
     });
     return collisions;
+}
+
+/**
+ * calculate the dotproduct of the vectors
+ */
+export function dot(a: Vector, b: Vector): number {
+    return a.x * b.x + a.y * b.y;
 }

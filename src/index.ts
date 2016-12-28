@@ -1,6 +1,6 @@
 import Lander from "./lander";
 import draw from './draw';
-import { Vector } from './geometry';
+import { Vector, Point, dot } from './geometry';
 import Physics from './physics';
 import { RotationDirection } from './lander';
 import Terrain from './terrain';
@@ -31,13 +31,13 @@ function updateCanvas() {
     ctx.font = "16px monospace";
     ctx.fillStyle = "white";
     let l = 0;
-    ctx.fillText("fps: " + fps, 20, ++l*20);
+    // ctx.fillText("fps: " + fps, 20, ++l*20);
     // ctx.fillText("angle: " + lander.angle, 20, ++l*20);
     // ctx.fillText("rotationSpeed: " + lander.rotationSpeed, 20, ++l*20);
-    ctx.fillText("x: " + lander.position.x, 20, ++l*20);
-    ctx.fillText("y: " + lander.position.y, 20, ++l*20);
-    ctx.fillText("vx: " + lander.velocity.x, 20, ++l*20);
-    ctx.fillText("vy: " + lander.velocity.y, 20, ++l*20);
+    ctx.fillText("x: " + lander.position.x, 20, ++l * 20);
+    ctx.fillText("y: " + lander.position.y, 20, ++l * 20);
+    ctx.fillText("vx: " + lander.velocity.x, 20, ++l * 20);
+    ctx.fillText("vy: " + lander.velocity.y, 20, ++l * 20);
 
     requestAnimationFrame(updateCanvas);
     last = (new Date()).getTime();
@@ -83,28 +83,3 @@ function keyPressed(event) {
 
 document.addEventListener('keydown', keyPressed);
 updateCanvas();
-
-// let v = { x: 300, y: 100 };
-// let vna = { x: -v.y, y: v.x }; // normal vector a
-// let vnb = { x: v.y, y: -v.x }; // normal vector b
-
-// ctx.beginPath();
-// ctx.moveTo(0, 0);
-// ctx.lineTo(v.x, v.y);
-// ctx.strokeStyle = "white";
-// ctx.stroke();
-// ctx.closePath();
-
-// ctx.beginPath();
-// ctx.moveTo(v.x, v.y);
-// ctx.lineTo(vna.x + v.x, vna.y + v.y);
-// ctx.strokeStyle = "red";
-// ctx.stroke();
-// ctx.closePath();
-
-// ctx.beginPath();
-// ctx.moveTo(v.x, v.y);
-// ctx.lineTo(vnb.x + v.x, vnb.y + v.y);
-// ctx.strokeStyle = "orange";
-// ctx.stroke();
-// ctx.closePath();

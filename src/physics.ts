@@ -1,4 +1,4 @@
-import { Vector, Point } from './geometry';
+import { Vector, Point, dot } from './geometry';
 import { EngineState, RotationDirection } from './lander';
 import { isOverlap } from './geometry';
 import Lander from './lander';
@@ -8,7 +8,8 @@ export default class Physics {
     public MAX_ROTATION_SPEED = 0.2
     public ROTATION_DAMPING = 0.0002
     public ROTATION_ACCELERATION = 0.002
-    public FRICTION = 0.2;
+    public FRICTION = 0.2
+    public RESTITUTION = 0.8
     public GRAVITY = 0.02
 
     constructor(public groundGeometry: Point[]) { }
@@ -25,7 +26,7 @@ export default class Physics {
                 lander.velocity.y = 0;
             }
             lander.position.y += 0.2;
-            
+
             if (lander.velocity.x > this.FRICTION) {
                 lander.velocity.x -= this.FRICTION;
             } else if (lander.velocity.x < -this.FRICTION) {
@@ -83,5 +84,38 @@ export default class Physics {
         }
         vy -= this.GRAVITY;
         return new Vector(vx, vy);
+    }
+
+    /**
+     * calculate resulting speed vector when bouncing off a wall
+     */
+    public bounceAngle(vector: Vector, wall: Vector, friction: number = 1, restitution: number = 1): Vector {
+        let normal = wall.normalA();
+        let u = normal.multiply(dot(vector, normal) / dot(normal, normal));
+        let w = vector.subtract(u);
+        return w.multiply(friction).subtract(u.multiply(restitution));
+
+        // --- TEST IMPLEMENTATION FOR REFERENCE ---
+        // let origin = new Point();
+        // let v = new Vector(400, 300);
+        // draw(ctx, [origin, v], "white");
+
+        // let off = new Point(400, 0);
+        // let wall = new Vector(50, 200);
+        // draw(ctx, [off, wall.add(off)], "grey");
+
+        // let n = wall.normalA();
+        // let wallOff = wall.add(off);
+        // draw(ctx, [wallOff, n.add(wallOff)], "red");
+
+        // let u = n.multiply(dot(v, n) / dot(n, n));
+        // draw(ctx, [wallOff, u.add(wallOff)], "blue");
+
+        // let w = v.subtract(u);
+        // draw(ctx, [wallOff, w.add(wallOff)], "green");
+
+        // // So the velocity after the collision is v′ = f w − r u
+        // let va = w.subtract(u);
+        // draw(ctx, [wallOff, va.add(wallOff)], "pink");
     }
 }
