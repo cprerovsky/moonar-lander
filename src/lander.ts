@@ -12,7 +12,7 @@ export default class Lander {
     position = new Vector(250, 250);
     geometry: Vector[] = [];
     angle = 0
-    velocity = new Vector();
+    velocity = new Vector(0, 0);
     engine: EngineState = "off";
     rotate: RotationState = "off";
 

@@ -18,13 +18,13 @@ function updateCanvas() {
     draw(context, lander.geometry, "rgb(240,240,240)");
     draw(context, groundGeometry, "rgb(240,240,240)");
 
-    // context.font = "16px monospace";
-    // context.fillStyle = "white";
-    // context.fillText("angle: " + spaceship.angle, 20, 20);
-    // context.fillText("x: " + spaceship.position.x, 20, 40);
-    // context.fillText("y: " + spaceship.position.y, 20, 60);
-    // context.fillText("vx: " + spaceship.velocity.x, 20, 80);
-    // context.fillText("vy: " + spaceship.velocity.y, 20, 100);
+    context.font = "16px monospace";
+    context.fillStyle = "white";
+    context.fillText("angle: " + lander.angle, 20, 20);
+    context.fillText("x: " + lander.position.x, 20, 40);
+    context.fillText("y: " + lander.position.y, 20, 60);
+    context.fillText("vx: " + lander.velocity.x, 20, 80);
+    context.fillText("vy: " + lander.velocity.y, 20, 100);
 
     requestAnimationFrame(updateCanvas);
 }

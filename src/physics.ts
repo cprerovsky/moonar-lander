@@ -4,9 +4,7 @@ import { isOverlap } from './geometry';
 import Lander from './lander';
 
 export default class Physics {
-    gravity: -0.02
-
-    constructor(public groundGeometry: Vector[]) {}
+    constructor(public groundGeometry: Vector[], public gravity: number = -0.02) {}
     
     /**
      * collision detection between lander vehicle and ground geometry
