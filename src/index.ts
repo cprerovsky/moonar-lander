@@ -7,7 +7,7 @@ import Terrain from './terrain';
 
 let canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
 let ctx = canvas.getContext("2d");
-let terrain = new Terrain(canvas.width, canvas.height);
+let terrain = new Terrain(canvas.width);
 let physics = new Physics(terrain.geometry);
 let lander = new Lander(physics);
 let last = 0;
@@ -32,12 +32,12 @@ function updateCanvas() {
     ctx.fillStyle = "white";
     let l = 0;
     ctx.fillText("fps: " + fps, 20, ++l*20);
-    // context.fillText("angle: " + lander.angle, 20, ++l*20);
-    // context.fillText("rotationSpeed: " + lander.rotationSpeed, 20, ++l*20);
-    // context.fillText("x: " + lander.position.x, 20, ++l*20);
-    // context.fillText("y: " + lander.position.y, 20, ++l*20);
+    // ctx.fillText("angle: " + lander.angle, 20, ++l*20);
+    // ctx.fillText("rotationSpeed: " + lander.rotationSpeed, 20, ++l*20);
+    ctx.fillText("x: " + lander.position.x, 20, ++l*20);
+    ctx.fillText("y: " + lander.position.y, 20, ++l*20);
     ctx.fillText("vx: " + lander.velocity.x, 20, ++l*20);
-    // context.fillText("vy: " + lander.velocity.y, 20, ++l*20);
+    ctx.fillText("vy: " + lander.velocity.y, 20, ++l*20);
 
     requestAnimationFrame(updateCanvas);
     last = (new Date()).getTime();

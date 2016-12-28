@@ -5,13 +5,20 @@ export default function updateCanvas (ctx: CanvasRenderingContext2D, geometry: P
     ctx.beginPath();
     geometry.map((p, i) => {
         if (i === 0) {
-            ctx.moveTo(p.x, p.y);
+            ctx.moveTo(p.x, translate(p.y, ctx));
         } else {
-            ctx.lineTo(p.x, p.y);
+            ctx.lineTo(p.x, translate(p.y, ctx));
         }
     });
-    if (closePath) ctx.lineTo(geometry[0].x, geometry[0].y);
+    if (closePath) ctx.lineTo(geometry[0].x, translate(geometry[0].y, ctx));
     ctx.strokeStyle = strokeStyle;
     ctx.stroke();
     ctx.closePath();
+}
+
+/**
+ * translate world y coordinates to drawing coordinates
+ */
+function translate(y: number, ctx: CanvasRenderingContext2D): number {
+    return ctx.canvas.height - y;
 }

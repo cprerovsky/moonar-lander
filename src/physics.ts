@@ -9,7 +9,7 @@ export default class Physics {
     public ROTATION_DAMPING = 0.0002
     public ROTATION_ACCELERATION = 0.002
     public FRICTION = 0.2;
-    public GRAVITY = -0.02
+    public GRAVITY = 0.02
 
     constructor(public groundGeometry: Point[]) { }
 
@@ -24,7 +24,7 @@ export default class Physics {
             } else {
                 lander.velocity.y = 0;
             }
-            lander.position.y -= 0.2;
+            lander.position.y += 0.2;
             
             if (lander.velocity.x > this.FRICTION) {
                 lander.velocity.x -= this.FRICTION;
@@ -53,10 +53,10 @@ export default class Physics {
         switch (rotation) {
             case "cw":
                 return (rotationSpeed <= this.MAX_ROTATION_SPEED) ?
-                    rotationSpeed + this.ROTATION_ACCELERATION : rotationSpeed;
+                    rotationSpeed - this.ROTATION_ACCELERATION : rotationSpeed;
             case "ccw":
                 return (rotationSpeed >= -this.MAX_ROTATION_SPEED) ?
-                    rotationSpeed - this.ROTATION_ACCELERATION : rotationSpeed;
+                    rotationSpeed + this.ROTATION_ACCELERATION : rotationSpeed;
             case "off":
                 return (rotationSpeed > 0) ?
                     rotationSpeed - this.ROTATION_DAMPING : rotationSpeed + this.ROTATION_DAMPING;
@@ -78,8 +78,8 @@ export default class Physics {
         let vy = velocity.y;
         if (engine !== "off") {
             let t = (engine === "full") ? thrust : thrust * 0.6;
-            vx = velocity.x + t * Math.sin(-angle) * -1;
-            vy = velocity.y + t * Math.cos(angle) * -1;
+            vx = velocity.x + t * Math.sin(-angle);
+            vy = velocity.y + t * Math.cos(angle);
         }
         vy -= this.GRAVITY;
         return new Vector(vx, vy);

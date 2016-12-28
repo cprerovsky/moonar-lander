@@ -56,7 +56,7 @@ export function isOverlap(lander: Point[], terrain: Point[]): number[] {
         let relativeX = (point.x - a.x) / (b.x - a.x);
         let y = a.y + (b.y - a.y) * relativeX;
         // check if the lander overlaps
-        if (point.y >= y) {
+        if (point.y <= y) {
             collisions.push(i);
         }
     });

@@ -45,15 +45,15 @@ export default class Lander {
         this.flameGeometry = [
             new Point(
                 this.position.x + this.width / 3,
-                this.position.y + this.height / 2)
+                this.position.y + this.height / -2)
                 .rotate(this.position, this.angle),
             new Point(
                 this.position.x,
-                this.position.y + this.height * (0.7 + Math.random()))
+                this.position.y + this.height * -(0.7 + Math.random()))
                 .rotate(this.position, this.angle),
             new Point(
                 this.position.x + this.width / -3,
-                this.position.y + this.height / 2)
+                this.position.y + this.height / -2)
                 .rotate(this.position, this.angle)
         ];
     }
@@ -63,22 +63,22 @@ export default class Lander {
             case "bl":
                 return new Point(
                     this.position.x + this.width / -2,
-                    this.position.y + this.height / 2)
+                    this.position.y + this.height / -2)
                     .rotate(this.position, this.angle);
             case "br":
                 return new Point(
                     this.position.x + this.width / 2,
-                    this.position.y + this.height / 2)
+                    this.position.y + this.height / -2)
                     .rotate(this.position, this.angle);
             case "tl":
                 return new Point(
                     this.position.x + this.width / -2.4,
-                    this.position.y + this.height / -2)
+                    this.position.y + this.height / 2)
                     .rotate(this.position, this.angle);
             case "tr":
                 return new Point(
                     this.position.x + this.width / 2.4,
-                    this.position.y + this.height / -2)
+                    this.position.y + this.height / 2)
                     .rotate(this.position, this.angle);
         }
     }
