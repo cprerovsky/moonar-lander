@@ -1,4 +1,4 @@
-import Vector from './vector';
+import { Vector } from './geometry';
 
 export default function updateCanvas (ctx: CanvasRenderingContext2D, geometry: Vector[], strokeStyle: string) {
     ctx.beginPath();

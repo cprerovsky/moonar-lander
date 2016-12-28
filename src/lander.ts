@@ -1,6 +1,9 @@
-import Vector from './vector';
+import { Vector } from './geometry';
+import Physics from './physics';
 
-const GRAVITY = -0.02;
+export type EngineState = "off" | "half" | "full";
+
+export type RotationState = "off" | "left" | "right";
 
 export default class Lander {
     width = 12
@@ -10,35 +13,22 @@ export default class Lander {
     geometry: Vector[] = [];
     angle = 0
     velocity = new Vector();
-    engine: "off" | "half" | "full"
-    rotate: "off" | "left" | "right"
+    engine: EngineState = "off";
+    rotate: RotationState = "off";
 
-    constructor() {
-        this.engine = "off";
-        this.rotate = "off";
-    }
+    constructor(public physics: Physics) { }
 
     public tick() {
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
-        if (this.rotate === "right") {
-            this.angle += Math.PI / 180 * 0.5;
-        }
-        else if (this.rotate === "left") {
-            this.angle -= Math.PI / 180 * 0.5;
-        }
-
-        if (this.engine !== "off") {
-            this.velocity.x += this.thrust * Math.sin(-this.angle) * -1;
-            this.velocity.y += this.thrust * Math.cos(this.angle) * -1;
-        }
-        this.velocity.y -= GRAVITY;
+        this.angle = this.physics.rotate(this.angle, this.rotate);
+        this.position = this.physics.travel(this.position, this.velocity);
+        this.velocity = this.physics.accelerate(this.velocity, this.thrust, this.angle, this.engine);
         this.geometry = [
             this.getPoint("bl"),
             this.getPoint("tl"),
             this.getPoint("tr"),
             this.getPoint("br")
         ];
+        // this.physics.collide(this);
     }
 
     protected getPoint(name: "bl" | "tl" | "tr" | "br"): Vector {
