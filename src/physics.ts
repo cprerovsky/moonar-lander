@@ -1,4 +1,4 @@
-import { Vector } from './geometry';
+import { Vector, Point } from './geometry';
 import { EngineState, RotationDirection } from './lander';
 import { isOverlap } from './geometry';
 import Lander from './lander';
@@ -11,7 +11,7 @@ export default class Physics {
     public FRICTION = 0.2;
     public GRAVITY = -0.02
 
-    constructor(public groundGeometry: Vector[]) { }
+    constructor(public groundGeometry: Point[]) { }
 
     /**
      * collision detection between lander vehicle and ground geometry
@@ -39,7 +39,7 @@ export default class Physics {
     /**
      * create a new position from an existing position and velocity
      */
-    travel(position: Vector, velocity: Vector): Vector {
+    travel(position: Point, velocity: Vector): Vector {
         return new Vector(
             position.x + velocity.x,
             position.y + velocity.y

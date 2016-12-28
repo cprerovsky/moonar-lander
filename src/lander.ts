@@ -1,4 +1,4 @@
-import { Vector } from './geometry';
+import { Vector, Point } from './geometry';
 import Physics from './physics';
 
 export type EngineState = "off" | "half" | "full";
@@ -9,14 +9,14 @@ export default class Lander {
     width = 12
     height = 16
     thrust = 0.1
-    position = new Vector(250, 250)
+    position = new Point(250, 250)
     angle = 0
     rotation: RotationDirection = "off"
     rotationSpeed = 0
     velocity = new Vector(0, 0)
     engine: EngineState = "off"
-    geometry: Vector[] = []
-    flameGeometry: Vector[] = []
+    geometry: Point[] = []
+    flameGeometry: Point[] = []
 
     constructor(public physics: Physics) { }
 
@@ -43,15 +43,15 @@ export default class Lander {
         }
 
         this.flameGeometry = [
-            new Vector(
+            new Point(
                 this.position.x + this.width / 3,
                 this.position.y + this.height / 2)
                 .rotate(this.position, this.angle),
-            new Vector(
+            new Point(
                 this.position.x,
                 this.position.y + this.height * (0.7 + Math.random()))
                 .rotate(this.position, this.angle),
-            new Vector(
+            new Point(
                 this.position.x + this.width / -3,
                 this.position.y + this.height / 2)
                 .rotate(this.position, this.angle)
@@ -61,22 +61,22 @@ export default class Lander {
     protected getPoint(name: "bl" | "tl" | "tr" | "br"): Vector {
         switch (name) {
             case "bl":
-                return new Vector(
+                return new Point(
                     this.position.x + this.width / -2,
                     this.position.y + this.height / 2)
                     .rotate(this.position, this.angle);
             case "br":
-                return new Vector(
+                return new Point(
                     this.position.x + this.width / 2,
                     this.position.y + this.height / 2)
                     .rotate(this.position, this.angle);
             case "tl":
-                return new Vector(
+                return new Point(
                     this.position.x + this.width / -2.4,
                     this.position.y + this.height / -2)
                     .rotate(this.position, this.angle);
             case "tr":
-                return new Vector(
+                return new Point(
                     this.position.x + this.width / 2.4,
                     this.position.y + this.height / -2)
                     .rotate(this.position, this.angle);

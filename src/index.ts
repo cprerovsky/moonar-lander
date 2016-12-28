@@ -81,8 +81,8 @@ function keyPressed(event) {
     }
 }
 
-// document.addEventListener('keydown', keyPressed);
-// updateCanvas();
+document.addEventListener('keydown', keyPressed);
+updateCanvas();
 
 // let v = { x: 300, y: 100 };
 // let vna = { x: -v.y, y: v.x }; // normal vector a

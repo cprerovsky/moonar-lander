@@ -7,7 +7,7 @@ export class Point {
     /**
      * rotate the vector around a pivot point and return a new result vector
      */
-    rotate(pivot: Vector, angle: number): Vector {
+    rotate(pivot: Point, angle: number): Vector {
         // http://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
         // answer by six face
         let sinA = Math.sin(angle);
@@ -44,7 +44,7 @@ export class Vector extends Point {
  * checks if a overlaps with b
  * returns the indices of a overlapping with b 
  */
-export function isOverlap(lander: Vector[], terrain: Vector[]): number[] {
+export function isOverlap(lander: Point[], terrain: Point[]): number[] {
     let collisions: number[] = [];
     let segmentWidth = terrain[1].x;
     lander.map((point, i) => {
