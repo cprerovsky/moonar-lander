@@ -8,7 +8,7 @@ export default class Physics {
     public MAX_ROTATION_SPEED = 0.2
     public ROTATION_DAMPING = 0.0002
     public ROTATION_ACCELERATION = 0.002
-    public FRICTION = 0.5
+    public FRICTION = 0.3
     public RESTITUTION = 0.7
     public GRAVITY = 0.02
 
@@ -22,6 +22,8 @@ export default class Physics {
         if (collisions.length !== 0) {
             let wallVector = collisions[0].segmentEnd.subtract(collisions[0].segmentStart);
             lander.velocity = this.bounce(lander.velocity, wallVector, this.FRICTION, this.RESTITUTION);
+            if (lander.velocity.length() < 0.3) lander.velocity = new Vector();
+            lander.position.y++;
         }
     }
 

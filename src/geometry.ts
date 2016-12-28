@@ -57,6 +57,13 @@ export class Vector extends Point {
     public normalB(): Vector {
         return new Vector(this.y, -this.x);
     }
+
+    /**
+     * calculates the vector length
+     */
+    public length(): number {
+        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+    }
 }
 
 export class Collision {

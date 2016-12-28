@@ -38,6 +38,7 @@ function updateCanvas() {
     ctx.fillText("y: " + lander.position.y, 20, ++l * 20);
     ctx.fillText("vx: " + lander.velocity.x, 20, ++l * 20);
     ctx.fillText("vy: " + lander.velocity.y, 20, ++l * 20);
+    ctx.fillText("spd: " + lander.velocity.length(), 20, ++l * 20);
 
     requestAnimationFrame(updateCanvas);
     last = (new Date()).getTime();
