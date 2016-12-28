@@ -8,8 +8,8 @@ export default class Physics {
     public MAX_ROTATION_SPEED = 0.2
     public ROTATION_DAMPING = 0.0002
     public ROTATION_ACCELERATION = 0.002
-    public FRICTION = 0.2
-    public RESTITUTION = 0.8
+    public FRICTION = 0.5
+    public RESTITUTION = 0.7
     public GRAVITY = 0.02
 
     constructor(public groundGeometry: Point[]) { }
@@ -20,20 +20,8 @@ export default class Physics {
     collide(lander: Lander) {
         let collisions = isOverlap(lander.geometry, this.groundGeometry);
         if (collisions.length !== 0) {
-            if (lander.velocity.y > 0.5) {
-                lander.velocity.y *= -0.6;
-            } else {
-                lander.velocity.y = 0;
-            }
-            lander.position.y += 0.2;
-
-            if (lander.velocity.x > this.FRICTION) {
-                lander.velocity.x -= this.FRICTION;
-            } else if (lander.velocity.x < -this.FRICTION) {
-                lander.velocity.y += this.FRICTION;
-            } else {
-                lander.velocity.x = 0;
-            }
+            let wallVector = collisions[0].segmentEnd.subtract(collisions[0].segmentStart);
+            lander.velocity = this.bounce(lander.velocity, wallVector, this.FRICTION, this.RESTITUTION);
         }
     }
 
@@ -89,7 +77,7 @@ export default class Physics {
     /**
      * calculate resulting speed vector when bouncing off a wall
      */
-    public bounceAngle(vector: Vector, wall: Vector, friction: number = 1, restitution: number = 1): Vector {
+    public bounce(vector: Vector, wall: Vector, friction: number = 1, restitution: number = 1): Vector {
         let normal = wall.normalA();
         let u = normal.multiply(dot(vector, normal) / dot(normal, normal));
         let w = vector.subtract(u);

@@ -59,14 +59,16 @@ export class Vector extends Point {
     }
 }
 
-
+export class Collision {
+    constructor(public point: Point, public segmentStart: Point, public segmentEnd: Point) {}
+}
 
 /**
  * checks if a overlaps with b
  * returns the indices of a overlapping with b 
  */
-export function isOverlap(lander: Point[], terrain: Point[]): number[] {
-    let collisions: number[] = [];
+export function isOverlap(lander: Point[], terrain: Point[]): Collision[] {
+    let collisions: Collision[] = [];
     let segmentWidth = terrain[1].x;
     lander.map((point, i) => {
         // first find corresponding terrain segment for x-pos of lander
@@ -78,7 +80,7 @@ export function isOverlap(lander: Point[], terrain: Point[]): number[] {
         let y = a.y + (b.y - a.y) * relativeX;
         // check if the lander overlaps
         if (point.y <= y) {
-            collisions.push(i);
+            collisions.push(new Collision(point, a, b));
         }
     });
     return collisions;
