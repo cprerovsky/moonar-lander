@@ -10,20 +10,28 @@ let context = canvas.getContext("2d");
 let terrain = new Terrain(canvas.width, canvas.height);
 let physics = new Physics(terrain.geometry);
 let lander = new Lander(physics);
-
+let last = 0;
+let fpsHistory = [];
 function updateCanvas() {
+    let ms = (new Date()).getTime() - last;
+    fpsHistory.push(ms);
+    if (fpsHistory.length > 100) fpsHistory.shift();
+    let msSum;
+    let fps = 1000 / (fpsHistory.reduce((a, b) => a + b) / fpsHistory.length);
+
     // Clear entire screen
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     lander.tick();
 
     draw(context, lander.geometry, "rgb(240,240,240)", true);
-    draw(context, lander.flameGeometry, "rgb(0,240,255)");
+    draw(context, lander.flameGeometry, "rgb(255,240,100)");
     draw(context, terrain.geometry, "rgb(240,240,240)");
 
     context.font = "16px monospace";
     context.fillStyle = "white";
     let l = 0;
+    context.fillText("fps: " + fps, 20, ++l*20);
     // context.fillText("angle: " + lander.angle, 20, ++l*20);
     // context.fillText("rotationSpeed: " + lander.rotationSpeed, 20, ++l*20);
     // context.fillText("x: " + lander.position.x, 20, ++l*20);
@@ -32,6 +40,7 @@ function updateCanvas() {
     // context.fillText("vy: " + lander.velocity.y, 20, ++l*20);
 
     requestAnimationFrame(updateCanvas);
+    last = (new Date()).getTime();
 }
 
 function keyLetGo(event) {
@@ -42,6 +51,7 @@ function keyLetGo(event) {
             lander.rotation = "off";
             break;
         case 38:
+        case 40:
             // Up Arrow key
             lander.engine = "off";
             break;
@@ -51,6 +61,7 @@ function keyLetGo(event) {
 document.addEventListener('keyup', keyLetGo);
 
 function keyPressed(event) {
+    console.log(event.keyCode);
     switch (event.keyCode) {
         case 37:
             // Left Arrow key
@@ -63,6 +74,10 @@ function keyPressed(event) {
         case 38:
             // Up Arrow key
             lander.engine = "full";
+            break;
+        case 40:
+            // Down
+            lander.engine = "half";
             break;
     }
 }

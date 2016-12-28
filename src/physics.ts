@@ -77,8 +77,9 @@ export default class Physics {
         let vx = velocity.x;
         let vy = velocity.y;
         if (engine !== "off") {
-            vx = velocity.x + thrust * Math.sin(-angle) * -1;
-            vy = velocity.y + thrust * Math.cos(angle) * -1;
+            let t = (engine === "full") ? thrust : thrust * 0.6;
+            vx = velocity.x + t * Math.sin(-angle) * -1;
+            vy = velocity.y + t * Math.cos(angle) * -1;
         }
         vy -= this.GRAVITY;
         return new Vector(vx, vy);
