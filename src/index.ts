@@ -2,6 +2,7 @@ import Lander from "./lander";
 import draw from './draw';
 import { Vector } from './geometry';
 import Physics from './physics';
+import { RotationDirection } from './lander';
 
 let canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
 let context = canvas.getContext("2d");
@@ -20,11 +21,13 @@ function updateCanvas() {
 
     context.font = "16px monospace";
     context.fillStyle = "white";
-    context.fillText("angle: " + lander.angle, 20, 20);
-    context.fillText("x: " + lander.position.x, 20, 40);
-    context.fillText("y: " + lander.position.y, 20, 60);
-    context.fillText("vx: " + lander.velocity.x, 20, 80);
-    context.fillText("vy: " + lander.velocity.y, 20, 100);
+    let l = 0;
+    context.fillText("angle: " + lander.angle, 20, ++l*20);
+    context.fillText("rotation: " + lander.angle, 20, ++l*20);
+    // context.fillText("x: " + lander.position.x, 20, 40);
+    // context.fillText("y: " + lander.position.y, 20, 60);
+    // context.fillText("vx: " + lander.velocity.x, 20, 80);
+    // context.fillText("vy: " + lander.velocity.y, 20, 100);
 
     requestAnimationFrame(updateCanvas);
 }
@@ -33,7 +36,8 @@ function keyLetGo(event) {
     switch (event.keyCode) {
         case 37:
         case 39:
-            lander.rotate = "off";
+            // Right Arrow key
+            lander.rotation = "off";
             break;
         case 38:
             // Up Arrow key
@@ -48,11 +52,11 @@ function keyPressed(event) {
     switch (event.keyCode) {
         case 37:
             // Left Arrow key
-            lander.rotate = "left";
+            lander.rotation = "ccw";
             break;
         case 39:
             // Right Arrow key
-            lander.rotate = "right";
+            lander.rotation = "cw";
             break;
         case 38:
             // Up Arrow key

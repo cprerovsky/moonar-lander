@@ -3,23 +3,25 @@ import Physics from './physics';
 
 export type EngineState = "off" | "half" | "full";
 
-export type RotationState = "off" | "left" | "right";
+export type RotationDirection = "off" | "cw" | "ccw";
 
 export default class Lander {
     width = 12
     height = 16
     thrust = 0.1
-    position = new Vector(250, 250);
-    geometry: Vector[] = [];
+    position = new Vector(250, 250)
+    geometry: Vector[] = []
     angle = 0
-    velocity = new Vector(0, 0);
-    engine: EngineState = "off";
-    rotate: RotationState = "off";
+    rotation: RotationDirection = "off"
+    rotationSpeed = 0
+    velocity = new Vector(0, 0)
+    engine: EngineState = "off"
 
     constructor(public physics: Physics) { }
 
     public tick() {
-        this.angle = this.physics.rotate(this.angle, this.rotate);
+        this.rotationSpeed = this.physics.rotate(this.rotation, this.rotationSpeed);
+        this.angle = this.physics.angle(this.angle, this.rotationSpeed);
         this.position = this.physics.travel(this.position, this.velocity);
         this.velocity = this.physics.accelerate(this.velocity, this.thrust, this.angle, this.engine);
         this.geometry = [
