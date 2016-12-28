@@ -1,6 +1,6 @@
 import { Vector } from './geometry';
 
-export default function updateCanvas (ctx: CanvasRenderingContext2D, geometry: Vector[], strokeStyle: string) {
+export default function updateCanvas (ctx: CanvasRenderingContext2D, geometry: Vector[], strokeStyle: string, closePath: boolean = false) {
     ctx.beginPath();
 
     geometry.map((p, i) => {
@@ -10,7 +10,7 @@ export default function updateCanvas (ctx: CanvasRenderingContext2D, geometry: V
             ctx.lineTo(p.x, p.y);
         }
     });
-    ctx.lineTo(geometry[0].x, geometry[0].y);
+    if (closePath) ctx.lineTo(geometry[0].x, geometry[0].y);
     ctx.strokeStyle = "rgb(240,240,240)";
     ctx.stroke();
     ctx.closePath();

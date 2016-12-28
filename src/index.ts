@@ -3,11 +3,12 @@ import draw from './draw';
 import { Vector } from './geometry';
 import Physics from './physics';
 import { RotationDirection } from './lander';
+import Terrain from './terrain';
 
 let canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
 let context = canvas.getContext("2d");
-let groundGeometry = [new Vector(0, 650), new Vector(800, 650)];
-let physics = new Physics(groundGeometry);
+let terrain = new Terrain(canvas.width, canvas.height);
+let physics = new Physics(terrain.geometry);
 let lander = new Lander(physics);
 
 function updateCanvas() {
@@ -16,8 +17,8 @@ function updateCanvas() {
 
     lander.tick();
 
-    draw(context, lander.geometry, "rgb(240,240,240)");
-    draw(context, groundGeometry, "rgb(240,240,240)");
+    draw(context, lander.geometry, "rgb(240,240,240)", true);
+    draw(context, terrain.geometry, "rgb(240,240,240)");
 
     context.font = "16px monospace";
     context.fillStyle = "white";

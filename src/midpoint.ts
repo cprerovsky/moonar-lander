@@ -12,7 +12,7 @@ export default function midpoint(numStartVals: number, iterations: number): Arra
 
     let origArr = arr;
     let mdArr = [];
-    let decay = 0.3;
+    let decayFactor = 0.5;
     let midval = 0;
     for (let i = 0; i < iterations; i++) {
         origArr.map((val, j) => {
@@ -20,14 +20,14 @@ export default function midpoint(numStartVals: number, iterations: number): Arra
                 mdArr.push(val);
                 return;
             }
-            midval = (val + origArr[j - 1] / 2) +
-                (Math.random() - 0.5) * decay;
+            midval = (val + origArr[j - 1]) / 2 + 
+                (Math.random() - 0.5) * decayFactor;
             if (midval > 1) midval = 1;
             mdArr.push(midval);
             mdArr.push(val);
         });
         origArr = mdArr;
-        decay *= 0.8;
+        decayFactor *= 1.1;
     }
 
     return origArr;
