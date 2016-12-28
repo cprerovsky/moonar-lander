@@ -22,8 +22,16 @@ export default class Physics {
         if (collisions.length !== 0) {
             let wallVector = collisions[0].segmentEnd.subtract(collisions[0].segmentStart);
             lander.velocity = this.bounce(lander.velocity, wallVector, this.FRICTION, this.RESTITUTION);
-            if (lander.velocity.length() < 0.3) lander.velocity = new Vector();
-            lander.position.y++;
+            // stop motion at all if lander is moving super slow
+            if (lander.velocity.length() < 0.2) lander.velocity = new Vector();
+            // attempt to correct y-position to not get stuck in terrain
+            lander.position.y += 0.3;
+            // update rotation based on impact
+            if (collisions[0].point.x < lander.position.x) {
+                lander.rotationSpeed -= 0.03 * lander.velocity.length();
+            } else {
+                lander.rotationSpeed += 0.03 * lander.velocity.length();
+            }
         }
     }
 
