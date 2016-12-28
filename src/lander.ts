@@ -28,7 +28,7 @@ export default class Lander {
             this.getPoint("tr"),
             this.getPoint("br")
         ];
-        // this.physics.collide(this);
+        this.physics.collide(this);
     }
 
     protected getPoint(name: "bl" | "tl" | "tr" | "br"): Vector {

@@ -12,7 +12,12 @@ export default class Physics {
     collide(lander: Lander) {
         let collisions = isOverlap(lander.geometry, this.groundGeometry);
         if (collisions.length !== 0) {
-            lander.velocity.y *= -0.6; 
+            if (lander.velocity.y > 0.5) {
+                lander.velocity.y *= -0.6;
+            } else {
+                lander.velocity.y = 0;
+            }
+            lander.position.y -= 0.2;
         }
     }
 
