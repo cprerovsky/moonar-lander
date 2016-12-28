@@ -1,18 +1,15 @@
 {
-  "name": "munar-ui",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "moonar-lander",
+  "version": "0.0.1",
+  "description": "A lunar lander type game",
+  "main": "build/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node node_modules/.bin/webpack --display-error-details",
-    "build2": "tsc -w ll.ts"
+    "build": "node node_modules/.bin/webpack --display-error-details"
   },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "sat": "git+https://github.com/jriecken/sat-js.git"
-  },
+  "author": "Clemens Prerovsky <c.prerovsky@gmail.com>",
+  "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "ts-loader": "^1.3.3",
     "typescript": "^2.1.4",
