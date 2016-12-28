@@ -18,6 +18,7 @@ function updateCanvas() {
     lander.tick();
 
     draw(context, lander.geometry, "rgb(240,240,240)", true);
+    draw(context, lander.flameGeometry, "rgb(0,240,255)");
     draw(context, terrain.geometry, "rgb(240,240,240)");
 
     context.font = "16px monospace";

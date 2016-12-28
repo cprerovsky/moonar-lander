@@ -10,12 +10,13 @@ export default class Lander {
     height = 16
     thrust = 0.1
     position = new Vector(250, 250)
-    geometry: Vector[] = []
     angle = 0
     rotation: RotationDirection = "off"
     rotationSpeed = 0
     velocity = new Vector(0, 0)
     engine: EngineState = "off"
+    geometry: Vector[] = []
+    flameGeometry: Vector[] = []
 
     constructor(public physics: Physics) { }
 
@@ -30,7 +31,31 @@ export default class Lander {
             this.getPoint("tr"),
             this.getPoint("br")
         ];
+        this.updateFlame();
+
         this.physics.collide(this);
+    }
+
+    protected updateFlame() {
+        if (this.engine === "off") {
+            this.flameGeometry = [];
+            return;
+        }
+
+        this.flameGeometry = [
+            new Vector(
+                this.position.x + this.width / 3,
+                this.position.y + this.height / 2)
+                .rotate(this.position, this.angle),
+            new Vector(
+                this.position.x,
+                this.position.y + this.height * (0.7 + Math.random()))
+                .rotate(this.position, this.angle),
+            new Vector(
+                this.position.x + this.width / -3,
+                this.position.y + this.height / 2)
+                .rotate(this.position, this.angle)
+        ];
     }
 
     protected getPoint(name: "bl" | "tl" | "tr" | "br"): Vector {
@@ -59,15 +84,3 @@ export default class Lander {
     }
 
 }
-
-        // Draw the flame if engine is on
-        // if (this.engine !== "off") {
-        //     ctx.beginPath();
-        //     ctx.moveTo(this.width * -0.5, this.height * 0.5);
-        //     ctx.lineTo(this.width * 0.5, this.height * 0.5);
-        //     ctx.lineTo(0, this.height * 0.5 + Math.random() * 10);
-        //     ctx.lineTo(this.width * -0.5, this.height * 0.5);
-        //     ctx.closePath();
-        //     ctx.strokeStyle = "orange";
-        //     ctx.stroke();
-        // }
