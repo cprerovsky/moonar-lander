@@ -1,6 +1,13 @@
-export class Vector {
+/**
+ * represents a 2d vector
+ */
+export class Point {
     constructor(public x: number = 0, public y: number = 0) { }
-    rotate(pivot: Vector, angle: number) {
+    
+    /**
+     * rotate the vector around a pivot point and return a new result vector
+     */
+    rotate(pivot: Vector, angle: number): Vector {
         // http://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
         // answer by six face
         let sinA = Math.sin(angle);
@@ -11,6 +18,27 @@ export class Vector {
         );
     }
 }
+
+/**
+ * represents a point on a 2d surface
+ */
+export class Vector extends Point {
+    /**
+     * generates the Normal A Vector
+     */
+    public normalA():Vector {
+        return new Vector(-this.y, this.x);
+    }
+
+    /**
+     * generates the Normal B Vector
+     */
+    public normalB():Vector {
+        return new Vector(this.y, -this.x);
+    }
+}
+
+
 
 /**
  * checks if a overlaps with b

@@ -6,7 +6,7 @@ import { RotationDirection } from './lander';
 import Terrain from './terrain';
 
 let canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
-let context = canvas.getContext("2d");
+let ctx = canvas.getContext("2d");
 let terrain = new Terrain(canvas.width, canvas.height);
 let physics = new Physics(terrain.geometry);
 let lander = new Lander(physics);
@@ -20,23 +20,23 @@ function updateCanvas() {
     let fps = 1000 / (fpsHistory.reduce((a, b) => a + b) / fpsHistory.length);
 
     // Clear entire screen
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     lander.tick();
 
-    draw(context, lander.geometry, "rgb(240,240,240)", true);
-    draw(context, lander.flameGeometry, "rgb(255,240,100)");
-    draw(context, terrain.geometry, "rgb(240,240,240)");
+    draw(ctx, lander.geometry, "rgb(240,240,240)", true);
+    draw(ctx, lander.flameGeometry, "rgb(255,240,100)");
+    draw(ctx, terrain.geometry, "rgb(240,240,240)");
 
-    context.font = "16px monospace";
-    context.fillStyle = "white";
+    ctx.font = "16px monospace";
+    ctx.fillStyle = "white";
     let l = 0;
-    context.fillText("fps: " + fps, 20, ++l*20);
+    ctx.fillText("fps: " + fps, 20, ++l*20);
     // context.fillText("angle: " + lander.angle, 20, ++l*20);
     // context.fillText("rotationSpeed: " + lander.rotationSpeed, 20, ++l*20);
     // context.fillText("x: " + lander.position.x, 20, ++l*20);
     // context.fillText("y: " + lander.position.y, 20, ++l*20);
-    context.fillText("vx: " + lander.velocity.x, 20, ++l*20);
+    ctx.fillText("vx: " + lander.velocity.x, 20, ++l*20);
     // context.fillText("vy: " + lander.velocity.y, 20, ++l*20);
 
     requestAnimationFrame(updateCanvas);
@@ -61,7 +61,6 @@ function keyLetGo(event) {
 document.addEventListener('keyup', keyLetGo);
 
 function keyPressed(event) {
-    console.log(event.keyCode);
     switch (event.keyCode) {
         case 37:
             // Left Arrow key
@@ -82,7 +81,30 @@ function keyPressed(event) {
     }
 }
 
-document.addEventListener('keydown', keyPressed);
+// document.addEventListener('keydown', keyPressed);
+// updateCanvas();
 
-updateCanvas();
+// let v = { x: 300, y: 100 };
+// let vna = { x: -v.y, y: v.x }; // normal vector a
+// let vnb = { x: v.y, y: -v.x }; // normal vector b
 
+// ctx.beginPath();
+// ctx.moveTo(0, 0);
+// ctx.lineTo(v.x, v.y);
+// ctx.strokeStyle = "white";
+// ctx.stroke();
+// ctx.closePath();
+
+// ctx.beginPath();
+// ctx.moveTo(v.x, v.y);
+// ctx.lineTo(vna.x + v.x, vna.y + v.y);
+// ctx.strokeStyle = "red";
+// ctx.stroke();
+// ctx.closePath();
+
+// ctx.beginPath();
+// ctx.moveTo(v.x, v.y);
+// ctx.lineTo(vnb.x + v.x, vnb.y + v.y);
+// ctx.strokeStyle = "orange";
+// ctx.stroke();
+// ctx.closePath();
