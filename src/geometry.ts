@@ -16,14 +16,21 @@ export class Vector {
  * checks if a overlaps with b
  * returns the indices of a overlapping with b 
  */
-export function isOverlap (a: Vector[], b: Vector[]): number[] {
-        let collisions: number[] = [];
-        a.map((ap, i) => {
-            b.map((bp, j) => {
-                if (ap.y >= bp.y) {
-                    collisions.push(i);
-                }
-            });
-        });
-        return collisions;
+export function isOverlap(lander: Vector[], terrain: Vector[]): number[] {
+    let collisions: number[] = [];
+    let segmentWidth = terrain[1].x;
+    lander.map((point, i) => {
+        // first find corresponding terrain segment for x-pos of lander
+        let segment = Math.floor(point.x / segmentWidth);
+        let a = terrain[segment];
+        let b = terrain[segment + 1];
+        // interpolate the segments y-value for the landers x-pos
+        let relativeX = (point.x - a.x) / (b.x - a.x);
+        let y = a.y + (b.y - a.y) * relativeX;
+        // check if the lander overlaps
+        if (point.y >= y) {
+            collisions.push(i);
+        }
+    });
+    return collisions;
 }
