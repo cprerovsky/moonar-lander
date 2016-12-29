@@ -4,6 +4,7 @@ import { Vector, Point, dot } from './geometry';
 import Physics from './physics';
 import { RotationDirection } from './lander';
 import Terrain from './terrain';
+import KeyboardControls from './keyboard-contols';
 
 let canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
 let ctx = canvas.getContext("2d");
@@ -32,55 +33,18 @@ function updateCanvas() {
     ctx.fillStyle = "white";
     let l = 0;
     // ctx.fillText("fps: " + fps, 20, ++l*20);
-    // ctx.fillText("angle: " + lander.angle, 20, ++l*20);
+    ctx.fillText("angle: " + lander.angle, 20, ++l*20);
     // ctx.fillText("rotationSpeed: " + lander.rotationSpeed, 20, ++l*20);
-    ctx.fillText("x: " + lander.position.x, 20, ++l * 20);
-    ctx.fillText("y: " + lander.position.y, 20, ++l * 20);
-    ctx.fillText("vx: " + lander.velocity.x, 20, ++l * 20);
-    ctx.fillText("vy: " + lander.velocity.y, 20, ++l * 20);
+    // ctx.fillText("x: " + lander.position.x, 20, ++l * 20);
+    // ctx.fillText("y: " + lander.position.y, 20, ++l * 20);
+    // ctx.fillText("vx: " + lander.velocity.x, 20, ++l * 20);
+    // ctx.fillText("vy: " + lander.velocity.y, 20, ++l * 20);
     ctx.fillText("spd: " + lander.velocity.length(), 20, ++l * 20);
 
     requestAnimationFrame(updateCanvas);
     last = (new Date()).getTime();
 }
 
-function keyLetGo(event) {
-    switch (event.keyCode) {
-        case 37:
-        case 39:
-            // Right Arrow key
-            lander.rotation = "off";
-            break;
-        case 38:
-        case 40:
-            // Up Arrow key
-            lander.engine = "off";
-            break;
-    }
-}
+new KeyboardControls(lander);
 
-document.addEventListener('keyup', keyLetGo);
-
-function keyPressed(event) {
-    switch (event.keyCode) {
-        case 37:
-            // Left Arrow key
-            lander.rotation = "ccw";
-            break;
-        case 39:
-            // Right Arrow key
-            lander.rotation = "cw";
-            break;
-        case 38:
-            // Up Arrow key
-            lander.engine = "full";
-            break;
-        case 40:
-            // Down
-            lander.engine = "half";
-            break;
-    }
-}
-
-document.addEventListener('keydown', keyPressed);
 updateCanvas();
