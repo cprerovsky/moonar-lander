@@ -9,7 +9,7 @@ export default class Lander {
     width = 12
     height = 16
     thrust = 0.1
-    position = new Point(250, 250)
+    private _position = new Point(250, 250)
     angle = 0
     rotation: RotationDirection = "off"
     rotationSpeed = 0
@@ -23,7 +23,7 @@ export default class Lander {
     public tick() {
         this.rotationSpeed = this.physics.rotate(this.rotation, this.rotationSpeed);
         this.angle = this.physics.angle(this.angle, this.rotationSpeed);
-        this.position = this.physics.travel(this.position, this.velocity);
+        this.position(this.physics.travel(this.position(), this.velocity));
         this.velocity = this.physics.accelerate(this.velocity, this.thrust, this.angle, this.engine);
         this.geometry = [
             this.getPoint("bl"),
@@ -36,50 +36,59 @@ export default class Lander {
         this.physics.collide(this);
     }
 
+    public position(newPos?: Point): Point {
+        if (newPos) {
+            this._position = newPos.x > 5 ? newPos : new Point(5, newPos.y);
+        }
+        return this._position;
+    }
+
     protected updateFlame() {
         if (this.engine === "off") {
             this.flameGeometry = [];
             return;
         }
 
+        let p = this.position();
         this.flameGeometry = [
             new Point(
-                this.position.x + this.width / 3,
-                this.position.y + this.height / -2)
-                .rotate(this.position, this.angle),
+                p.x + this.width / 3,
+                p.y + this.height / -2)
+                .rotate(p, this.angle),
             new Point(
-                this.position.x,
-                this.position.y + this.height * -(0.7 + Math.random()))
-                .rotate(this.position, this.angle),
+                p.x,
+                p.y + this.height * -(0.7 + Math.random()))
+                .rotate(p, this.angle),
             new Point(
-                this.position.x + this.width / -3,
-                this.position.y + this.height / -2)
-                .rotate(this.position, this.angle)
+                p.x + this.width / -3,
+                p.y + this.height / -2)
+                .rotate(p, this.angle)
         ];
     }
 
     protected getPoint(name: "bl" | "tl" | "tr" | "br"): Vector {
+        let p = this.position();
         switch (name) {
             case "bl":
                 return new Point(
-                    this.position.x + this.width / -2,
-                    this.position.y + this.height / -2)
-                    .rotate(this.position, this.angle);
+                    p.x + this.width / -2,
+                    p.y + this.height / -2)
+                    .rotate(p, this.angle);
             case "br":
                 return new Point(
-                    this.position.x + this.width / 2,
-                    this.position.y + this.height / -2)
-                    .rotate(this.position, this.angle);
+                    p.x + this.width / 2,
+                    p.y + this.height / -2)
+                    .rotate(p, this.angle);
             case "tl":
                 return new Point(
-                    this.position.x + this.width / -2.4,
-                    this.position.y + this.height / 2)
-                    .rotate(this.position, this.angle);
+                    p.x + this.width / -2.4,
+                    p.y + this.height / 2)
+                    .rotate(p, this.angle);
             case "tr":
                 return new Point(
-                    this.position.x + this.width / 2.4,
-                    this.position.y + this.height / 2)
-                    .rotate(this.position, this.angle);
+                    p.x + this.width / 2.4,
+                    p.y + this.height / 2)
+                    .rotate(p, this.angle);
         }
     }
 

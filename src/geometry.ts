@@ -17,7 +17,7 @@ export class Point {
             sinA * (this.x - pivot.x) + cosA * (this.y - pivot.y) + pivot.y
         );
     }
-    
+
     /**
      * generate a result vector by adding v
      */
@@ -67,11 +67,11 @@ export class Vector extends Point {
 }
 
 export class Collision {
-    constructor(public point: Point, public segmentStart: Point, public segmentEnd: Point) {}
+    constructor(public point: Point, public segmentStart: Point, public segmentEnd: Point) { }
 }
 
 /**
- * checks if a overlaps with b
+ * checks if lander geometry overlaps with terrain
  * returns the indices of a overlapping with b 
  */
 export function isOverlap(lander: Point[], terrain: Point[]): Collision[] {
@@ -80,8 +80,17 @@ export function isOverlap(lander: Point[], terrain: Point[]): Collision[] {
     lander.map((point, i) => {
         // first find corresponding terrain segment for x-pos of lander
         let segment = Math.floor(point.x / segmentWidth);
-        let a = terrain[segment];
-        let b = terrain[segment + 1];
+        let a: Point, b: Point;
+        if (segment < 0) {
+            a = new Point(point.x - 1, terrain[0].y);
+            b = terrain[0];
+        } else if (segment >= terrain.length) {
+            a = terrain[terrain.length - 1];
+            b = new Point(point.x + 1, terrain[terrain.length - 1].y);
+        } else {
+            a = terrain[segment] || terrain[segment + 1];
+            b = terrain[segment + 1] || terrain[segment];
+        }
         // interpolate the segments y-value for the landers x-pos
         let relativeX = (point.x - a.x) / (b.x - a.x);
         let y = a.y + (b.y - a.y) * relativeX;
