@@ -6,7 +6,7 @@ import Lander from './lander';
 export default class Physics {
 
     public MAX_ROTATION_SPEED = 0.2
-    public ROTATION_DAMPING = 0.0002
+    public ROTATION_DAMPING = 0.0001
     public ROTATION_ACCELERATION = 0.002
     public FRICTION = 0.3
     public RESTITUTION = 0.7

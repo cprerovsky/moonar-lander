@@ -9,8 +9,9 @@ export default class Renderer {
         this.focus = lander.position();
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         this.draw(ctx, lander.geometry, "rgb(240,240,240)", true);
-        this.draw(ctx, lander.flameGeometry, "rgb(255,240,100)");
+        this.draw(ctx, lander.flameGeometry, "rgb(240,240,240)");
         this.draw(ctx, terrain.geometry, "rgb(240,240,240)");
+        this.draw(ctx, terrain.flagGeometry, "rgb(240,240,240)");
     }
 
     private draw(ctx: CanvasRenderingContext2D, geometry: Point[], strokeStyle: string, closePath: boolean = false) {

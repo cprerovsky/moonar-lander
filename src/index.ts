@@ -8,7 +8,7 @@ import Renderer from './renderer';
 
 let canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
 let ctx = canvas.getContext("2d");
-let terrain = new Terrain(5000, 300);
+let terrain = new Terrain(10000, 350);
 let physics = new Physics(terrain.geometry);
 let lander = new Lander(physics);
 let renderer = new Renderer();
