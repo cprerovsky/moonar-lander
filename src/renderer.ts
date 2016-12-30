@@ -3,9 +3,10 @@ import Lander from './lander';
 import Terrain from './terrain';
 
 export default class Renderer {
-    private view: Point
-    
+    private focus: Point
+
     public render(ctx: CanvasRenderingContext2D, lander: Lander, terrain: Terrain) {
+        this.focus = lander.position();
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         this.draw(ctx, lander.geometry, "rgb(240,240,240)", true);
         this.draw(ctx, lander.flameGeometry, "rgb(255,240,100)");
@@ -17,21 +18,24 @@ export default class Renderer {
         ctx.beginPath();
         geometry.map((p, i) => {
             if (i === 0) {
-                ctx.moveTo(p.x, this.translate(p.y, ctx));
+                ctx.moveTo(this.tx(p.x, ctx), this.ty(p.y, ctx));
             } else {
-                ctx.lineTo(p.x, this.translate(p.y, ctx));
+                ctx.lineTo(this.tx(p.x, ctx), this.ty(p.y, ctx));
             }
         });
-        if (closePath) ctx.lineTo(geometry[0].x, this.translate(geometry[0].y, ctx));
+        if (closePath) ctx.lineTo(this.tx(geometry[0].x, ctx), this.ty(geometry[0].y, ctx));
         ctx.strokeStyle = strokeStyle;
         ctx.stroke();
         ctx.closePath();
     }
 
     /**
-     * translate world y coordinates to drawing coordinates
+     * translate world x coordinates to drawing coordinates
      */
-    private translate(y: number, ctx: CanvasRenderingContext2D): number {
+    private tx(x: number, ctx: CanvasRenderingContext2D): number {
+        return x - this.focus.x + (ctx.canvas.width / 2);
+    }
+    private ty(y: number, ctx: CanvasRenderingContext2D): number {
         return ctx.canvas.height - y;
     }
 }
