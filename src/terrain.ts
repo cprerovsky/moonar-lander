@@ -3,13 +3,13 @@ import { Point } from './geometry';
 
 export default class Terrain {
     public geometry: Point[] = [];
-    constructor(sceneWidth: number, public maxHeight: number = 200) {
-        let heights = midpoint(4, 2);
+    constructor(sceneWidth: number, public maxHeight: number) {
+        let heights = midpoint(6, 4); 
         let widthStep = sceneWidth / (heights.length - 1);
         heights.map((h, i) => {
             this.geometry.push(new Point(
                 i * widthStep,
-                h * maxHeight
+                Math.sin(i / 50) * h * maxHeight / 2 + maxHeight / 2 + 10
             ));
         });
     }

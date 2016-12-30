@@ -9,7 +9,7 @@ export default class Lander {
     width = 12
     height = 16
     thrust = 0.1
-    private _position = new Point(250, 250)
+    private _position = new Point(1000, 300)
     angle = 0
     rotation: RotationDirection = "off"
     rotationSpeed = 0
