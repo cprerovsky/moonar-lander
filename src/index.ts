@@ -8,6 +8,8 @@ import Renderer from './renderer';
 import * as seedrandom from 'seedrandom';
 
 let canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
+canvas.width = document.documentElement.clientWidth;
+canvas.height = document.documentElement.clientHeight;
 let ctx = canvas.getContext("2d");
 let rng = seedrandom("test");
 
