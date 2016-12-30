@@ -20,35 +20,18 @@ export default class Renderer {
 
     private initSky() {
         let canvas = document.createElement('canvas');
-        canvas.width = 10000;
+        canvas.width = 3500;
         canvas.height = 800;
         let ctx = canvas.getContext('2d');
-        ctx.fillStyle = "rgb(100,100,100)";
         for (let i=0; i<1000; i++) {
-            ctx.fillRect(Math.random() * 10000, Math.random() * (ctx.canvas.height - 200), 2, 2);
+            let x = Math.random() * 3500;
+            let yinit = Math.random();
+            let y = yinit * (ctx.canvas.height - 200);
+            let c = Math.floor(200 - yinit * 180);
+            let s = Math.random() * 3;
+            ctx.fillStyle = `rgb(${c},${c},${c})`;
+            ctx.fillRect(x, y, s, s);
         }
-
-        ctx.beginPath()
-        ctx.strokeStyle = "red";
-        ctx.moveTo(0,0);
-        ctx.lineTo(1000,800);
-        ctx.stroke();
-        ctx.closePath();
-
-        ctx.beginPath()
-        ctx.strokeStyle = "green";
-        ctx.moveTo(1000,0);
-        ctx.lineTo(2000,800);
-        ctx.stroke();
-        ctx.closePath();
-        
-        ctx.beginPath()
-        ctx.strokeStyle = "blue";
-        ctx.moveTo(2000,0);
-        ctx.lineTo(3000,800);
-        ctx.stroke();
-        ctx.closePath();
-
         this.sky = ctx.getImageData(0, 0, 3500, ctx.canvas.height);
     }
 
