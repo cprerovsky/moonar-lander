@@ -15,7 +15,7 @@ export default class Terrain {
                 Math.sin(i / 50) * h * maxHeight / 2 + maxHeight / 2 + 10
             ));
         });
-
+        this.geometry[0].y = this.geometry[this.geometry.length - 1].y = 0;
         this.placeFlag(this.geometry[50]);
     }
 

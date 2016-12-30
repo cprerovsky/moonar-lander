@@ -21,7 +21,6 @@ module.exports = {
         filename: '[name].js',
         pathInfo: true
     },
-
     module: {
         loaders: [
             { test: /\.ts$/, loader: 'ts-loader?transpileOnly=false' }
@@ -38,5 +37,5 @@ module.exports = {
         }
     },
     debug: true,
-    devtool: 'eval-source-map'
+    devtool: 'source-map'
 };
