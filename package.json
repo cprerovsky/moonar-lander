@@ -9,7 +9,9 @@
   },
   "author": "Clemens Prerovsky <c.prerovsky@gmail.com>",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@types/seedrandom": "^2.4.27"
+  },
   "devDependencies": {
     "ts-loader": "^1.3.3",
     "typescript": "^2.1.4",

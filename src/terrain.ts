@@ -1,11 +1,13 @@
 import midpoint from './midpoint';
 import { Point } from './geometry';
+import * as seedrandom from 'seedrandom';
 
 export default class Terrain {
     public geometry: Point[] = [];
     public flagGeometry: Point[] = [];
-    constructor(sceneWidth: number, public maxHeight: number) {
-        let heights = midpoint(9, 4); 
+    
+    constructor(sceneWidth: number, public maxHeight: number, rng: seedrandom.prng) {
+        let heights = midpoint(9, 4, rng); 
         let widthStep = sceneWidth / (heights.length - 1);
         heights.map((h, i) => {
             this.geometry.push(new Point(
