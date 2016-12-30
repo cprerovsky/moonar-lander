@@ -3,18 +3,13 @@ import Lander from './lander';
 import Terrain from './terrain';
 
 export default class Renderer {
-    constructor(public ctx: CanvasRenderingContext2D, public lander: Lander, public terrain: Terrain) { }
-
-    public render() {
-        let ctx = this.ctx;
+    private view: Point
+    
+    public render(ctx: CanvasRenderingContext2D, lander: Lander, terrain: Terrain) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        this.lander.tick();
-
-        this.draw(ctx, this.lander.geometry, "rgb(240,240,240)", true);
-        this.draw(ctx, this.lander.flameGeometry, "rgb(255,240,100)");
-        this.draw(ctx, this.terrain.geometry, "rgb(240,240,240)");
-
-        requestAnimationFrame(() => this.render());
+        this.draw(ctx, lander.geometry, "rgb(240,240,240)", true);
+        this.draw(ctx, lander.flameGeometry, "rgb(255,240,100)");
+        this.draw(ctx, terrain.geometry, "rgb(240,240,240)");
     }
 
     private draw(ctx: CanvasRenderingContext2D, geometry: Point[], strokeStyle: string, closePath: boolean = false) {

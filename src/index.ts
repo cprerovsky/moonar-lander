@@ -11,7 +11,14 @@ let ctx = canvas.getContext("2d");
 let terrain = new Terrain(canvas.width);
 let physics = new Physics(terrain.geometry);
 let lander = new Lander(physics);
-let renderer = new Renderer(ctx, lander, terrain);
+let renderer = new Renderer();
 new KeyboardControls(lander);
 
-renderer.render();
+setInterval(() => lander.tick(), 25);
+
+(function nextFrame() {
+    requestAnimationFrame((t) => {
+        renderer.render(ctx, lander, terrain)
+        nextFrame();
+    });
+})();
