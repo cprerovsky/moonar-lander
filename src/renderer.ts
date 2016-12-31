@@ -9,7 +9,8 @@ export interface DrawOptions {
     gradient?: {
         y: number
         colors: string[]
-    }
+    },
+    parallax?: number
 }
 
 const GREY = "rgb(240,240,240)";
@@ -35,7 +36,7 @@ export default class Renderer {
         this.sky = ctx.getImageData(0, 0, 3500, ctx.canvas.height);
     }
 
-    public render(ctx: CanvasRenderingContext2D, lander: Lander, terrain: Terrain) {
+    public render(ctx: CanvasRenderingContext2D, lander: Lander, terrain: Terrain, bgterrain: Terrain) {
         if (!this.sky) this.initSky();
         this.focus = lander.position();
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -45,24 +46,26 @@ export default class Renderer {
             off,  0, 
             ctx.canvas.width, ctx.canvas.height
         );
-        this.draw(ctx, lander.geometry, { stroke: GREY, fill: "black", closePath: true });
-        this.draw(ctx, lander.flameGeometry, { stroke: GREY });
+        this.draw(ctx, bgterrain.geometry, { stroke: "rgb(50,50,50)", fill: "black", parallax: 0.5 });
         this.draw(ctx, terrain.geometry, { stroke: GREY, fill: "black" });
         this.draw(ctx, terrain.flagGeometry, { stroke: GREY, fill: "black" });
+        this.draw(ctx, lander.geometry, { stroke: GREY, fill: "black", closePath: true });
+        this.draw(ctx, lander.flameGeometry, { stroke: GREY });
     }
 
     private draw(ctx: CanvasRenderingContext2D, geometry: Point[], opts: DrawOptions) {
         if (geometry.length === 0) return;
+        let prx = opts.parallax || 1;
         ctx.beginPath();
         geometry.map((p, i) => {
             if (i === 0) {
-                ctx.moveTo(this.tx(p.x, ctx), this.ty(p.y, ctx));
+                ctx.moveTo(this.tx(p.x, ctx, prx), this.ty(p.y, ctx));
             } else {
-                ctx.lineTo(this.tx(p.x, ctx), this.ty(p.y, ctx));
+                ctx.lineTo(this.tx(p.x, ctx, prx), this.ty(p.y, ctx));
             }
         });
         if (opts.closePath) {
-            ctx.lineTo(this.tx(geometry[0].x, ctx), this.ty(geometry[0].y, ctx));
+            ctx.lineTo(this.tx(geometry[0].x, ctx, prx), this.ty(geometry[0].y, ctx));
         }
         if (opts.fill) {
             ctx.fillStyle = opts.fill;
@@ -78,8 +81,8 @@ export default class Renderer {
     /**
      * translate world x coordinates to drawing coordinates
      */
-    private tx(x: number, ctx: CanvasRenderingContext2D): number {
-        return x - this.focus.x + (ctx.canvas.width / 2);
+    private tx(x: number, ctx: CanvasRenderingContext2D, parallax: number): number {
+        return x - this.focus.x * parallax + (ctx.canvas.width / 2);
     }
     private ty(y: number, ctx: CanvasRenderingContext2D): number {
         return ctx.canvas.height - y;

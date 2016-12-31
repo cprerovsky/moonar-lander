@@ -13,7 +13,9 @@ canvas.height = document.documentElement.clientHeight;
 let ctx = canvas.getContext("2d");
 let rng = seedrandom("test");
 
-let terrain = new Terrain(10000, 350, rng);
+let terrain = new Terrain(10000, 350, rng, 9, 4);
+let bgterrain = new Terrain(2500, 350, rng, 8, 3, false);
+bgterrain.geometry = bgterrain.geometry.map((p) => new Point(p.x * 2, p.y + 50));
 let physics = new Physics(terrain.geometry);
 let lander = new Lander(physics);
 let renderer = new Renderer();
@@ -23,7 +25,7 @@ setInterval(() => lander.tick(), 25);
 
 (function nextFrame() {
     requestAnimationFrame((t) => {
-        renderer.render(ctx, lander, terrain)
+        renderer.render(ctx, lander, terrain, bgterrain);
         nextFrame();
     });
 })();
