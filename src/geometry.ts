@@ -3,11 +3,11 @@ import { EngineState } from './lander';
  * represents a 2d vector
  */
 export class Vector {
-    constructor(public x: number, public y: number) { }
+    constructor(public readonly x: number, public readonly y: number) { }
 }
 
 export class Collision {
-    constructor(public point: Vector, public segmentStart: Vector, public segmentEnd: Vector) { }
+    constructor(public readonly point: Vector, public readonly segmentStart: Vector, public readonly segmentEnd: Vector) { }
 }
 
 export type Geometry = Vector[];

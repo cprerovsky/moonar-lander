@@ -18,9 +18,9 @@ export class Lander {
 
 export function tick(lander: Lander, terrainGeometry: Geometry): Lander {
     let nrotationSpeed = rotate(lander.rotation, lander.rotationSpeed);
-    let nangle = angle(lander.angle, lander.rotationSpeed);
+    let nangle = angle(lander.angle, nrotationSpeed);
     let nposition = position(add(lander.position, lander.velocity));
-    let nvelocity = accelerate(lander.velocity, THRUST, lander.angle, lander.engine);
+    let nvelocity = accelerate(lander.velocity, THRUST, nangle, lander.engine);
     let landerGeometry = LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle));
     return collide(
         new Lander(nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine),

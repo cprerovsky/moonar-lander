@@ -12,7 +12,9 @@ export function terrain(width: number, height: number, rng: seedrandom.prng, mid
             Math.sin(i / 50) * h * height / 2 + height / 2 + 10
         ));
     });
-    geometry[0].y = geometry[geometry.length - 1].y = 0;
+    // set first and last point to zero height
+    geometry[0] = new Vector(geometry[0].x, 0);
+    geometry[geometry.length - 1] = new Vector(geometry[geometry.length - 1].x, 0);
     return geometry;
 }
 
