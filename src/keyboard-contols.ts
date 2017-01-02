@@ -13,7 +13,7 @@ export function initKeyboardControls(lander: Lander) {
 }
 
 export function applyCommands(lander: Lander): Lander {
-    return new Lander(lander.position, lander.velocity, lander.angle, rotation, lander.rotationSpeed, engine);
+    return new Lander(lander.pilot, lander.position, lander.velocity, lander.angle, rotation, lander.rotationSpeed, engine);
 }
 
 function keyup(event) {
