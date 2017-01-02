@@ -13,21 +13,25 @@ const GRAVITY = 0.02
 /**
  * collision detection between lander vehicle and ground geometry
  */
-export function collide(lander: Lander, landerGeometry: Geometry, groundGeometry: Geometry) {
+export function collide(lander: Lander, landerGeometry: Geometry, groundGeometry: Geometry): Lander {
     let collisions = isOverlap(landerGeometry, groundGeometry);
-    if (collisions.length !== 0) {
+    if (collisions.length === 0) {
+        return lander;
+    } else {
         let wallVector = subtract(collisions[0].segmentEnd, collisions[0].segmentStart)
-        lander.velocity = this.bounce(lander.velocity, wallVector, this.FRICTION, this.RESTITUTION);
+        let nvelocity = bounce(lander.velocity, wallVector);
         // stop motion at all if lander is moving super slow
-        if (length(lander.velocity) < 0.2) lander.velocity = new Vector(0, 0);
+        if (length(lander.velocity) < 0.2) nvelocity = new Vector(0, 0);
         // attempt to correct y-position to not get stuck in terrain
-        lander.position.y += 0.3;
+        let npostition = new Vector(lander.position.x, lander.position.y + 0.3);
         // update rotation based on impact
+        let nrotationSpeed = 0;
         if (collisions[0].point.x < lander.position.x) {
-            lander.rotationSpeed -= 0.03 * length(lander.velocity);
+            nrotationSpeed -= 0.03 * length(lander.velocity);
         } else {
-            lander.rotationSpeed += 0.03 * length(lander.velocity);
+            nrotationSpeed += 0.03 * length(lander.velocity);
         }
+        return new Lander(npostition, nvelocity, lander.angle, lander.rotation, nrotationSpeed, lander.engine);
     }
 }
 
