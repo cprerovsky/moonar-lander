@@ -14,7 +14,7 @@ let fgTerrain = terrain(10000, 350, rng, 9, 4);
 let bgTerrain = terrain(2500, 350, rng, 8, 3).map((p) => new Vector(p.x * 2, p.y + 50));
 let skybox = sky(3500, 800);
 let lander = new Lander(new Vector(1000, 300), new Vector(0, 0), 0, "off", 0, "off");
-let flagPosition = flag(fgTerrain, rng);
+let flagPosition = fgTerrain[30]; //flag(fgTerrain, rng);
 initKeyboardControls(lander);
 
 setInterval(() => lander = tick(applyCommands(lander), fgTerrain), 25);
