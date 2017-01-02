@@ -1,10 +1,11 @@
 import { Vector, add, LANDER_GEOMETRY, translate, Geometry } from './geometry';
 import { rotate, angle, position, accelerate, collide } from './physics';
+import { Commands } from './commands';
 
 export type EngineState = "off" | "half" | "full";
 export type RotationDirection = "off" | "cw" | "ccw";
 
-const THRUST = 0.1;
+const THRUST = 0.02;
 
 export class Lander {
     constructor(
@@ -16,7 +17,8 @@ export class Lander {
         public readonly engine: EngineState) { }
 }
 
-export function tick(lander: Lander, terrainGeometry: Geometry): Lander {
+export function tick(no: number, commands: Commands, lander: Lander, terrainGeometry: Geometry): Lander {
+    lander = execute(commands, lander);
     let nrotationSpeed = rotate(lander.rotation, lander.rotationSpeed);
     let nangle = angle(lander.angle, nrotationSpeed);
     let nposition = position(add(lander.position, lander.velocity));
@@ -26,4 +28,21 @@ export function tick(lander: Lander, terrainGeometry: Geometry): Lander {
         new Lander(nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine),
         landerGeometry,
         terrainGeometry);
+}
+
+function execute(commands: Commands, lander: Lander): Lander {
+    let engine = lander.engine;
+    let rotation = lander.rotation;
+    commands.map((c) => {
+        if (c.engine) engine = c.engine;
+        if (c.rotation) rotation = c.rotation;
+        console.log(c);
+    });
+    return new Lander(
+        lander.position,
+        lander.velocity,
+        lander.angle,
+        rotation,
+        lander.rotationSpeed,
+        engine);
 }
