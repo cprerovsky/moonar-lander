@@ -1,5 +1,5 @@
 import { Vector, Geometry, translate, LANDER_GEOMETRY, LANDER_FLAME_GEOMETRY } from './geometry';
-import Lander from './lander';
+import { Lander } from './lander';
 
 interface DrawOptions {
     stroke?: string

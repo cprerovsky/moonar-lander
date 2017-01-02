@@ -1,7 +1,7 @@
 import { Vector, dot, Geometry, subtract, length, normalA, multiply } from './geometry';
 import { EngineState, RotationDirection } from './lander';
 import { isOverlap } from './geometry';
-import Lander from './lander';
+import { Lander } from './lander';
 
 const MAX_ROTATION_SPEED = 0.2
 const ROTATION_DAMPING = 0.0001

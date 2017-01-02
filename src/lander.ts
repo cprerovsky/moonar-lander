@@ -6,7 +6,7 @@ export type RotationDirection = "off" | "cw" | "ccw";
 
 const THRUST = 0.1;
 
-export default class Lander {
+export class Lander {
     constructor(
         public position: Vector,
         public velocity: Vector,

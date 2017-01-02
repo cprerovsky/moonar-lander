@@ -1,4 +1,4 @@
-import Lander from './lander';
+import { Lander } from './lander';
 import { RotationDirection, EngineState } from './lander';
 
 // UGH, internal state :(
