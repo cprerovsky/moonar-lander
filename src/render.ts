@@ -1,4 +1,4 @@
-import { Vector, Geometry, translate, LANDER_GEOMETRY, LANDER_FLAME_GEOMETRY } from './geometry';
+import { Vector, Geometry, translate, LANDER_GEOMETRY, landerFlameGeometry } from './geometry';
 import { Lander } from './lander';
 
 interface DrawOptions {
@@ -46,7 +46,9 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, lander: Lan
     draw(ctx, fgTerrain, focus, { stroke: GREY, fill: "black" });
     // draw(ctx, terrain.flagGeometry, { stroke: GREY, fill: "black" });
     draw(ctx, LANDER_GEOMETRY.map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: GREY, fill: "black", closePath: true });
-    draw(ctx, LANDER_FLAME_GEOMETRY.map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: GREY });
+    if (lander.engine !== "off") {
+        draw(ctx, landerFlameGeometry(lander.engine).map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: GREY });
+    }
 }
 
 function draw(ctx: CanvasRenderingContext2D, geometry: Geometry, focus: Vector, opts: DrawOptions) {

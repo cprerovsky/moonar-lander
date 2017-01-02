@@ -1,3 +1,4 @@
+import { EngineState } from './lander';
 /**
  * represents a 2d vector
  */
@@ -113,6 +114,26 @@ export function translate(vector: Vector, offset: Vector, angle: number) {
     return rotate(add(vector, offset), offset, angle);
 }
 
+/**
+ * create a randomly sized flame geometry
+ */
+export function landerFlameGeometry(engine: EngineState): Geometry {
+    if (engine === "off") return [];
+    let height = 0;
+    if (engine === "half") {
+        height = 10 * -(0.7 + Math.random());
+    } else if (engine === "full") {
+        height = 16 * -(0.7 + Math.random());
+    }
+    return LANDER_FLAME_GEOMETRY.map((v, i) => {
+        if (i === 1) {
+            return new Vector(v.x, height);
+        } else {
+            return v;
+        }
+    });
+}
+
 export const LANDER_GEOMETRY: Geometry = [
     new Vector(-6, -8),
     new Vector(-5, 8),
@@ -120,7 +141,7 @@ export const LANDER_GEOMETRY: Geometry = [
     new Vector(6, -8)
 ];
 
-export const LANDER_FLAME_GEOMETRY: Geometry = [
+const LANDER_FLAME_GEOMETRY: Geometry = [
     new Vector(4, -8),
     new Vector(0, -16), // p.y + this.height * -(0.7 + Math.random()))
     new Vector(-4, -8),
