@@ -15,3 +15,11 @@ export function terrain(width: number, height: number, rng: seedrandom.prng, mid
     geometry[0].y = geometry[geometry.length - 1].y = 0;
     return geometry;
 }
+
+/**
+ * find a valid spot on the terrain to place the flag
+ */
+export function flag(terrain: Geometry, rng: seedrandom.prng): Vector {
+    let LIMIT = 10;
+    return terrain[ Math.round(rng() * (terrain.length - LIMIT)) - LIMIT / 2];
+}

@@ -1,4 +1,4 @@
-import { Vector, Geometry, translate, LANDER_GEOMETRY, landerFlameGeometry } from './geometry';
+import { Vector, Geometry, translate, LANDER_GEOMETRY, landerFlameGeometry, FLAG_GEOMETRY, add } from './geometry';
 import { Lander } from './lander';
 
 interface DrawOptions {
@@ -26,7 +26,7 @@ export function sky(width: number, height: number): ImageData {
         let x = Math.random() * width;
         let yinit = Math.random();
         let y = yinit * (height - 200);
-        let c = Math.floor(200 - yinit * 180);
+        let c = Math.round(200 - yinit * 180);
         let s = Math.random() * 3;
         ctx.fillStyle = `rgb(${c},${c},${c})`;
         ctx.fillRect(x, y, s, s);
@@ -34,7 +34,10 @@ export function sky(width: number, height: number): ImageData {
     return ctx.getImageData(0, 0, 3500, ctx.canvas.height);
 }
 
-export function render(ctx: CanvasRenderingContext2D, focus: Vector, lander: Lander, fgTerrain: Geometry, bgTerrain: Geometry, sky: ImageData) {
+/**
+ * render state to the canvas
+ */
+export function render(ctx: CanvasRenderingContext2D, focus: Vector, lander: Lander, fgTerrain: Geometry, bgTerrain: Geometry, sky: ImageData, flagPosition: Vector) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     let off = (focus.x - ctx.canvas.width / 2) / 4;
     ctx.putImageData(sky,
@@ -44,7 +47,7 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, lander: Lan
     );
     draw(ctx, bgTerrain, focus, { stroke: "rgb(50,50,50)", fill: "black", parallax: 0.5 });
     draw(ctx, fgTerrain, focus, { stroke: GREY, fill: "black" });
-    // draw(ctx, terrain.flagGeometry, { stroke: GREY, fill: "black" });
+    draw(ctx, FLAG_GEOMETRY.map((v) => add(v, flagPosition)), focus, { stroke: GREY, fill: "black" });
     draw(ctx, LANDER_GEOMETRY.map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: GREY, fill: "black", closePath: true });
     if (lander.engine !== "off") {
         draw(ctx, landerFlameGeometry(lander.engine).map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: GREY });

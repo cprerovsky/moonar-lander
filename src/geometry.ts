@@ -77,7 +77,7 @@ export function isOverlap(lander: Vector[], terrain: Vector[]): Collision[] {
     let segmentWidth = terrain[1].x;
     lander.map((point, i) => {
         // first find corresponding terrain segment for x-pos of lander
-        let segment = Math.floor(point.x / segmentWidth);
+        let segment = Math.round(point.x / segmentWidth);
         let a: Vector, b: Vector;
         if (segment < 0) {
             a = new Vector(point.x - 1, terrain[0].y);
