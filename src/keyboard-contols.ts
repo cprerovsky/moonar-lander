@@ -1,45 +1,53 @@
 import Lander from './lander';
-export default class KeyboardControls {
-    constructor(private lander: Lander) {
-        this.lander = lander;
-        document.addEventListener('keyup', (e) => this.keyup(e));
-        document.addEventListener('keydown', (e) => this.keydown(e));
+import { RotationDirection, EngineState } from './lander';
+
+// UGH, internal state :(
+let rotation: RotationDirection;
+let engine: EngineState;
+
+export function initKeyboardControls(lander: Lander) {
+    rotation = lander.rotation;
+    engine = lander.engine;
+    document.addEventListener('keyup', (e) => keyup(e));
+    document.addEventListener('keydown', (e) => keydown(e));
+}
+
+export function applyCommands(lander: Lander): Lander {
+    return new Lander(lander.position, lander.velocity, lander.angle, rotation, lander.rotationSpeed, engine);
+}
+
+function keyup(event) {
+    switch (event.keyCode) {
+        case 37:
+        case 39:
+            // Right Arrow key
+            rotation = "off";
+            break;
+        case 38:
+        case 40:
+            // Up Arrow key
+            engine = "off";
+            break;
     }
+}
 
-    private keyup(event) {
-        switch (event.keyCode) {
-            case 37:
-            case 39:
-                // Right Arrow key
-                this.lander.rotation = "off";
-                break;
-            case 38:
-            case 40:
-                // Up Arrow key
-                this.lander.engine = "off";
-                break;
-        }
-    }
-
-    keydown(event) {
-        switch (event.keyCode) {
-            case 37:
-                // Left Arrow key
-                this.lander.rotation = "ccw";
-                break;
-            case 39:
-                // Right Arrow key
-                this.lander.rotation = "cw";
-                break;
-            case 38:
-                // Up Arrow key
-                this.lander.engine = "full";
-                break;
-            case 40:
-                // Down
-                this.lander.engine = "half";
-                break;
-        }
-
+function keydown(event) {
+    switch (event.keyCode) {
+        case 37:
+            // Left Arrow key
+            rotation = "ccw";
+            break;
+        case 39:
+            // Right Arrow key
+            rotation = "cw";
+            break;
+        case 38:
+            // Up Arrow key
+            engine = "full";
+            break;
+        case 40:
+            // Down
+            engine = "half";
+            break;
     }
 }

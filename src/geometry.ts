@@ -1,92 +1,89 @@
 /**
  * represents a 2d vector
  */
-export class Point {
-    constructor(public x: number = 0, public y: number = 0) { }
-
-    /**
-     * rotate the vector around a pivot point and return a new result vector
-     */
-    rotate(pivot: Point, angle: number): Vector {
-        // http://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
-        // answer by six face
-        let sinA = Math.sin(angle);
-        let cosA = Math.cos(angle);
-        return new Vector(
-            cosA * (this.x - pivot.x) - sinA * (this.y - pivot.y) + pivot.x,
-            sinA * (this.x - pivot.x) + cosA * (this.y - pivot.y) + pivot.y
-        );
-    }
-
-    /**
-     * generate a result vector by adding v
-     */
-    public add(v: Point): Vector {
-        return new Vector(this.x + v.x, this.y + v.y);
-    }
-
-    /**
-     * multiply by n
-     */
-    public multiply(n: number): Vector {
-        return new Vector(this.x * n, this.y * n);
-    }
-
-    /**
-     * subtract vector v
-     */
-    public subtract(v: Point): Vector {
-        return new Vector(this.x - v.x, this.y - v.y);
-    }
-}
-
-/**
- * represents a point on a 2d surface
- */
-export class Vector extends Point {
-    /**
-     * generates the Normal A Vector
-     */
-    public normalA(): Vector {
-        return new Vector(-this.y, this.x);
-    }
-
-    /**
-     * generates the Normal B Vector
-     */
-    public normalB(): Vector {
-        return new Vector(this.y, -this.x);
-    }
-
-    /**
-     * calculates the vector length
-     */
-    public length(): number {
-        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
-    }
+export class Vector {
+    constructor(public x: number, public y: number) { }
 }
 
 export class Collision {
-    constructor(public point: Point, public segmentStart: Point, public segmentEnd: Point) { }
+    constructor(public point: Vector, public segmentStart: Vector, public segmentEnd: Vector) { }
+}
+
+export type Geometry = Vector[];
+
+/**
+ * rotate the point around a pivot point and return a new result vector
+ */
+export function rotate(point: Vector, pivot: Vector, angle: number): Vector {
+    // http://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
+    // answer by six face
+    let sinA = Math.sin(angle);
+    let cosA = Math.cos(angle);
+    return new Vector(
+        cosA * (point.x - pivot.x) - sinA * (point.y - pivot.y) + pivot.x,
+        sinA * (point.x - pivot.x) + cosA * (point.y - pivot.y) + pivot.y
+    );
+}
+
+/**
+ * generate a result vector by adding v
+ */
+export function add(v: Vector, a: Vector): Vector {
+    return new Vector(v.x + a.x, v.y + a.y);
+}
+
+/**
+ * multiply by n
+ */
+export function multiply(v: Vector, n: number): Vector {
+    return new Vector(v.x * n, v.y * n);
+}
+
+/**
+ * subtract vector s from v
+ */
+export function subtract(v: Vector, s: Vector): Vector {
+    return new Vector(v.x - s.x, v.y - s.y);
+}
+
+/**
+ * generates the Normal A Vector
+ */
+export function normalA(v: Vector): Vector {
+    return new Vector(-v.y, v.x);
+}
+
+/**
+ * generates the Normal B Vector
+ */
+export function normalB(v: Vector): Vector {
+    return new Vector(v.y, -v.x);
+}
+
+/**
+ * calculates the vector length
+ */
+export function length(v: Vector): number {
+    return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
 }
 
 /**
  * checks if lander geometry overlaps with terrain
  * returns the indices of a overlapping with b 
  */
-export function isOverlap(lander: Point[], terrain: Point[]): Collision[] {
+export function isOverlap(lander: Vector[], terrain: Vector[]): Collision[] {
     let collisions: Collision[] = [];
     let segmentWidth = terrain[1].x;
     lander.map((point, i) => {
         // first find corresponding terrain segment for x-pos of lander
         let segment = Math.floor(point.x / segmentWidth);
-        let a: Point, b: Point;
+        let a: Vector, b: Vector;
         if (segment < 0) {
-            a = new Point(point.x - 1, terrain[0].y);
+            a = new Vector(point.x - 1, terrain[0].y);
             b = terrain[0];
         } else if (segment >= terrain.length) {
             a = terrain[terrain.length - 1];
-            b = new Point(point.x + 1, terrain[terrain.length - 1].y);
+            b = new Vector(point.x + 1, terrain[terrain.length - 1].y);
         } else {
             a = terrain[segment] || terrain[segment + 1];
             b = terrain[segment + 1] || terrain[segment];
@@ -108,3 +105,30 @@ export function isOverlap(lander: Point[], terrain: Point[]): Collision[] {
 export function dot(a: Vector, b: Vector): number {
     return a.x * b.x + a.y * b.y;
 }
+
+/**
+ * translate vector by moving it by offset and rotating by angle around offset
+ */
+export function translate(vector: Vector, offset: Vector, angle: number) {
+    return rotate(add(vector, offset), offset, angle);
+}
+
+export const LANDER_GEOMETRY: Geometry = [
+    new Vector(-6, -8),
+    new Vector(-5, 8),
+    new Vector(5, 8),
+    new Vector(6, -8)
+];
+
+export const LANDER_FLAME_GEOMETRY: Geometry = [
+    new Vector(4, -8),
+    new Vector(0, -16), // p.y + this.height * -(0.7 + Math.random()))
+    new Vector(-4, -8),
+];
+
+export const FLAG_GEOMETRY = [
+    new Vector(0, 0),
+    new Vector(0, 25),
+    new Vector(15, 20),
+    new Vector(0, 15)
+];
