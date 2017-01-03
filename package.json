@@ -5,16 +5,36 @@
   "main": "build/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node node_modules/.bin/webpack --config ./frontend/webpack.config.js --display-error-details"
+    "build": "node node_modules/.bin/webpack --config ./frontend/webpack.config.js --display-error-details",
+    "build_backend": "tsc -p backend"
   },
   "author": "Clemens Prerovsky <c.prerovsky@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@types/seedrandom": "^2.4.27"
+    "@types/seedrandom": "^2.4.27",
+    "express": "^4.14.0",
+    "path": "^0.12.7",
+    "ws": "^1.1.1"
   },
   "devDependencies": {
+    "@types/node": "^6.0.55",
     "ts-loader": "^1.3.3",
     "typescript": "^2.1.4",
     "webpack": "^1.14.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cprerovsky/moonar-lander.git"
+  },
+  "keywords": [
+    "lunar",
+    "lander",
+    "canvas",
+    "game",
+    "websockets"
+  ],
+  "bugs": {
+    "url": "https://github.com/cprerovsky/moonar-lander/issues"
+  },
+  "homepage": "https://github.com/cprerovsky/moonar-lander#readme"
 }
