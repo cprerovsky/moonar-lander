@@ -13,7 +13,7 @@ module.exports = {
     },
     resolve: {
         extensions: ['', '.js', '.ts'],
-        modulesDirectories: ['node_modules']
+        modulesDirectories: ['../node_modules']
     },
     output: {
         path: path.join(__dirname, 'build'),
