@@ -15,7 +15,8 @@ export class Lander {
         public readonly angle: number,
         public readonly rotation: RotationDirection,
         public readonly rotationSpeed: number,
-        public readonly engine: EngineState) { }
+        public readonly engine: EngineState,
+        public readonly fuel: number) { }
 }
 
 export function tick(no: number, commands: Commands, lander: Lander, terrainGeometry: Geometry): Lander {
@@ -25,10 +26,21 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
     let nposition = position(add(lander.position, lander.velocity));
     let nvelocity = accelerate(lander.velocity, THRUST, nangle, lander.engine);
     let landerGeometry = LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle));
+    let fuel = burn(lander.fuel, lander.engine)
     return collide(
-        new Lander(lander.pilot, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine),
+        new Lander(lander.pilot, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel),
         landerGeometry,
         terrainGeometry);
+}
+
+function burn(fuel: number, engine: EngineState) {
+    if (engine === "half") {
+        return fuel - 0.5;
+    } else if (engine === "full") {
+        return --fuel;
+    } else {
+        return fuel;
+    }
 }
 
 function execute(commands: Commands, lander: Lander): Lander {
@@ -46,5 +58,6 @@ function execute(commands: Commands, lander: Lander): Lander {
         lander.angle,
         rotation,
         lander.rotationSpeed,
-        engine);
+        engine,
+        lander.fuel);
 }

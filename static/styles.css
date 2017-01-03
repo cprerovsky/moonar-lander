@@ -1,0 +1,66 @@
+/* Monoid font from http://larsenwork.com/monoid/ */
+@font-face {
+  font-family: "Monoid";
+  src: url("Monoid-Regular.ttf") format("truetype");
+}
+
+body * {
+    font-family: "Monoid";
+    font-size: 16px;
+    line-height: 200%;
+    margin: 0;
+    padding: 0;
+}
+
+#game {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: black;
+  z-index: 0;
+}
+
+#ui {
+    color: rgb(240,240,240);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+}
+
+#ui li {
+    padding: 10px;
+    list-style-type: none;
+}
+
+#ui .portrait {
+    float: left;
+    margin-top: 15px;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    border: 1px solid rgb(240,240,240);
+    background: grey;
+    text-align: center;
+}
+
+#ui .data {
+    float: left;
+    padding-left: 10px;
+}
+
+#ui .fuelmeter, #ui .fuelmeter .gauge {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 10px;
+    border: 1px solid rgb(240,240,240);
+}
+
+#ui .fuelmeter .gauge {
+    position: absolute;
+    width: 63%;
+    height: 99%;
+    border: 0;
+    background: rgb(100,100,100);
+}
