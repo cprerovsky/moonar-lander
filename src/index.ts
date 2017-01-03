@@ -32,7 +32,11 @@ let commands: Commands = [
     // new Command("full", null, 1100),
     // new Command("off", null, 1300)
 ];
-initKeyboardControls(commands);
+initKeyboardControls((command: Command) => {
+    if (command) {
+        commands = commands.concat(command);
+    }
+});
 
 let tickNo = 0;
 setInterval(() => {

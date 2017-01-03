@@ -35,9 +35,9 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
 
 function burn(fuel: number, engine: EngineState) {
     if (engine === "half") {
-        return fuel - 0.5;
+        return fuel - 0.25;
     } else if (engine === "full") {
-        return --fuel;
+        return fuel - 0.5;
     } else {
         return fuel;
     }

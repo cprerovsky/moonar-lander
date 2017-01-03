@@ -3,43 +3,37 @@ import { RotationDirection, EngineState } from './lander';
 import { Commands, Command } from './commands';
 
 
-export function initKeyboardControls(commands: Commands) {
-    document.addEventListener('keyup', (e) => keyup(e, commands));
-    document.addEventListener('keydown', (e) => keydown(e, commands));
+export function initKeyboardControls(cb: Function) {
+    document.addEventListener('keyup', (e) => { cb(keyup(e)) });
+    document.addEventListener('keydown', (e) => { cb(keydown(e)) })
 }
 
-function keyup(event, commands: Commands) {
+function keyup(event: KeyboardEvent): Command {
     switch (event.keyCode) {
         case 37:
         case 39:
             // Right Arrow key
-            commands.push(new Command(null, "off"));
-            break;
+            return new Command(null, "off");
         case 38:
         case 40:
             // Up Arrow key
-            commands.push(new Command("off"));
-            break;
+            return new Command("off");
     }
 }
 
-function keydown(event, commands: Commands) {
+function keydown(event: KeyboardEvent): Command {
     switch (event.keyCode) {
         case 37:
             // Left Arrow key
-            commands.push(new Command(null, "ccw"));
-            break;
+            return new Command(null, "ccw");
         case 39:
             // Right Arrow key
-            commands.push(new Command(null, "cw"));
-            break;
+            return new Command(null, "cw");
         case 38:
             // Up Arrow key
-            commands.push(new Command("full"));
-            break;
+            return new Command("full");
         case 40:
             // Down
-            commands.push(new Command("half"));
-            break;
+            return new Command("half");
     }
 }
