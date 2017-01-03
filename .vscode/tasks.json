@@ -13,7 +13,7 @@
             "isWatching": true
         },
         {
-            "taskName": "build_backend",
+            "taskName": "backend",
             "args": ["run", "build_backend"],
             "isWatching": false
         }
