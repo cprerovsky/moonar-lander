@@ -1,9 +1,13 @@
 import { Lander } from './lander';
+import { length } from './geometry';
+
+const R_TO_DEG = 180 / Math.PI;
 
 export function updateUi (lander: Lander) {
-    $(`#${lander.pilot} .fuel`, Math.floor(lander.fuel));
-    let fuelgauge = $(`#${lander.pilot} .fuelmeter .gauge`);
-    fuelgauge.style.width = lander.fuel / 10 + "%";
+    $(`#${lander.pilot} .position`, `${Math.floor(lander.position.x)}, ${Math.floor(lander.position.y)}`);
+    $(`#${lander.pilot} .fuel`, `${Math.floor(lander.fuel)}`);
+    // TODO why the heck is radians to deg conversion negative?
+    $(`#${lander.pilot} .angle`, Math.floor(-lander.angle * R_TO_DEG));
 }
 
 let ELEMENTS_CACHE: { [key: string]: HTMLElement; } = {};

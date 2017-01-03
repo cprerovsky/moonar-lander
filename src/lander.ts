@@ -46,11 +46,18 @@ function burn(fuel: number, engine: EngineState) {
 function execute(commands: Commands, lander: Lander): Lander {
     let engine = lander.engine;
     let rotation = lander.rotation;
-    commands.map((c) => {
-        if (c.engine) engine = c.engine;
-        if (c.rotation) rotation = c.rotation;
-        console.log(c);
-    });
+    let fuel = lander.fuel;
+    if (lander.fuel > 0) {
+        commands.map((c) => {
+            if (c.engine) engine = c.engine;
+            if (c.rotation) rotation = c.rotation;
+            console.log(c);
+        });
+    } else {
+        engine = "off";
+        rotation = "off";
+        fuel = 0;
+    }
     return new Lander(
         lander.pilot,
         lander.position,
@@ -59,5 +66,5 @@ function execute(commands: Commands, lander: Lander): Lander {
         rotation,
         lander.rotationSpeed,
         engine,
-        lander.fuel);
+        fuel);
 }

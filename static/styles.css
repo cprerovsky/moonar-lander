@@ -6,7 +6,7 @@
 
 body * {
     font-family: "Monoid";
-    font-size: 16px;
+    font-size: 14px;
     line-height: 200%;
     margin: 0;
     padding: 0;
@@ -25,27 +25,30 @@ body * {
     position: absolute;
     top: 0px;
     left: 0px;
+    width: 100%;
     z-index: 10;
 }
 
 #ui li {
-    padding: 10px;
+    position: relative;
+    padding: 1%;
+    width: 23%;
     list-style-type: none;
 }
 
 #ui .portrait {
-    float: left;
-    margin-top: 15px;
-    width: 30px;
-    height: 30px;
-    border-radius: 15px;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 25px;
     border: 1px solid rgb(240,240,240);
     background: grey;
     text-align: center;
 }
 
 #ui .data {
-    float: left;
     padding-left: 10px;
 }
 
