@@ -10,6 +10,9 @@
             var server = new WebSocket("ws://localhost:4711");
             server.onmessage = function (msg) { console.log("SERVER: " + msg.data); };
             server.onerror = error;
+            server.onopen = function () {
+                server.send('ping');
+            }
 
             setTimeout(function () {
                 var client = new WebSocket("ws://localhost:4711");

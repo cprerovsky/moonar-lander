@@ -12,13 +12,6 @@ server.listen(4711);
 
 let wss = new WebSocketServer({ server: server });
 
-class State {
-    public hostSocket: WebSocket;
-    public clientSockets: { [key: string]: WebSocket } = {};
-}
-
-let STATE = new State();
-
 class KEYS {
     public static HOST = 'host'
     public static TOKEN = 'token'
@@ -27,6 +20,7 @@ class KEYS {
 wss.on('connection', function (ws) {
     if (!hasHostSocket(wss)) {
         ws[KEYS.HOST] = true;
+        ws.send(JSON.stringify({ host: true }));
         console.log('connect host');
     } else {
         let t = token();
