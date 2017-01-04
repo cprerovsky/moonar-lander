@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as express from 'express';
 import * as http from 'http';
-import { Server as WebSocketServer } from 'uws';
+import { Server as WebSocketServer } from 'ws';
 let app = express();
 
 app.use(express.static(path.join(__dirname + '/../../frontend/static', '/')));
@@ -12,33 +12,61 @@ server.listen(4711);
 
 let wss = new WebSocketServer({ server: server });
 
-wss.on('connection', function (ws) {
-    if (!hasGameHost(wss)) {
-        ws['GAME_HOSE'] = true;
-    } else {
-        ws['TOKEN'] = token();
-        ws.send(JSON.stringify(token));
-    }
-    // ws.on('message', );
-    // ws.send('something');
-});
-
-function hasGameHost(wss: WebSocketServer): boolean {
-    return wss.clients.filter(ws => !!ws['GAME_HOST']).length === 1;
+class State {
+    public hostSocket: WebSocket;
+    public clientSockets: { [key: string]: WebSocket } = {};
 }
 
+let STATE = new State();
+
+class KEYS {
+    public static HOST = 'host'
+    public static TOKEN = 'token'
+}
+
+wss.on('connection', function (ws) {
+    if (!hasHostSocket(wss)) {
+        ws[KEYS.HOST] = true;
+        console.log('connect host');
+    } else {
+        let t = token();
+        console.log('connect client ' + t);
+        ws[KEYS.TOKEN] = t;
+        ws.send(JSON.stringify({ token: t }));
+    }
+
+    ws.on('message', (data) => message(wss, ws, data));
+    ws.on('error', (e) => console.log(e));
+});
+
+function hasHostSocket(wss: WebSocketServer): boolean {
+    return wss.clients.filter((ws) => !!ws[KEYS.HOST]).length === 1;
+}
+
+function hostSocket(wss: WebSocketServer): WebSocket {
+    return wss.clients.filter((ws) => !!ws[KEYS.HOST])[0];
+}
+
+function message(wss: WebSocketServer, ws: WebSocket, data: any) {
+    console.log('message' + data);
+    if (ws[KEYS.HOST]) {
+        ws.send('hello server');
+    } else {
+        hostSocket(wss).send(data);
+    }
+}
 
 /**
  * generate a random token
  * http://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
  */
 function token(): string {
-    let text = "";
+    let token = "";
     let set = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (var i = 0; i < 20; i++) {
-        text += set.charAt(Math.floor(Math.random() * set.length));
+        token += set.charAt(Math.floor(Math.random() * set.length));
     }
-    return text;
+    return token;
 }
 
 // C > S
