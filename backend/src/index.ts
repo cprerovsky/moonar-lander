@@ -33,6 +33,23 @@ wss.on('connection', function (ws) {
     ws.on('error', (e) => console.log(e));
 });
 
+function message(wss: WebSocketServer, ws: WebSocket, data: any) {
+    console.log('message' + data);
+    if (ws[KEYS.HOST]) {
+        let hc = toHostCommand(data);
+        switch (hc.cmd) {
+            case 'to':
+                clientSocket(wss, hc.val).send(hc.data);
+                break;
+            case 'broadcast':
+                wss.broadcast(data);
+                break;
+        }
+    } else {
+        hostSocket(wss).send(data);
+    }
+}
+
 function hasHostSocket(wss: WebSocketServer): boolean {
     return wss.clients.filter((ws) => !!ws[KEYS.HOST]).length === 1;
 }
@@ -41,13 +58,20 @@ function hostSocket(wss: WebSocketServer): WebSocket {
     return wss.clients.filter((ws) => !!ws[KEYS.HOST])[0];
 }
 
-function message(wss: WebSocketServer, ws: WebSocket, data: any) {
-    console.log('message' + data);
-    if (ws[KEYS.HOST]) {
-        ws.send('hello server');
-    } else {
-        hostSocket(wss).send(data);
-    }
+function clientSocket(wss: WebSocketServer, token: string): WebSocket {
+    return wss.clients.filter((ws) => ws[KEYS.TOKEN] === token)[0];
+}
+
+class HostCommand {
+    constructor(public readonly cmd: 'to' | 'broadcast',
+        public readonly val: string,
+        public readonly data: string) { }
+}
+
+function toHostCommand(msg) {
+    let parts = msg.split('\n');
+    let cmdval = parts[0].split(':');
+    return new HostCommand(cmdval[0], cmdval[1], parts[1]);
 }
 
 /**
