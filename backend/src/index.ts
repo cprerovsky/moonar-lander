@@ -44,9 +44,20 @@ function message(wss: WebSocketServer, ws: WebSocket, data: any) {
             case 'broadcast':
                 wss.broadcast(data);
                 break;
+            case 'disconnect':
+                disconnect(wss, hc.val);
+                break;
         }
     } else {
         hostSocket(wss).send(data);
+    }
+}
+
+function disconnect(wss: WebSocketServer, token: string) {
+    if (token === '*') {
+        wss.clients.map((ws: WebSocket) => ws.close());
+    } else {
+        clientSocket(wss, token).close();
     }
 }
 
@@ -63,7 +74,7 @@ function clientSocket(wss: WebSocketServer, token: string): WebSocket {
 }
 
 class HostCommand {
-    constructor(public readonly cmd: 'to' | 'broadcast',
+    constructor(public readonly cmd: 'to' | 'broadcast' | 'disconnect',
         public readonly val: string,
         public readonly data: string) { }
 }
