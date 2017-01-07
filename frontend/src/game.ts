@@ -46,7 +46,7 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
         // let exec = commands.filter((c) => !c.tick || c.tick <= tickNo);
         let focus: Vector;
         Object.keys(state.landers).map((token) => {
-            tick(tickNo, [], state.landers[token], state.fgTerrain)
+            state.landers[token] = tick(tickNo, [], state.landers[token], state.fgTerrain)
             focus = state.landers[token].position;
         });
         // if (tickNo % 5 === 0) updateUi(lander);
@@ -136,5 +136,5 @@ interface HostConfirmMsg {
 }
 
 export type Store<T> = {
-    readonly[key: string]: T
+    [key: string]: T
 }
