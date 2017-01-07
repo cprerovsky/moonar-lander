@@ -4,8 +4,8 @@ import * as http from 'http';
 import { Server as WebSocketServer } from 'ws';
 let app = express();
 
-app.use(express.static(path.join(__dirname + '/../../frontend/static', '/')));
-app.use(express.static(path.join(__dirname + '/../../frontend/build', '/build')));
+app.use('/', express.static(path.join(__dirname, '/../../frontend/static')));
+app.use('/build', express.static(path.join(__dirname, '/../../frontend/build')));
 
 let server = http.createServer(app);
 server.listen(4711);
@@ -34,7 +34,7 @@ wss.on('connection', function (ws) {
 });
 
 function message(wss: WebSocketServer, ws: WebSocket, data: any) {
-    console.log('message' + data);
+    console.log('message', data);
     if (ws[KEYS.HOST]) {
         let hc = toHostCommand(data);
         switch (hc.cmd) {

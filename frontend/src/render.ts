@@ -45,7 +45,7 @@ let circles: number[] = [0];
 export function render(ctx: CanvasRenderingContext2D, focus: Vector, lander: Lander, fgTerrain: Geometry, bgTerrain: Geometry, sky: ImageData, flagPosition: Vector) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     let off = (focus.x - ctx.canvas.width / 2) / 4;
-    let landerColor = uniqueColor(lander.pilot);
+    let landerColor = GREY;
     ctx.putImageData(sky,
         -off, 0,
         off, 0,

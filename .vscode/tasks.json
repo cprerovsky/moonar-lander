@@ -8,13 +8,8 @@
     "suppressTaskName": true,
     "tasks": [
         {
-            "taskName": "build-frontend",
-            "args": ["run", "build-frontend"],
-            "isWatching": true
-        },
-        {
-            "taskName": "build-backend",
-            "args": ["run", "build-backend"],
+            "taskName": "watch",
+            "args": ["run", "watch"],
             "isWatching": true,
             "isBuildCommand": true
         }
