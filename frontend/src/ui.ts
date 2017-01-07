@@ -2,12 +2,9 @@ import { Lander } from './lander';
 import { length } from './geometry';
 
 module UI {
-    export function addPlayer(token: string, name: string) {
+    export function addPlayer(token: string, name: string, color: string) {
         let html = `<li id="${token}" class="player">
-        <div class="portrait">${name.charAt(0).toUpperCase()}</div>
-        <div class="data">
-          <p class="pilot">clemens</p>
-        </div>
+    <p class="pilot" style="color: ${color}">clemens</p>
 </li>`;
         $('#ui').innerHTML += html;
     }

@@ -58,12 +58,12 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
             "off",
             1000),
             state.landers);
-        UI.addPlayer(data.token, data.name);
+        UI.addPlayer(data.token, data.name, data.color);
         // TODO send player game information
-    } else if (state.phase === GamePhase.HOST_CONFIRMED && isCommandsMsg(data)) {
+    } else if (state.phase === GamePhase.STARTED && isCommandsMsg(data)) {
         state.commands = state.commands.concat(data.commands);
     } else {
-        console.error(`Unable to handle message in game phase ${state.phase}`, data);
+        console.error(`Dropped message in ${GamePhase[state.phase]}`, data);
     }
 }
 
