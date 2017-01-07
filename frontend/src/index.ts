@@ -5,14 +5,17 @@ import * as seedrandom from 'seedrandom';
 import { sky, render } from './render';
 import { initKeyboardControls } from './keyboard-controls';
 import { Commands, Command } from './commands';
-import { setup } from './game';
+import { setup, start } from './game';
 
 let canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
 canvas.width = document.documentElement.clientWidth;
 canvas.height = document.documentElement.clientHeight;
 let ctx = canvas.getContext("2d");
 
-let game = setup(ctx, "hello");
+let game = setup(ctx, "hello12");
+setTimeout(() => { 
+    start(game, ctx);
+}, 5000);
 
 // let lander = new Lander(
 //     'clemens',

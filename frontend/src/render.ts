@@ -1,6 +1,7 @@
 import { Vector, Geometry, translate, LANDER_GEOMETRY, landerFlameGeometry, FLAG_GEOMETRY, add, length } from './geometry';
 import { Lander } from './lander';
 import { uniqueColor } from './color';
+import { Store } from './game';
 
 interface DrawOptions {
     stroke?: string
@@ -42,7 +43,7 @@ let circles: number[] = [0];
 /**
  * render state to the canvas
  */
-export function render(ctx: CanvasRenderingContext2D, focus: Vector, lander: Lander, fgTerrain: Geometry, bgTerrain: Geometry, sky: ImageData, flagPosition: Vector) {
+export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: Store<Lander>, fgTerrain: Geometry, bgTerrain: Geometry, sky: ImageData, flagPosition: Vector) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     let off = (focus.x - ctx.canvas.width / 2) / 4;
     let landerColor = GREY;
@@ -58,15 +59,18 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, lander: Lan
         let c = 100 - Math.floor(100 / 5000 * r);
         circle(ctx, flagPosition, focus, r, `rgb(${c},${c},${c})`);
         return (r <= 200) ? ++r : r + r / 200;
-    }).filter((r, i, a) => { 
+    }).filter((r, i, a) => {
         return r < 5000;
     });
     if (circles[circles.length - 1] === 200) circles.push(0);
     draw(ctx, fgTerrain, focus, { stroke: GREY, fill: "black" });
-    draw(ctx, LANDER_GEOMETRY.map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: landerColor, fill: "black", closePath: true });
-    if (lander.engine !== "off") {
-        draw(ctx, landerFlameGeometry(lander.engine).map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: landerColor });
-    }
+    Object.keys(landers).map((token) => {
+        let lander = landers[token];
+        draw(ctx, LANDER_GEOMETRY.map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: landerColor, fill: "black", closePath: true });
+        if (lander.engine !== "off") {
+            draw(ctx, landerFlameGeometry(lander.engine).map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: landerColor });
+        }
+    });
 }
 
 function circle(ctx: CanvasRenderingContext2D, center: Vector, focus: Vector, radius: number, strokeStyle: string) {

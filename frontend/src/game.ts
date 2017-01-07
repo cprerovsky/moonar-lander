@@ -1,9 +1,9 @@
 import { Commands } from './commands';
-import { Lander } from './lander';
+import { Lander, tick } from './lander';
 import * as seedrandom from 'seedrandom';
 import { terrain, flag } from './terrain';
 import { Vector, Geometry } from './geometry';
-import { sky } from './render';
+import { sky, render } from './render';
 import { uniqueColor } from './color';
 import UI from './ui';
 
@@ -40,7 +40,30 @@ export function setup(ctx: CanvasRenderingContext2D, seed: string) {
     return state;
 }
 
-export function start(state: GameState) { }
+export function start(state: GameState, ctx: CanvasRenderingContext2D) {
+    let tickNo = 0;
+    setInterval(() => {
+        // let exec = commands.filter((c) => !c.tick || c.tick <= tickNo);
+        let focus: Vector;
+        Object.keys(state.landers).map((token) => {
+            tick(tickNo, [], state.landers[token], state.fgTerrain)
+            focus = state.landers[token].position;
+        });
+        // if (tickNo % 5 === 0) updateUi(lander);
+        // commands = commands.filter((c) => c.tick > tickNo);
+        tickNo++;
+        requestAnimationFrame((t) => {
+            render(ctx, focus, state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition);
+        });
+    }, 25);
+
+    // (function nextFrame() {
+    //     requestAnimationFrame((t) => {
+    //         render(ctx, lander.position, lander, fgTerrain, bgTerrain, skybox, flagPosition);
+    //         nextFrame();
+    //     });
+    // })();
+}
 
 function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
     let data = JSON.parse(msg.data);
@@ -68,6 +91,11 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
 }
 
 function addToStore<T>(key: string, value: T, store: Store<T>): Store<T> {
+    if (Object.keys(store).length === 0) {
+        let r = {};
+        r[key] = value;
+        return r;
+    }
     return Object.keys(store).reduce(function (previous, current, i) {
         if (i === 0) previous[key] = value;
         previous[current] = current[current];
@@ -107,6 +135,6 @@ interface HostConfirmMsg {
     host: boolean
 }
 
-type Store<T> = {
+export type Store<T> = {
     readonly[key: string]: T
 }
