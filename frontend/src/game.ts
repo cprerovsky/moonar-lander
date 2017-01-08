@@ -45,9 +45,7 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
     send(state.ws, 'broadcast:', { game: 'start' });
     let tickNo = 0;
     setInterval(() => {
-        let focus: Vector;
         state.landers = state.landers.map((lander) => {
-            focus = lander.position;
             let cmds = state.commands.filter(
                 (c) => (!c.tick || c.tick <= tickNo) && c.token === lander.token);
             return tick(tickNo, cmds, lander, state.fgTerrain)
@@ -56,6 +54,15 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
         state.commands = state.commands.filter((c) => c.tick > tickNo);
         tickNo++;
         requestAnimationFrame((t) => {
+            let focus = new Vector(
+                state.landers.reduce((p, c) => {
+                    if (Math.abs(state.flagPosition.x - c.position.x) < Math.abs(state.flagPosition.x - p.position.x)) {
+                        return c;
+                    } else {
+                        return p;
+                    }
+                }).position.x
+                , 0);
             render(ctx, focus, state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition);
         });
     }, 25);
