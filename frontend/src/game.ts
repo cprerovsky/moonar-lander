@@ -42,7 +42,7 @@ export function setup(ctx: CanvasRenderingContext2D, seed: string) {
 
 export function start(state: GameState, ctx: CanvasRenderingContext2D) {
     state.phase = GamePhase.STARTED;
-    send(state.ws, 'broadcast:', { game: 'start' });
+    send(state.ws, 'broadcast', '', { game: 'start' });
     let tickNo = 0;
     setInterval(() => {
         state.landers = state.landers.map((lander) => {
@@ -86,7 +86,10 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
             "off",
             1000));
         UI.addPlayer(data.token, data.name, data.color);
-        // TODO send player game information
+        send(state.ws, 'broadcast', '', {
+            terrain: state.fgTerrain,
+            flag: state.flagPosition
+        });
     } else if (state.phase === GamePhase.STARTED && isCommandsMsg(data)) {
         state.commands = state.commands.concat(
             data.commands.map(
@@ -97,8 +100,9 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
     }
 }
 
-function send(ws: WebSocket, cmd: string, data: any) {
-    ws.send(cmd + '\n' + JSON.stringify(data));
+function send(ws: WebSocket, cmd: 'broadcast' | 'to' | 'disconnect', cval: string, data: any) {
+    ws.send(`${cmd}:${cval}
+${JSON.stringify(data)}`);
 }
 
 /// --- typeguards & interfaces ---
