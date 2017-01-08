@@ -1,4 +1,4 @@
-import { Commands } from './commands';
+import { Commands, Command } from './commands';
 import { Lander, tick } from './lander';
 import * as seedrandom from 'seedrandom';
 import { terrain, flag } from './terrain';
@@ -41,37 +41,24 @@ export function setup(ctx: CanvasRenderingContext2D, seed: string) {
 }
 
 export function start(state: GameState, ctx: CanvasRenderingContext2D) {
+    state.phase = GamePhase.STARTED;
+    send(state.ws, 'broadcast:', { game: 'start' });
     let tickNo = 0;
     setInterval(() => {
-        // let exec = commands.filter((c) => !c.tick || c.tick <= tickNo);
         let focus: Vector;
         state.landers = state.landers.map((lander) => {
             focus = lander.position;
-            return tick(tickNo, [], lander, state.fgTerrain)
+            let cmds = state.commands.filter(
+                (c) => (!c.tick || c.tick <= tickNo) && c.token === lander.token);
+            return tick(tickNo, cmds, lander, state.fgTerrain)
         });
         // if (tickNo % 5 === 0) updateUi(lander);
-        // commands = commands.filter((c) => c.tick > tickNo);
+        state.commands = state.commands.filter((c) => c.tick > tickNo);
         tickNo++;
         requestAnimationFrame((t) => {
             render(ctx, focus, state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition);
         });
     }, 25);
-
-    // let commands: Commands = [
-    // new Command("full", "cw"),
-    // new Command(null, "off", 7),
-    // new Command("off", "ccw", 80),
-    // new Command(null, "off", 86),
-    // new Command("half", null, 200),
-    // new Command("off", null, 400),
-    // new Command("full", null, 450),
-    // new Command("off", "cw", 550),
-    // new Command(null, "off", 555),
-    // new Command("full", null, 650),
-    // new Command("off", null, 800),
-    // new Command("full", null, 1100),
-    // new Command("off", null, 1300)
-    // ];
 }
 
 function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
@@ -94,23 +81,17 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
         UI.addPlayer(data.token, data.name, data.color);
         // TODO send player game information
     } else if (state.phase === GamePhase.STARTED && isCommandsMsg(data)) {
-        state.commands = state.commands.concat(data.commands);
+        state.commands = state.commands.concat(
+            data.commands.map(
+                cmd => new Command(data.token, cmd.engine, cmd.rotation, cmd.tick))
+        );
     } else {
         console.error(`Dropped message in ${GamePhase[state.phase]}`, data);
     }
 }
 
-function addToStore<T>(key: string, value: T, store: Store<T>): Store<T> {
-    if (Object.keys(store).length === 0) {
-        let r = {};
-        r[key] = value;
-        return r;
-    }
-    return Object.keys(store).reduce(function (previous, current, i) {
-        if (i === 0) previous[key] = value;
-        previous[current] = current[current];
-        return previous;
-    }, {});
+function send(ws: WebSocket, cmd: string, data: any) {
+    ws.send(cmd + '\n' + JSON.stringify(data));
 }
 
 /// --- typeguards & interfaces ---
@@ -144,8 +125,3 @@ function isCommandsMsg(data: any): data is CommandsMsg {
 interface HostConfirmMsg {
     host: boolean
 }
-
-export type Store<T> = {
-    [key: string]: T
-}
-

@@ -1,7 +1,6 @@
 import { Vector, Geometry, translate, LANDER_GEOMETRY, landerFlameGeometry, FLAG_GEOMETRY, add, length } from './geometry';
 import { Lander } from './lander';
 import { uniqueColor } from './color';
-import { Store } from './game';
 
 interface DrawOptions {
     stroke?: string

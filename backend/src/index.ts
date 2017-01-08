@@ -42,7 +42,7 @@ function message(wss: WebSocketServer, ws: WebSocket, data: any) {
                 clientSocket(wss, hc.val).send(hc.data);
                 break;
             case 'broadcast':
-                wss.broadcast(data);
+                broadcast(wss, hc.data);
                 break;
             case 'disconnect':
                 disconnect(wss, hc.val);
@@ -51,6 +51,10 @@ function message(wss: WebSocketServer, ws: WebSocket, data: any) {
     } else {
         hostSocket(wss).send(data);
     }
+}
+
+function broadcast(wss: WebSocketServer, data: any) {
+    wss.clients.filter((ws) => !ws[KEYS.HOST]).map((ws) => ws.send(data));
 }
 
 function disconnect(wss: WebSocketServer, token: string) {

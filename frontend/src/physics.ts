@@ -8,7 +8,7 @@ const ROTATION_ACCELERATION = 0.0005
 const ROTATION_DAMPING = 0.00005
 const FRICTION = 0.3
 const RESTITUTION = 0.7
-const GRAVITY = 0.02
+const GRAVITY = 0.01
 
 /**
  * collision detection between lander vehicle and ground geometry
