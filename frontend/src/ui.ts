@@ -4,7 +4,7 @@ import { length } from './geometry';
 module UI {
     export function addPlayer(token: string, name: string, color: string) {
         let html = `<li id="${token}" class="player">
-    <p class="pilot" style="color: ${color}">clemens</p>
+    <p class="pilot" style="color: ${color}">${name}</p>
 </li>`;
         $('#ui').innerHTML += html;
     }

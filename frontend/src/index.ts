@@ -7,10 +7,10 @@ canvas.height = document.documentElement.clientHeight;
 let ctx = canvas.getContext("2d");
 
 let game = setup(ctx, "hello12");
-setTimeout(() => { 
+document.getElementById('start').onclick = function (this, ev) {
+    console.log('starting game');
     start(game, ctx);
-}, 5000);
-
+};
 
 // initKeyboardControls((command: Command) => {
 //     if (command) {
