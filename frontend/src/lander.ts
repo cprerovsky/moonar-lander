@@ -9,6 +9,8 @@ const THRUST = 0.02;
 
 export class Lander {
     constructor(
+        public readonly token: string,
+        public readonly color: string,
         public readonly position: Vector,
         public readonly velocity: Vector,
         public readonly angle: number,
@@ -27,7 +29,7 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
     let landerGeometry = LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle));
     let fuel = burn(lander.fuel, lander.engine)
     return collide(
-        new Lander(nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel),
+        new Lander(lander.token, lander.color, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel),
         landerGeometry,
         terrainGeometry);
 }
@@ -58,6 +60,8 @@ function execute(commands: Commands, lander: Lander): Lander {
         fuel = 0;
     }
     return new Lander(
+        lander.token,
+        lander.color,
         lander.position,
         lander.velocity,
         lander.angle,

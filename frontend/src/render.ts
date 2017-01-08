@@ -43,10 +43,9 @@ let circles: number[] = [0];
 /**
  * render state to the canvas
  */
-export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: Store<Lander>, fgTerrain: Geometry, bgTerrain: Geometry, sky: ImageData, flagPosition: Vector) {
+export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: Lander[], fgTerrain: Geometry, bgTerrain: Geometry, sky: ImageData, flagPosition: Vector) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     let off = (focus.x - ctx.canvas.width / 2) / 4;
-    let landerColor = GREY;
     ctx.putImageData(sky,
         -off, 0,
         off, 0,
@@ -64,11 +63,14 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: St
     });
     if (circles[circles.length - 1] === 200) circles.push(0);
     draw(ctx, fgTerrain, focus, { stroke: GREY, fill: "black" });
-    Object.keys(landers).map((token) => {
-        let lander = landers[token];
-        draw(ctx, LANDER_GEOMETRY.map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: landerColor, fill: "black", closePath: true });
+    landers.map((lander) => {
+        draw(ctx, LANDER_GEOMETRY.map((v) => 
+            translate(v, lander.position, lander.angle)),
+            focus, { stroke: lander.color, fill: "black", closePath: true });
         if (lander.engine !== "off") {
-            draw(ctx, landerFlameGeometry(lander.engine).map((v) => translate(v, lander.position, lander.angle)), focus, { stroke: landerColor });
+            draw(ctx, landerFlameGeometry(lander.engine).map((v) =>
+                translate(v, lander.position, lander.angle)),
+                focus, { stroke: lander.color });
         }
     });
 }
