@@ -15,24 +15,33 @@ function Client(name) {
             console.log(name, msg.data);
             ws.send(JSON.stringify({ token: token, commands: [
                 { engine: "full", rotation: "cw" },
-                { rotation: "ccw", tick: 20 },
-                { rotation: "off", tick: 25 },
-                { engine: "off", tick: 150 },
-                { engine: "full", tick: 180 },
-                { engine: "off", tick: 250 },
-                { engine: "full", tick: 350 },
-                { engine: "off", tick: 500 },
-                { engine: "full", tick: 700 },
-                { engine: "off", tick: 1000 },
+                { rotation: "ccw", tick: 20 + rndoff() },
+                { rotation: "off", tick: 25 + rndoff() },
+                { engine: "off", tick: 150 + rndoff() },
+                { engine: "full", tick: 180 + rndoff() },
+                { engine: "off", rotation: "ccw", tick: 250 + rndoff() },
+                { rotation: "off", tick: 260 + rndoff() },
+                { engine: "full", tick: 350 + rndoff() },
+                { engine: "off", tick: 500 + rndoff() },
+                { engine: "full", tick: 700 + rndoff() },
+                { engine: "off", tick: 1000 + rndoff() },
             ] }));
         }
     };
     this.register = function () {
         ws.send(JSON.stringify({ token: token, name: name }));
     }
+    function rndoff() { return Math.floor(Math.random() * 5) };
 }
 
-var clients = [new Client("Michael")]; //, new Client("Norbert"), new Client("Florian")];
+var clients = [
+    new Client("Katharina"),
+    new Client("Michael"),
+    new Client("Norbert"),
+    new Client("Florian"),
+    new Client("Clemens"),
+    new Client("Klaus")
+];
 setTimeout(() => {
     clients.map((client) => client.register());
 }, 1000);
