@@ -42,3 +42,16 @@ body * {
     right: 10px;
     z-index: 1000;
 }
+
+#times {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1000;
+    color: dimgrey;
+}
+
+#times .tick, #times .render, #times .ui {
+    display: inline-block;
+    width: 100px;
+}

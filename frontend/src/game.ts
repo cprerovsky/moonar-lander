@@ -2,7 +2,7 @@ import { Commands, Command } from './commands';
 import { Lander, tick } from './lander';
 import * as seedrandom from 'seedrandom';
 import { terrain, flag } from './terrain';
-import { Vector, Geometry } from './geometry';
+import { Vector, Geometry, landerFlameGeometry } from './geometry';
 import { sky, render } from './render';
 import { uniqueColor } from './color';
 import UI from './ui';
@@ -44,15 +44,25 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
     state.phase = GamePhase.STARTED;
     send(state.ws, 'broadcast', '', { game: 'start' });
     let tickNo = 0;
+    let times: Times = {
+        tick : [],
+        render : [],
+        ui: []
+    };
+    let t1: number, t2: number, t3: number, t4: number, t5: number;
     setInterval(() => {
+        t1 = performance.now();
         state.landers = state.landers.map((lander) => {
             let cmds = state.commands.filter(
                 (c) => (!c.tick || c.tick <= tickNo) && c.token === lander.token);
             return tick(tickNo, cmds, lander, state.fgTerrain)
         });
-        if (tickNo % 5 === 0) UI.update(state.landers, state.flagPosition);
         state.commands = state.commands.filter((c) => c.tick > tickNo);
+        t2 = performance.now();
+        if (tickNo % 5 === 0) UI.update(state.landers, state.flagPosition);
+        t3 = performance.now();
         requestAnimationFrame((t) => {
+            t4 = performance.now();
             let focus = new Vector(
                 state.landers.reduce((p, c) => {
                     if (Math.abs(state.flagPosition.x - c.position.x) < Math.abs(state.flagPosition.x - p.position.x)) {
@@ -63,9 +73,23 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
                 }).position.x
                 , 0);
             render(ctx, focus, state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition);
+            t5 = performance.now();
         });
+        updateTimes(times, t1, t2, t3, t4, t5);
+        if (tickNo % 5 === 0) UI.updateTimes(times);
         tickNo++;
     }, 25);
+}
+
+function updateTimes(times: Times, t1: number, t2: number, t3: number, t4: number, t5: number) {
+    times.tick.push(t2 - t1);
+    times.ui.push(t3 - t2);
+    times.render.push(t5 - t4);
+    if (times.tick.length > TIMES_MAX) {
+        times.tick.shift();
+        times.ui.shift();
+        times.render.shift();
+    }
 }
 
 function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
@@ -135,4 +159,11 @@ function isCommandsMsg(data: any): data is CommandsMsg {
 
 interface HostConfirmMsg {
     host: boolean
+}
+
+export const TIMES_MAX = 100;
+export type Times = {
+    tick: number[]
+    render: number[]
+    ui: number[]
 }

@@ -31,7 +31,7 @@ function Client(name) {
     this.register = function () {
         ws.send(JSON.stringify({ token: token, name: name }));
     }
-    function rndoff() { return Math.floor(Math.random() * 5) };
+    function rndoff() { return Math.floor(Math.random() * 20) - 10 };
 }
 
 var clients = [
