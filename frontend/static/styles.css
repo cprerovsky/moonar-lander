@@ -1,12 +1,12 @@
 /* Monoid font from http://larsenwork.com/monoid/ */
 @font-face {
-  font-family: "Monoid";
-  src: url("Monoid-Regular.ttf") format("truetype");
+  font-family: "Silkscreen";
+  src: url("slkscr.ttf") format("truetype");
 }
 
 body * {
-    font-family: "Monoid";
-    font-size: 14px;
+    font-family: "Silkscreen";
+    font-size: 16px;
     line-height: 200%;
     margin: 0;
     padding: 0;
