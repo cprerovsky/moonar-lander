@@ -94,9 +94,9 @@ function toHostCommand(msg) {
  * http://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
  */
 function token(): string {
-    let token = "";
+    let token = "T"; // must start with letter
     let set = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (var i = 0; i < 20; i++) {
+    for (var i = 0; i < 19; i++) {
         token += set.charAt(Math.floor(Math.random() * set.length));
     }
     return token;

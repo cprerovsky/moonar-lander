@@ -36,11 +36,11 @@ function Client(name) {
 
 var clients = [
     new Client("Katharina"),
-    // new Client("Michael"),
-    // new Client("Norbert"),
-    // new Client("Florian"),
-    // new Client("Clemens"),
-    // new Client("Klaus")
+    new Client("Michael"),
+    new Client("Norbert"),
+    new Client("Florian"),
+    new Client("Clemens"),
+    new Client("Klaus")
 ];
 setTimeout(() => {
     clients.map((client) => client.register());

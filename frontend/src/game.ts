@@ -50,9 +50,8 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
                 (c) => (!c.tick || c.tick <= tickNo) && c.token === lander.token);
             return tick(tickNo, cmds, lander, state.fgTerrain)
         });
-        // if (tickNo % 5 === 0) updateUi(lander);
+        if (tickNo % 5 === 0) UI.update(state.landers, state.flagPosition);
         state.commands = state.commands.filter((c) => c.tick > tickNo);
-        tickNo++;
         requestAnimationFrame((t) => {
             let focus = new Vector(
                 state.landers.reduce((p, c) => {
@@ -65,6 +64,7 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
                 , 0);
             render(ctx, focus, state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition);
         });
+        tickNo++;
     }, 25);
 }
 
