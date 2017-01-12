@@ -47,22 +47,24 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
     let times: Times = {
         tick : [],
         render : [],
-        ui: []
+        ui: [],
+        fps: []
     };
-    let t1: number, t2: number, t3: number, t4: number, t5: number;
+    let t: number[] = [];
     setInterval(() => {
-        t1 = performance.now();
+        t[0] = performance.now();
         state.landers = state.landers.map((lander) => {
             let cmds = state.commands.filter(
                 (c) => (!c.tick || c.tick <= tickNo) && c.token === lander.token);
             return tick(tickNo, cmds, lander, state.fgTerrain)
         });
         state.commands = state.commands.filter((c) => c.tick > tickNo);
-        t2 = performance.now();
+        t[1] = performance.now();
         if (tickNo % 5 === 0) UI.update(state.landers, state.flagPosition);
-        t3 = performance.now();
-        requestAnimationFrame((t) => {
-            t4 = performance.now();
+        t[2] = performance.now();
+        requestAnimationFrame((ts) => {
+            t[5] = ts - t[3] || 0;
+            t[3] = performance.now();
             let focus = new Vector(
                 state.landers.reduce((p, c) => {
                     if (Math.abs(state.flagPosition.x - c.position.x) < Math.abs(state.flagPosition.x - p.position.x)) {
@@ -73,22 +75,21 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
                 }).position.x
                 , 0);
             render(ctx, focus, state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition);
-            t5 = performance.now();
+            t[4] = performance.now();
         });
-        updateTimes(times, t1, t2, t3, t4, t5);
+        updateTimes(times, t);
         if (tickNo % 5 === 0) UI.updateTimes(times);
         tickNo++;
     }, 25);
 }
 
-function updateTimes(times: Times, t1: number, t2: number, t3: number, t4: number, t5: number) {
-    times.tick.push(t2 - t1);
-    times.ui.push(t3 - t2);
-    times.render.push(t5 - t4);
+function updateTimes(times: Times, t: number[]) {
+    times.tick.push(t[1] - t[0]);
+    times.ui.push(t[2] - t[1]);
+    times.render.push(t[4] - t[3]);
+    times.fps.push(1000 / t[5]);
     if (times.tick.length > TIMES_MAX) {
-        times.tick.shift();
-        times.ui.shift();
-        times.render.shift();
+        Object.keys(times).map((k) => times[k].shift());
     }
 }
 
@@ -166,4 +167,5 @@ export type Times = {
     tick: number[]
     render: number[]
     ui: number[]
+    fps: number[]
 }

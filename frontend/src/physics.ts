@@ -3,9 +3,9 @@ import { EngineState, RotationDirection } from './lander';
 import { isOverlap } from './geometry';
 import { Lander } from './lander';
 
-const MAX_ROTATION_SPEED = 0.1
-const ROTATION_ACCELERATION = 0.0005
-const ROTATION_DAMPING = 0.00005
+const MAX_ROTATION_SPEED = 0.2
+const ROTATION_ACCELERATION = 0.0015
+const ROTATION_DAMPING = 0.0001
 const FRICTION = 0.3
 const RESTITUTION = 0.7
 const GRAVITY = 0.01
