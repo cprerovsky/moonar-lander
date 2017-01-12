@@ -30,7 +30,7 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
     let nposition = position(add(lander.position, lander.velocity));
     let nvelocity = accelerate(lander.velocity, THRUST, nangle, lander.engine);
     let landerGeometry = LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle));
-    let fuel = burn(lander.fuel, lander.engine)
+    let fuel = burn(lander.fuel, lander.engine);
     return collide(
         new Lander(lander.token, lander.color, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel),
         landerGeometry,
@@ -40,8 +40,17 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
 /**
  * check whether a lander is still alive
  */
-function isAlive(lander: Lander): boolean {
+export function isAlive(lander: Lander): boolean {
     return lander.fuel > 0;
+}
+
+/**
+ * check if the lander has landed
+ */
+export function isLanded(lander: Lander): boolean {
+    return Math.abs(lander.angle) < 0.785398 &&
+        Math.abs(lander.velocity.x) < 0.1 &&
+        Math.abs(lander.velocity.y) < 0.1;
 }
 
 /**

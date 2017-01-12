@@ -22,6 +22,9 @@ export class GameState {
         public readonly ws?: WebSocket) { }
 }
 
+/**
+ * setup a new game
+ */
 export function setup(ctx: CanvasRenderingContext2D, seed: string) {
     let rng = seedrandom(seed);
     let ws = new WebSocket("ws://localhost:4711");
@@ -40,10 +43,12 @@ export function setup(ctx: CanvasRenderingContext2D, seed: string) {
     return state;
 }
 
+/**
+ * start a game and maintain the game loop
+ */
 export function start(state: GameState, ctx: CanvasRenderingContext2D) {
     state.phase = GamePhase.STARTED;
     send(state.ws, 'broadcast', '', { game: 'start' });
-    let tickNo = 0;
     let times: Times = {
         tick : [],
         render : [],
@@ -51,7 +56,7 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
         fps: []
     };
     let t: number[] = [];
-    setInterval(() => {
+    let loop = function(tickNo: number) {
         t[0] = performance.now();
         state.landers = state.landers.map((lander) => {
             let cmds = state.commands.filter(
@@ -79,8 +84,9 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
         });
         updateTimes(times, t);
         if (tickNo % 5 === 0) UI.updateTimes(times);
-        tickNo++;
-    }, 25);
+        setTimeout(() => loop(++tickNo), 25);
+    };
+    loop(0);
 }
 
 function updateTimes(times: Times, t: number[]) {
