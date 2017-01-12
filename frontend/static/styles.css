@@ -4,6 +4,10 @@
   src: url("slkscr.ttf") format("truetype");
 }
 
+body {
+    overflow: hidden;
+}
+
 body * {
     font-family: "Silkscreen";
     font-size: 16px;

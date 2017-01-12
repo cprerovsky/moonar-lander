@@ -20,6 +20,9 @@ export class Lander {
         public readonly fuel: number) { }
 }
 
+/**
+ * let the lander run through a full tick; update values and apply physics
+ */
 export function tick(no: number, commands: Commands, lander: Lander, terrainGeometry: Geometry): Lander {
     lander = execute(commands, lander);
     let nrotationSpeed = rotate(lander.rotation, lander.rotationSpeed);
@@ -34,6 +37,16 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
         terrainGeometry);
 }
 
+/**
+ * check whether a lander is still alive
+ */
+function isAlive(lander: Lander): boolean {
+    return lander.fuel > 0;
+}
+
+/**
+ * burn fuel from the tank
+ */
 function burn(fuel: number, engine: EngineState) {
     if (engine === "half") {
         return fuel - 0.25;
@@ -44,6 +57,9 @@ function burn(fuel: number, engine: EngineState) {
     }
 }
 
+/**
+ * execute commands for a lander
+ */
 function execute(commands: Commands, lander: Lander): Lander {
     let engine = lander.engine;
     let rotation = lander.rotation;
