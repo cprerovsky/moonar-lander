@@ -16,7 +16,19 @@ const GRAVITY = 0.01
 export function collide(lander: Lander, landerGeometry: Geometry, groundGeometry: Geometry): Lander {
     let collisions = isOverlap(landerGeometry, groundGeometry);
     if (collisions.length === 0) {
-        return lander;
+        return new Lander(
+            lander.token,
+            lander.color,
+            lander.position,
+            lander.velocity,
+            lander.angle,
+            lander.rotation,
+            lander.rotationSpeed,
+            lander.engine,
+            lander.fuel,
+            lander.crashed,
+            false
+        );;
     } else {
         let wallVector = subtract(collisions[0].segmentEnd, collisions[0].segmentStart)
         let nvelocity = bounce(lander.velocity, wallVector);
@@ -41,7 +53,8 @@ export function collide(lander: Lander, landerGeometry: Geometry, groundGeometry
             nrotationSpeed,
             lander.engine,
             lander.fuel,
-            lander.crashed || length(lander.velocity) > 1
+            lander.crashed || length(lander.velocity) > 1,
+            true
         );
     }
 }

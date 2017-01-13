@@ -17,7 +17,6 @@
                 token = data.token;
             } else if (data.game === "start") {
                 console.log(name, msg.data);
-                debugger;
                 if (!first) {
                     ws.send(JSON.stringify({
                         token: token, commands: [

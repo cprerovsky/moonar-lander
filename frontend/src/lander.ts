@@ -18,7 +18,8 @@ export class Lander {
         public readonly rotationSpeed: number,
         public readonly engine: EngineState,
         public readonly fuel: number,
-        public readonly crashed: boolean) { }
+        public readonly crashed: boolean,
+        public readonly touchdown: boolean) { }
 }
 
 /**
@@ -33,23 +34,17 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
     let landerGeometry = LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle));
     let fuel = burn(lander.fuel, lander.engine);
     return collide(
-        new Lander(lander.token, lander.color, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel, lander.crashed),
+        new Lander(lander.token, lander.color, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel, lander.crashed, lander.touchdown),
         landerGeometry,
         terrainGeometry);
 }
 
 /**
- * check whether a lander is still alive
- */
-export function isAlive(lander: Lander): boolean {
-    return lander.fuel > 0;
-}
-
-/**
  * check if the lander has landed
  */
-export function isLanded(lander: Lander): boolean {
-    return Math.abs(lander.angle) < 0.785398 &&
+export function landed(lander: Lander): boolean {
+    return lander.touchdown &&
+        Math.abs(lander.angle) < 0.785398 &&
         Math.abs(lander.velocity.x) < 0.1 &&
         Math.abs(lander.velocity.y) < 0.1;
 }
@@ -96,5 +91,6 @@ function execute(commands: Commands, lander: Lander): Lander {
         lander.rotationSpeed,
         engine,
         fuel,
-        lander.crashed);
+        lander.crashed,
+        lander.touchdown);
 }

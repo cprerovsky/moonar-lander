@@ -1,5 +1,5 @@
 import { Commands, Command } from './commands';
-import { Lander, tick } from './lander';
+import { Lander, tick, landed } from './lander';
 import * as seedrandom from 'seedrandom';
 import { terrain, flag } from './terrain';
 import { Vector, Geometry, landerFlameGeometry } from './geometry';
@@ -64,8 +64,32 @@ function loop(tickNo: number, state: GameState, ctx: CanvasRenderingContext2D) {
     state.commands = state.commands.filter((c) => c.tick > tickNo);
     UI.update(tickNo, state.landers, state.flagPosition);
     requestAnimationFrame(() => render(ctx, calculateFocus(state.flagPosition, state.landers), state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition));
-    setTimeout(() => loop(++tickNo, state, ctx), 25);
+    if (isGameOver(state.landers)) {
+        teardown(state);
+    } else {
+        setTimeout(() => loop(++tickNo, state, ctx), 25);
+    }
 };
+
+function teardown(state: GameState) {
+    send(state.ws, 'broadcast', '', { game: 'over' });
+    console.log('GAME OVER');
+}
+
+/**
+ * check whether the game is over
+ */
+function isGameOver(landers: Lander[]): boolean {
+    return landers.filter(lander => {
+        if (lander.crashed
+            || lander.fuel === 0
+            || landed(lander)) {
+            return true;
+        } else {
+            return false;
+        }
+    }).length > 0;
+}
 
 /**
  * calculate the camera focus point
@@ -99,6 +123,7 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
             0,
             "off",
             1000,
+            false,
             false));
         UI.addPlayer(data.token, data.name, data.color);
         send(state.ws, 'broadcast', '', {
