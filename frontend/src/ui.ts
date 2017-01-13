@@ -24,18 +24,6 @@ module UI {
         });
     }
 
-    export function updateTimes(times: Times) {
-        let r = (a, b) => a + b / TIMES_MAX;
-        $(`#times .tick`, formatMs(times.tick.reduce(r)));
-        $(`#times .render`, formatMs(times.render.reduce(r)));
-        $(`#times .ui`, formatMs(times.ui.reduce(r)));
-        $(`#times .fps`, formatMs(times.fps.reduce(r)));
-    }
-
-    function formatMs(n: number): string {
-        return round(n, 3) + 'ms';
-    }
-
     function round(n: number, p: number): number {
         let places = Math.pow(10, p);
         return (Math.floor(n * places) / places);

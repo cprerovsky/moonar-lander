@@ -49,27 +49,15 @@ export function setup(ctx: CanvasRenderingContext2D, seed: string) {
 export function start(state: GameState, ctx: CanvasRenderingContext2D) {
     state.phase = GamePhase.STARTED;
     send(state.ws, 'broadcast', '', { game: 'start' });
-    let times: Times = {
-        tick : [],
-        render : [],
-        ui: [],
-        fps: []
-    };
-    let t: number[] = [];
     let loop = function(tickNo: number) {
-        t[0] = performance.now();
         state.landers = state.landers.map((lander) => {
             let cmds = state.commands.filter(
                 (c) => (!c.tick || c.tick <= tickNo) && c.token === lander.token);
             return tick(tickNo, cmds, lander, state.fgTerrain)
         });
         state.commands = state.commands.filter((c) => c.tick > tickNo);
-        t[1] = performance.now();
         if (tickNo % 5 === 0) UI.update(state.landers, state.flagPosition);
-        t[2] = performance.now();
         requestAnimationFrame((ts) => {
-            t[5] = ts - t[3] || 0;
-            t[3] = performance.now();
             let focus = new Vector(
                 state.landers.reduce((p, c) => {
                     if (Math.abs(state.flagPosition.x - c.position.x) < Math.abs(state.flagPosition.x - p.position.x)) {
@@ -80,10 +68,7 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
                 }).position.x
                 , 0);
             render(ctx, focus, state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition);
-            t[4] = performance.now();
         });
-        updateTimes(times, t);
-        if (tickNo % 5 === 0) UI.updateTimes(times);
         setTimeout(() => loop(++tickNo), 25);
     };
     loop(0);
