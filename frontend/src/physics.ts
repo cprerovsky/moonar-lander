@@ -31,7 +31,18 @@ export function collide(lander: Lander, landerGeometry: Geometry, groundGeometry
         } else {
             nrotationSpeed += 0.03 * length(lander.velocity);
         }
-        return new Lander(lander.token, lander.color, npostition, nvelocity, lander.angle, lander.rotation, nrotationSpeed, lander.engine, lander.fuel);
+        return new Lander(
+            lander.token,
+            lander.color,
+            npostition,
+            nvelocity,
+            lander.angle,
+            lander.rotation,
+            nrotationSpeed,
+            lander.engine,
+            lander.fuel,
+            lander.crashed || length(lander.velocity) > 1
+        );
     }
 }
 

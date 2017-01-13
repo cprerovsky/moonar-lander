@@ -17,7 +17,8 @@ export class Lander {
         public readonly rotation: RotationDirection,
         public readonly rotationSpeed: number,
         public readonly engine: EngineState,
-        public readonly fuel: number) { }
+        public readonly fuel: number,
+        public readonly crashed: boolean) { }
 }
 
 /**
@@ -32,7 +33,7 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
     let landerGeometry = LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle));
     let fuel = burn(lander.fuel, lander.engine);
     return collide(
-        new Lander(lander.token, lander.color, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel),
+        new Lander(lander.token, lander.color, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel, lander.crashed),
         landerGeometry,
         terrainGeometry);
 }
@@ -70,6 +71,7 @@ function burn(fuel: number, engine: EngineState) {
  * execute commands for a lander
  */
 function execute(commands: Commands, lander: Lander): Lander {
+    if (lander.crashed) return lander;
     let engine = lander.engine;
     let rotation = lander.rotation;
     let fuel = lander.fuel;
@@ -93,5 +95,6 @@ function execute(commands: Commands, lander: Lander): Lander {
         rotation,
         lander.rotationSpeed,
         engine,
-        fuel);
+        fuel,
+        lander.crashed);
 }

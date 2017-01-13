@@ -1,6 +1,5 @@
 import { Lander } from './lander';
 import { length, Vector, subtract } from './geometry';
-import { Times, TIMES_MAX } from './game';
 
 module UI {
     export function addPlayer(token: string, name: string, color: string) {

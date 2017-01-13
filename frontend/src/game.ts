@@ -74,16 +74,6 @@ export function start(state: GameState, ctx: CanvasRenderingContext2D) {
     loop(0);
 }
 
-function updateTimes(times: Times, t: number[]) {
-    times.tick.push(t[1] - t[0]);
-    times.ui.push(t[2] - t[1]);
-    times.render.push(t[4] - t[3]);
-    times.fps.push(1000 / t[5]);
-    if (times.tick.length > TIMES_MAX) {
-        Object.keys(times).map((k) => times[k].shift());
-    }
-}
-
 function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
     let data = JSON.parse(msg.data);
     if (state.phase === GamePhase.INITIALIZING && data.host === true) {
@@ -100,7 +90,8 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
             "off",
             0,
             "off",
-            1000));
+            1000,
+            false));
         UI.addPlayer(data.token, data.name, data.color);
         send(state.ws, 'broadcast', '', {
             terrain: state.fgTerrain,
@@ -151,12 +142,4 @@ function isCommandsMsg(data: any): data is CommandsMsg {
 
 interface HostConfirmMsg {
     host: boolean
-}
-
-export const TIMES_MAX = 100;
-export type Times = {
-    tick: number[]
-    render: number[]
-    ui: number[]
-    fps: number[]
 }
