@@ -13,7 +13,11 @@ module UI {
         $('#ui').innerHTML += html;
     }
 
-    export function update(landers: Lander[], flagPosition: Vector) {
+    /**
+     * update the ui
+     */
+    export function update(tick: number, landers: Lander[], flagPosition: Vector) {
+        if (tick % 5 === 0) return;
         landers.map((l) => {
             $(`#${l.token} .dist`, Math.floor(length(subtract(flagPosition, l.position))));
             $(`#${l.token} .fuel`, Math.floor(l.fuel));

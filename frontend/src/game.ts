@@ -49,29 +49,37 @@ export function setup(ctx: CanvasRenderingContext2D, seed: string) {
 export function start(state: GameState, ctx: CanvasRenderingContext2D) {
     state.phase = GamePhase.STARTED;
     send(state.ws, 'broadcast', '', { game: 'start' });
-    let loop = function(tickNo: number) {
-        state.landers = state.landers.map((lander) => {
-            let cmds = state.commands.filter(
-                (c) => (!c.tick || c.tick <= tickNo) && c.token === lander.token);
-            return tick(tickNo, cmds, lander, state.fgTerrain)
-        });
-        state.commands = state.commands.filter((c) => c.tick > tickNo);
-        if (tickNo % 5 === 0) UI.update(state.landers, state.flagPosition);
-        requestAnimationFrame((ts) => {
-            let focus = new Vector(
-                state.landers.reduce((p, c) => {
-                    if (Math.abs(state.flagPosition.x - c.position.x) < Math.abs(state.flagPosition.x - p.position.x)) {
-                        return c;
-                    } else {
-                        return p;
-                    }
-                }).position.x
-                , 0);
-            render(ctx, focus, state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition);
-        });
-        setTimeout(() => loop(++tickNo), 25);
-    };
-    loop(0);
+    loop(0, state, ctx);
+}
+
+/**
+ * game loop
+ */
+function loop(tickNo: number, state: GameState, ctx: CanvasRenderingContext2D) {
+    state.landers = state.landers.map((lander) => {
+        let cmds = state.commands.filter(
+            (c) => (!c.tick || c.tick <= tickNo) && c.token === lander.token);
+        return tick(tickNo, cmds, lander, state.fgTerrain)
+    });
+    state.commands = state.commands.filter((c) => c.tick > tickNo);
+    UI.update(tickNo, state.landers, state.flagPosition);
+    requestAnimationFrame(() => render(ctx, calculateFocus(state.flagPosition, state.landers), state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition));
+    setTimeout(() => loop(++tickNo, state, ctx), 25);
+};
+
+/**
+ * calculate the camera focus point
+ */
+function calculateFocus(flag: Vector, landers: Lander[]): Vector {
+    return new Vector(
+        landers.reduce((p, c) => {
+            if (Math.abs(flag.x - c.position.x) < Math.abs(flag.x - p.position.x)) {
+                return c;
+            } else {
+                return p;
+            }
+        }).position.x
+        , 0);
 }
 
 function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
