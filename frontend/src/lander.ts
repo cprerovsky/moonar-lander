@@ -44,6 +44,8 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
  */
 export function landed(lander: Lander): boolean {
     return lander.touchdown &&
+        lander.engine === 'off' &&
+        lander.rotation === 'off' &&
         Math.abs(lander.angle) < 0.785398 &&
         Math.abs(lander.velocity.x) < 0.1 &&
         Math.abs(lander.velocity.y) < 0.1;

@@ -27,14 +27,23 @@ module UI {
         });
     }
 
+    export function reset() {
+        $('#ui').innerHTML = '';
+    }
+
+    export type Menu = 'gameover';
+
+    export function show(menu: Menu) {
+        $(`#${menu}`).classList.remove('hidden');
+    }
+
+    export function hide(menu: Menu) {
+        $(`#${menu}`).classList.add('hidden');
+    }
+
     function round(n: number, p: number): number {
         let places = Math.pow(10, p);
         return (Math.floor(n * places) / places);
-    }
-
-
-    export function reset() {
-        $('#ui').innerHTML = '';
     }
 }
 

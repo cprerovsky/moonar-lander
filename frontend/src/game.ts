@@ -7,12 +7,15 @@ import { sky, render } from './render';
 import { uniqueColor } from './color';
 import UI from './ui';
 
-
+/**
+ * the game state holds all game information
+ */
 export class GameState {
     public players: PlayerMsg[] = []
     public landers: Lander[] = []
     public commands: Commands = []
     public phase: GamePhase = GamePhase.INITIALIZING
+    public over: boolean = false
     constructor(public readonly ctx: CanvasRenderingContext2D,
         public readonly rng: seedrandom.prng,
         public readonly fgTerrain: Geometry,
@@ -64,11 +67,12 @@ function loop(tickNo: number, state: GameState, ctx: CanvasRenderingContext2D) {
     state.commands = state.commands.filter((c) => c.tick > tickNo);
     UI.update(tickNo, state.landers, state.flagPosition);
     requestAnimationFrame(() => render(ctx, calculateFocus(state.flagPosition, state.landers), state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition));
-    if (isGameOver(state.landers)) {
-        teardown(state);
-    } else {
-        setTimeout(() => loop(++tickNo, state, ctx), 25);
+    if (!state.over && isGameOver(state.landers)) {
+        state.over = true;
+        UI.show('gameover');
+        // teardown(state);
     }
+    setTimeout(() => loop(++tickNo, state, ctx), 25);
 };
 
 function teardown(state: GameState) {
