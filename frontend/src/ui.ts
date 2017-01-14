@@ -1,5 +1,6 @@
 import { Lander } from './lander';
 import { length, Vector, subtract } from './geometry';
+import { GameState, Points, PlayerMsg } from './game';
 
 module UI {
     export function addPlayer(token: string, name: string, color: string) {
@@ -27,18 +28,30 @@ module UI {
         });
     }
 
+    export function gameover(players: PlayerMsg[], points: Points) {
+        let html = players.sort((a, b) => {
+            return points[b.token] - points[a.token];
+        }).reduce((html, player) => {
+            return html +
+                `<li><span style="color: ${player.color}">${player.name}</span>
+                    ${points[player.token]}</li>`;
+        }, '');
+        $('#gameover .result', html);
+        show('#gameover');
+    }
+
     export function reset() {
         $('#ui').innerHTML = '';
     }
 
-    export type Menu = 'gameover';
+    export type Menu = '#gameover';
 
     export function show(menu: Menu) {
-        $(`#${menu}`).classList.remove('hidden');
+        $(`${menu}`).classList.remove('hidden');
     }
 
     export function hide(menu: Menu) {
-        $(`#${menu}`).classList.add('hidden');
+        $(`${menu}`).classList.add('hidden');
     }
 
     function round(n: number, p: number): number {

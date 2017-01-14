@@ -2,7 +2,7 @@ import { Commands, Command } from './commands';
 import { Lander, tick, landed } from './lander';
 import * as seedrandom from 'seedrandom';
 import { terrain, flag } from './terrain';
-import { Vector, Geometry, landerFlameGeometry } from './geometry';
+import { Vector, Geometry, landerFlameGeometry, length, subtract } from './geometry';
 import { sky, render } from './render';
 import { uniqueColor } from './color';
 import UI from './ui';
@@ -68,8 +68,7 @@ function loop(tickNo: number, state: GameState, ctx: CanvasRenderingContext2D) {
     requestAnimationFrame(() => render(ctx, calculateFocus(state.flagPosition, state.landers), state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition));
     if (state.phase === GamePhase.STARTED && isGameOver(state.landers)) {
         state.phase = GamePhase.OVER;
-        UI.show('gameover');
-        // teardown(state);
+        UI.gameover(state.players, points(state.landers, state.flagPosition));
     }
     setTimeout(() => loop(++tickNo, state, ctx), 25);
 };
@@ -143,6 +142,22 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
     }
 }
 
+/**
+ * calculate points for each lander
+ */
+function points(landers: Lander[], flag: Vector): Points {
+    return landers.reduce((p, l) => {
+        let points = 5000 - length(subtract(l.position, flag));
+        points += Math.floor(l.fuel);
+        if (l.crashed) {
+            points = points / 10;
+        }
+        if (points < 0) points = 0;
+        p[l.token] = Math.round(points);
+        return p;
+    }, {});
+}
+
 function send(ws: WebSocket, cmd: 'broadcast' | 'to' | 'disconnect', cval: string, data: any) {
     ws.send(`${cmd}:${cval}
 ${JSON.stringify(data)}`);
@@ -156,7 +171,7 @@ enum GamePhase {
     OVER
 }
 
-interface PlayerMsg {
+export interface PlayerMsg {
     token: string
     name: string
     color?: string
@@ -180,3 +195,5 @@ function isCommandsMsg(data: any): data is CommandsMsg {
 interface HostConfirmMsg {
     host: boolean
 }
+
+export interface Points { [key: string]: number }
