@@ -15,7 +15,6 @@ export class GameState {
     public landers: Lander[] = []
     public commands: Commands = []
     public phase: GamePhase = GamePhase.INITIALIZING
-    public over: boolean = false
     constructor(public readonly ctx: CanvasRenderingContext2D,
         public readonly rng: seedrandom.prng,
         public readonly fgTerrain: Geometry,
@@ -153,7 +152,8 @@ ${JSON.stringify(data)}`);
 enum GamePhase {
     INITIALIZING,
     HOST_CONFIRMED,
-    STARTED
+    STARTED,
+    OVER
 }
 
 interface PlayerMsg {
