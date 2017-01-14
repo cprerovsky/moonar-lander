@@ -66,8 +66,8 @@ function loop(tickNo: number, state: GameState, ctx: CanvasRenderingContext2D) {
     state.commands = state.commands.filter((c) => c.tick > tickNo);
     UI.update(tickNo, state.landers, state.flagPosition);
     requestAnimationFrame(() => render(ctx, calculateFocus(state.flagPosition, state.landers), state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition));
-    if (!state.over && isGameOver(state.landers)) {
-        state.over = true;
+    if (state.phase === GamePhase.STARTED && isGameOver(state.landers)) {
+        state.phase = GamePhase.OVER;
         UI.show('gameover');
         // teardown(state);
     }
@@ -87,11 +87,11 @@ function isGameOver(landers: Lander[]): boolean {
         if (lander.crashed
             || lander.fuel === 0
             || landed(lander)) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
-    }).length > 0;
+    }).length === 0;
 }
 
 /**
