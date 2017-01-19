@@ -98,10 +98,6 @@ export function accelerate(velocity: Vector, thrust: number, angle: number, engi
     return new Vector(vx, vy);
 }
 
-export function position(newPos?: Vector): Vector {
-    return newPos.x > 5 ? newPos : new Vector(5, newPos.y);
-}
-
 /**
  * calculate resulting speed vector when bouncing off a wall
  */

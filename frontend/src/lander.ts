@@ -1,5 +1,5 @@
 import { Vector, add, LANDER_GEOMETRY, translate, Geometry } from './geometry';
-import { rotate, angle, position, accelerate, collide } from './physics';
+import { rotate, angle, accelerate, collide } from './physics';
 import { Commands } from './commands';
 
 export type EngineState = "off" | "half" | "full";
@@ -29,7 +29,7 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
     lander = execute(commands, lander);
     let nrotationSpeed = rotate(lander.rotation, lander.rotationSpeed);
     let nangle = angle(lander.angle, nrotationSpeed);
-    let nposition = position(add(lander.position, lander.velocity));
+    let nposition = add(lander.position, lander.velocity);
     let nvelocity = accelerate(lander.velocity, THRUST, nangle, lander.engine);
     let landerGeometry = LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle));
     let fuel = burn(lander.fuel, lander.engine);
