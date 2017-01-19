@@ -55,13 +55,16 @@ export function landed(lander: Lander): boolean {
  * burn fuel from the tank
  */
 function burn(fuel: number, engine: EngineState) {
+    let f = fuel;
     if (engine === "half") {
-        return fuel - 0.25;
+        f -= 0.45;
     } else if (engine === "full") {
-        return fuel - 0.5;
-    } else {
-        return fuel;
+        f -= 1;
     }
+    if (f <= 0) {
+        f = 0;
+    }
+    return f;
 }
 
 /**

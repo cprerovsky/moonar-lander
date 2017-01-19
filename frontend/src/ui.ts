@@ -92,7 +92,7 @@ module UI {
         if (tick % 5 === 0) return;
         landers.map((l) => {
             $(`#${l.token} .dist`, Math.floor(length(subtract(flagPosition, l.position))));
-            $(`#${l.token} .fuel`, Math.floor(l.fuel));
+            $(`#${l.token} .fuel`, round(l.fuel, 0));
             $(`#${l.token} .speed`, `${round(l.velocity.x, 3)}, ${round(l.velocity.y, 3)}`);
             $(`#${l.token} .angle`, round(l.angle, 3));
             $(`#${l.token} .on`, l.engine !== 'off' || l.rotation !== 'off' ? '&squf;' : '&nbsp;');
