@@ -125,7 +125,7 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
         state.landers = state.landers.concat(new Lander(
             data.token,
             data.color,
-            new Vector(1000, 300),
+            new Vector(1000, 600),
             new Vector(0, 0),
             0,
             "off",
