@@ -13,8 +13,8 @@ interface DrawOptions {
     parallax?: number
 }
 
-const GREY = "rgb(240,240,240)";
-const MED_GREY = "rgb(150,150,150)";
+const GREY = "rgb(160,160,160)";
+const MED_GREY = "rgb(120,120,120)";
 const DARK_GREY = "rgb(50,50,50)";
 
 /**

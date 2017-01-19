@@ -1,19 +1,32 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Moonar Lander</title>
-    <link rel="stylesheet" href="styles.css"></link>
-  </head>
-  <body>
-    <ol id="ui">
-    </ol>
-    <div id="gameover" class="menu hidden">
-      <h2>game over</h2>
-      <ul class="result"></ul>
-    </div>
-    <canvas id="game"></canvas>
-    <button id="start">Start</button>
-    <script src="/build/app.js"></script>
-    <script src="client.js"></script>
-  </body>
+<head>
+  <title>Moonar Lander</title>
+  <link rel="stylesheet" href="styles.css"></link>
+</head>
+
+<body>
+  <!-- UI -->
+  <ol id="ui">
+  </ol>
+  <!-- MAIN menu -->
+  <div id="main" class="menu">
+    <h2>moonar lander</h2>
+    <p>
+      seed <input id="seed" type="text" value="hello1"> <button id="open">open game</button>
+    </p>
+    <p class="waiting">
+      waiting for clients...<br>
+      <button id="start">start game</button> <button id="cancel">cancel</button>
+    </p>
+  </div>
+  <!-- GAMEOVER menu -->
+  <div id="gameover" class="menu hidden">
+    <h2>game over</h2>
+    <ol class="results"></ol>
+  </div>
+  <!-- canvas & scripts -->
+  <canvas id="game"></canvas>
+  <script src="/build/app.js"></script>
+</body>
 </html>

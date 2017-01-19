@@ -3,6 +3,48 @@ import { length, Vector, subtract } from './geometry';
 import { GameState, Points, PlayerMsg } from './game';
 
 module UI {
+    /**
+     * initialize ui bindings
+     */
+    export function init(openCB: (seed: string) => void, startCB: Function, cancelCB: Function) {
+        // open game
+        $('#main #open').addEventListener('click', () => {
+            $('#main').classList.add('state-open');
+            $('#main #seed').setAttribute('readonly', 'true');
+            openCB($('#main #seed').getAttribute('value'));
+        });
+        // start game
+        $('#main #start').addEventListener('click', () => {
+            $('#main').classList.add('hidden');
+            $('#main').classList.remove('state-open');
+            $('#main #seed').removeAttribute('readonly');
+            startCB();
+        });
+        // cancel starting game
+        $('#main #cancel').addEventListener('click', () => {
+            $('#main').classList.remove('state-open');
+            $('#main #seed').removeAttribute('readonly');
+            cancelCB();
+        });
+        // seed input scaling
+        function scaleSeedInput () {
+            let w = ($('#main #seed') as any).value.length * 12;
+            if (w > 400) w = 400;
+            $('#main #seed').style.width = w + 'px';
+        }
+        $('#main #seed').addEventListener('keyup', scaleSeedInput);
+        scaleSeedInput();
+        
+    }
+
+    /**
+     * handles the start setup menu
+     */
+    export function setup() {
+
+    }
+
+
     export function addPlayer(token: string, name: string, color: string) {
         let html = `<li id="${token}" class="player">
     <p class="pilot" style="color: ${color}">${name} <span class="on"></span></p>
@@ -36,7 +78,7 @@ module UI {
                 `<li><span style="color: ${player.color}">${player.name}</span>
                     ${points[player.token]}</li>`;
         }, '');
-        $('#gameover .result', html);
+        $('#gameover .results', html);
         show('#gameover');
     }
 

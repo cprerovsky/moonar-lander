@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    var isFirst = true;
+    var isFirst = false;
     function Client(name) {
         var name = name;
         var token = '';

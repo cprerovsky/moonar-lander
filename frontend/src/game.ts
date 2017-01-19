@@ -24,40 +24,51 @@ export class GameState {
         public readonly ws?: WebSocket) { }
 }
 
-/**
- * setup a new game
- */
-export function setup(ctx: CanvasRenderingContext2D, seed: string) {
-    let rng = seedrandom(seed);
-    let ws = new WebSocket("ws://localhost:4711");
-    ws.onmessage = function (this: WebSocket, msg: MessageEvent) {
-        handleMessage(this, msg, state);
-    };
-    ws.onclose = function (this: WebSocket, ev: CloseEvent) {
-        console.log('WebSocket connection closed: ' + ev.reason);
-    };
-    ws.onerror = console.error;
-    let fgTerrain = terrain(10000, 350, rng, 9, 4);
-    let bgTerrain = terrain(2500, 350, rng, 8, 3).map((p) => new Vector(p.x * 2, p.y + 50));
-    let skybox = sky(3500, 800);
-    let flagPosition = flag(fgTerrain, rng);
-    let state = new GameState(ctx, rng, fgTerrain, bgTerrain, flagPosition, skybox, ws);
-    return state;
-}
+module GAME {
+    /**
+     * setup a new game
+     */
+    export function setup(ctx: CanvasRenderingContext2D, seed: string) {
+        let rng = seedrandom(seed);
+        let ws = new WebSocket("ws://localhost:4711");
+        ws.onopen = () => {
+            console.log('WebSocket connection established');
+        };
+        ws.onmessage = function (this: WebSocket, msg: MessageEvent) {
+            handleMessage(this, msg, state);
+        };
+        ws.onclose = function (this: WebSocket, ev: CloseEvent) {
+            console.log('WebSocket connection closed', ev);
+        };
+        ws.onerror = console.error;
+        let fgTerrain = terrain(10000, 350, rng, 9, 4);
+        let bgTerrain = terrain(2500, 350, rng, 8, 3).map((p) => new Vector(p.x * 2, p.y + 50));
+        let skybox = sky(3500, 800);
+        let flagPosition = flag(fgTerrain, rng);
+        let state = new GameState(ctx, rng, fgTerrain, bgTerrain, flagPosition, skybox, ws);
+        return state;
+    }
 
-/**
- * start a game and maintain the game loop
- */
-export function start(state: GameState, ctx: CanvasRenderingContext2D) {
-    state.phase = GamePhase.STARTED;
-    send(state.ws, 'broadcast', '', { game: 'start' });
-    loop(0, state, ctx);
+    /**
+     * start a game and maintain the game loop
+     */
+    export function start(state: GameState) {
+        state.phase = GamePhase.STARTED;
+        send(state.ws, 'broadcast', '', { game: 'start' });
+        loop(0, state);
+    }
+
+    export function teardown(state: GameState) {
+        send(state.ws, 'broadcast', '', { game: 'over' });
+        send(state.ws, 'disconnect', '*');
+    }
 }
+export default GAME;
 
 /**
  * game loop
  */
-function loop(tickNo: number, state: GameState, ctx: CanvasRenderingContext2D) {
+function loop(tickNo: number, state: GameState) {
     state.landers = state.landers.map((lander) => {
         let cmds = state.commands.filter(
             (c) => (!c.tick || c.tick <= tickNo) && c.token === lander.token);
@@ -65,18 +76,13 @@ function loop(tickNo: number, state: GameState, ctx: CanvasRenderingContext2D) {
     });
     state.commands = state.commands.filter((c) => c.tick > tickNo);
     UI.update(tickNo, state.landers, state.flagPosition);
-    requestAnimationFrame(() => render(ctx, calculateFocus(state.flagPosition, state.landers), state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition));
+    requestAnimationFrame(() => render(state.ctx, calculateFocus(state.flagPosition, state.landers), state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition));
     if (state.phase === GamePhase.STARTED && isGameOver(state.landers)) {
         state.phase = GamePhase.OVER;
         UI.gameover(state.players, points(state.landers, state.flagPosition));
     }
-    setTimeout(() => loop(++tickNo, state, ctx), 25);
+    setTimeout(() => loop(++tickNo, state), 25);
 };
-
-function teardown(state: GameState) {
-    send(state.ws, 'broadcast', '', { game: 'over' });
-    console.log('GAME OVER');
-}
 
 /**
  * check whether the game is over
@@ -112,6 +118,7 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
     let data = JSON.parse(msg.data);
     if (state.phase === GamePhase.INITIALIZING && data.host === true) {
         state.phase = GamePhase.HOST_CONFIRMED;
+        console.log('HOST confirmed');
     } else if (state.phase === GamePhase.HOST_CONFIRMED && isPlayerMsg(data)) {
         data.color = uniqueColor(data.name);
         state.players = state.players.concat(data);
@@ -147,7 +154,7 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
  */
 function points(landers: Lander[], flag: Vector): Points {
     return landers.reduce((p, l) => {
-        let points = 5000 - length(subtract(l.position, flag));
+        let points = 7000 - length(subtract(l.position, flag));
         points += Math.floor(l.fuel);
         if (l.crashed) {
             points = points / 10;
@@ -158,7 +165,7 @@ function points(landers: Lander[], flag: Vector): Points {
     }, {});
 }
 
-function send(ws: WebSocket, cmd: 'broadcast' | 'to' | 'disconnect', cval: string, data: any) {
+function send(ws: WebSocket, cmd: 'broadcast' | 'to' | 'disconnect', cval: string, data?: any) {
     ws.send(`${cmd}:${cval}
 ${JSON.stringify(data)}`);
 }
