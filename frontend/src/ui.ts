@@ -1,12 +1,16 @@
 import { Lander } from './lander';
 import { length, Vector, subtract } from './geometry';
 import { GameState, Points, PlayerMsg } from './game';
+import { terrain, flag } from './terrain';
+import * as seedrandom from 'seedrandom';
+import { previewTerrain } from './render';
 
 module UI {
     /**
      * initialize ui bindings
      */
-    export function init(openCB: (seed: string) => void, startCB: Function, cancelCB: Function) {
+    export function init(ctx: CanvasRenderingContext2D, openCB: (seed: string) => void, startCB: Function, cancelCB: Function) {
+        resize(ctx);
         // open game
         $('#main #open').addEventListener('click', () => {
             $('#main').classList.add('state-open');
@@ -26,15 +30,29 @@ module UI {
             $('#main #seed').removeAttribute('readonly');
             cancelCB();
         });
+        window.addEventListener('resize', () => { resize(ctx); });
         // seed input scaling
-        function scaleSeedInput () {
-            let w = ($('#main #seed') as any).value.length * 12;
+        function seedChange() {
+            let seed: string = ($('#main #seed') as any).value;
+            let w = seed.length * 12;
             if (w > 400) w = 400;
             $('#main #seed').style.width = w + 'px';
+            let rng = seedrandom(seed);
+            let pt = terrain(10000, 350, rng, 9, 4);
+            let flagPosition = flag(pt, rng);
+            previewTerrain(ctx, pt, flagPosition);
         }
-        $('#main #seed').addEventListener('keyup', scaleSeedInput);
-        scaleSeedInput();
-        
+        $('#main #seed').addEventListener('keyup', seedChange);
+        seedChange();
+
+    }
+
+    /**
+     * update canvas size
+     */
+    export function resize(ctx: CanvasRenderingContext2D) {
+        ctx.canvas.width = document.documentElement.clientWidth;
+        ctx.canvas.height = document.documentElement.clientHeight;
     }
 
     /**

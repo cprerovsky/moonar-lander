@@ -1,6 +1,7 @@
 import { Vector, Geometry, translate, LANDER_GEOMETRY, landerFlameGeometry, FLAG_GEOMETRY, add, length } from './geometry';
 import { Lander } from './lander';
 import { uniqueColor } from './color';
+import { terrain } from './terrain';
 
 interface DrawOptions {
     stroke?: string
@@ -63,7 +64,7 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: La
     if (circles[circles.length - 1] === 200) circles.push(0);
     draw(ctx, fgTerrain, focus, { stroke: GREY, fill: "black" });
     landers.map((lander) => {
-        draw(ctx, LANDER_GEOMETRY.map((v) => 
+        draw(ctx, LANDER_GEOMETRY.map((v) =>
             translate(v, lander.position, lander.angle)),
             focus, { stroke: lander.color, fill: "black", closePath: true });
         if (lander.engine !== "off") {
@@ -72,6 +73,22 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: La
                 focus, { stroke: lander.color });
         }
     });
+}
+
+export function previewTerrain(ctx: CanvasRenderingContext2D, terrain: Geometry, flag: Vector) {
+    let terrainWidth = terrain[terrain.length - 1].x;
+    let scale = ctx.canvas.width / terrainWidth;
+    let displayTerrain = terrain.map((v) => {
+        return new Vector(
+            v.x * scale,
+            v.y * scale
+        );
+    });
+    flag = new Vector(flag.x * scale, flag.y * scale);
+    let focus = new Vector(ctx.canvas.width / 2, ctx.canvas.height / 2);
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    draw(ctx, displayTerrain, focus, { stroke: GREY, fill: "black" });
+    draw(ctx, FLAG_GEOMETRY.map((v) => add(v, flag)), focus, { stroke: GREY, fill: "black" });
 }
 
 function circle(ctx: CanvasRenderingContext2D, center: Vector, focus: Vector, radius: number, strokeStyle: string) {
