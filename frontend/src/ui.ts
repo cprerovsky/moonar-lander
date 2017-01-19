@@ -11,6 +11,10 @@ module UI {
      */
     export function init(ctx: CanvasRenderingContext2D, openCB: (seed: string) => void, startCB: Function, cancelCB: Function) {
         resize(ctx);
+        window.addEventListener('resize', () => { resize(ctx); });
+        /*
+         * main menu
+         */
         // open game
         $('#main #open').addEventListener('click', () => {
             $('#main').classList.add('state-open');
@@ -30,7 +34,6 @@ module UI {
             $('#main #seed').removeAttribute('readonly');
             cancelCB();
         });
-        window.addEventListener('resize', () => { resize(ctx); });
         // seed input scaling
         function seedChange() {
             let seed: string = ($('#main #seed') as any).value;
@@ -45,6 +48,14 @@ module UI {
         $('#main #seed').addEventListener('keyup', seedChange);
         seedChange();
 
+        /*
+         * game over menu
+         */
+        $('#gameover #teardown').addEventListener('click', () => {
+            $('#gameover').classList.add('hidden');
+            $('#main').classList.remove('hidden');
+            cancelCB();
+        });
     }
 
     /**
@@ -97,21 +108,11 @@ module UI {
                     ${points[player.token]}</li>`;
         }, '');
         $('#gameover .results', html);
-        show('#gameover');
+        $('#gameover').classList.remove('hidden');
     }
 
     export function reset() {
         $('#ui').innerHTML = '';
-    }
-
-    export type Menu = '#gameover';
-
-    export function show(menu: Menu) {
-        $(`${menu}`).classList.remove('hidden');
-    }
-
-    export function hide(menu: Menu) {
-        $(`${menu}`).classList.add('hidden');
     }
 
     function round(n: number, p: number): number {

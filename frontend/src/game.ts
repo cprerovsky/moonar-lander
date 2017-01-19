@@ -59,6 +59,8 @@ module GAME {
     }
 
     export function teardown(state: GameState) {
+        state.phase = GamePhase.TEARDOWN;
+        UI.reset();
         send(state.ws, 'broadcast', '', { game: 'over' });
         send(state.ws, 'disconnect', '*');
     }
@@ -81,7 +83,7 @@ function loop(tickNo: number, state: GameState) {
         state.phase = GamePhase.OVER;
         UI.gameover(state.players, points(state.landers, state.flagPosition));
     }
-    setTimeout(() => loop(++tickNo, state), 25);
+    if (state.phase !== GamePhase.TEARDOWN) setTimeout(() => loop(++tickNo, state), 25);
 };
 
 /**
@@ -175,7 +177,8 @@ enum GamePhase {
     INITIALIZING,
     HOST_CONFIRMED,
     STARTED,
-    OVER
+    OVER,
+    TEARDOWN
 }
 
 export interface PlayerMsg {
