@@ -81,10 +81,10 @@ export function previewTerrain(ctx: CanvasRenderingContext2D, terrain: Geometry,
     let displayTerrain = terrain.map((v) => {
         return new Vector(
             v.x * scale,
-            v.y * scale
+            v.y * scale + ctx.canvas.height / 5
         );
     });
-    flag = new Vector(flag.x * scale, flag.y * scale);
+    flag = new Vector(flag.x * scale, flag.y * scale + ctx.canvas.height / 5);
     let focus = new Vector(ctx.canvas.width / 2, ctx.canvas.height / 2);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     draw(ctx, displayTerrain, focus, { stroke: GREY, fill: "black" });
