@@ -32,7 +32,7 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
     let nposition = add(lander.position, lander.velocity);
     let nvelocity = accelerate(lander.velocity, THRUST, nangle, lander.engine);
     let landerGeometry = LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle));
-    let fuel = burn(lander.fuel, lander.engine);
+    let fuel = burn(lander.fuel, lander.engine, lander.rotation);
     return collide(
         new Lander(lander.token, lander.color, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel, lander.crashed, lander.touchdown),
         landerGeometry,
@@ -54,16 +54,20 @@ export function landed(lander: Lander): boolean {
 /**
  * burn fuel from the tank
  */
-function burn(fuel: number, engine: EngineState) {
+function burn(fuel: number, engine: EngineState, rotation: RotationDirection) {
     let f = fuel;
     if (engine === "half") {
         f -= 0.45;
     } else if (engine === "full") {
         f -= 1;
     }
+    if (rotation !== "off") {
+        f -= 0.15;
+    }
     if (f <= 0) {
         f = 0;
     }
+    // TODO: fuel must not be less than 0
     return f;
 }
 

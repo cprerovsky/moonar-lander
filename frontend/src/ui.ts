@@ -66,21 +66,11 @@ module UI {
         ctx.canvas.height = document.documentElement.clientHeight;
     }
 
-    /**
-     * handles the start setup menu
-     */
-    export function setup() {
-
-    }
-
-
     export function addPlayer(token: string, name: string, color: string) {
         let html = `<li id="${token}" class="player">
     <p class="pilot" style="color: ${color}">${name} <span class="on"></span></p>
     <p>dist <span class="dist">.</span></p>
     <p>fuel <span class="fuel">.</span></p>
-    <p>angl <span class="angle">.</span></p>
-    <p>sped <span class="speed">.</span></p>
 </li>`;
         $('#ui').innerHTML += html;
     }
@@ -92,10 +82,7 @@ module UI {
         if (tick % 5 === 0) return;
         landers.map((l) => {
             $(`#${l.token} .dist`, Math.floor(length(subtract(flagPosition, l.position))));
-            $(`#${l.token} .fuel`, round(l.fuel, 0));
-            $(`#${l.token} .speed`, `${round(l.velocity.x, 3)}, ${round(l.velocity.y, 3)}`);
-            $(`#${l.token} .angle`, round(l.angle, 3));
-            $(`#${l.token} .on`, l.engine !== 'off' || l.rotation !== 'off' ? '&squf;' : '&nbsp;');
+            $(`#${l.token} .fuel`, round(l.fuel, 0) + '');
         });
     }
 
@@ -120,7 +107,6 @@ module UI {
         return (Math.floor(n * places) / places);
     }
 }
-
 export default UI;
 
 let ELEMENTS_CACHE: { [key: string]: HTMLElement; } = {};

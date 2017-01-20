@@ -101,32 +101,3 @@ function token(): string {
     }
     return token;
 }
-
-// C > S
-/*
-
-> token:\n
-> register:clemens-blablabla
-
-< token:asdf
-
-turn into a single gameinfo:
-< terrain:{ terrain: [{3,7}, ... ]}
-< flag:{1,2}
-< lander:{ ... }
-
-< game:start
-
-> token:asdf\n
-> commands: [ { engine: "half", rotate: "cw", ... }, ... ] }
-
-< lander:{ position: ..., velocity: ... }
-
-> commands: ...
-
-...
-
-< game:over
-< won:true
-< crashed:true
-*/
