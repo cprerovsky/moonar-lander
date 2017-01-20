@@ -22,7 +22,7 @@ h2 {
 }
 
 p {
-    line-height: 350%;
+    line-height: 150%;
 }
 
 #game {
@@ -43,12 +43,17 @@ p {
     width: 100%;
     z-index: 10;
     padding: 10px;
+    line-height: 150%;
 }
 
 #ui li {
     list-style-type: none;
     float: left;
     width: 150px;
+}
+
+#ui li p {
+    line-height: 150%;
 }
 
 .menu {
