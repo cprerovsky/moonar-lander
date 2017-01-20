@@ -5,7 +5,7 @@ import { Commands } from './commands';
 export type EngineState = "off" | "half" | "full";
 export type RotationDirection = "off" | "cw" | "ccw";
 
-const THRUST = 0.025;
+const THRUST = 0.035;
 
 export class Lander {
     constructor(
