@@ -11,51 +11,38 @@ const RESTITUTION = 0.7
 const GRAVITY = 0.01
 
 /**
+ * represents the outcome of a collision
+ */
+export class CollisionResult {
+    constructor(
+        public readonly velocity: Vector,
+        public readonly position: Vector,
+        public readonly rotationSpeed: number
+    ) {}
+}
+
+/**
  * collision detection between lander vehicle and ground geometry
  */
-export function collide(lander: Lander, landerGeometry: Geometry, groundGeometry: Geometry): Lander {
+export function collide(position: Vector, velocity: Vector, landerGeometry: Geometry, groundGeometry: Geometry): CollisionResult {
     let collisions = isOverlap(landerGeometry, groundGeometry);
     if (collisions.length === 0) {
-        return new Lander(
-            lander.token,
-            lander.color,
-            lander.position,
-            lander.velocity,
-            lander.angle,
-            lander.rotation,
-            lander.rotationSpeed,
-            lander.engine,
-            lander.fuel,
-            lander.crashed,
-            false
-        );;
+        return null;
     } else {
         let wallVector = subtract(collisions[0].segmentEnd, collisions[0].segmentStart)
-        let nvelocity = bounce(lander.velocity, wallVector);
+        let nvelocity = bounce(velocity, wallVector);
         // stop motion at all if lander is moving super slow
-        if (length(lander.velocity) < 0.2) nvelocity = new Vector(0, 0);
+        if (length(velocity) < 0.2) nvelocity = new Vector(0, 0);
         // attempt to correct y-position to not get stuck in terrain
-        let npostition = new Vector(lander.position.x, lander.position.y + 0.3);
+        let npostition = new Vector(position.x, position.y + 0.3);
         // update rotation based on impact
         let nrotationSpeed = 0;
-        if (collisions[0].point.x < lander.position.x) {
-            nrotationSpeed -= 0.03 * length(lander.velocity);
+        if (collisions[0].point.x < position.x) {
+            nrotationSpeed -= 0.03 * length(velocity);
         } else {
-            nrotationSpeed += 0.03 * length(lander.velocity);
+            nrotationSpeed += 0.03 * length(velocity);
         }
-        return new Lander(
-            lander.token,
-            lander.color,
-            npostition,
-            nvelocity,
-            lander.angle,
-            lander.rotation,
-            nrotationSpeed,
-            lander.engine,
-            lander.fuel,
-            lander.crashed || length(lander.velocity) > 1,
-            true
-        );
+        return new CollisionResult(nvelocity, npostition, nrotationSpeed);
     }
 }
 

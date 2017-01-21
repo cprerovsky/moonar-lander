@@ -1,4 +1,4 @@
-import { Vector, add, LANDER_GEOMETRY, translate, Geometry } from './geometry';
+import { Vector, add, LANDER_GEOMETRY, translate, Geometry, length } from './geometry';
 import { rotate, angle, accelerate, collide } from './physics';
 import { Commands } from './commands';
 
@@ -19,6 +19,7 @@ export class Lander {
         public readonly engine: EngineState,
         public readonly fuel: number,
         public readonly crashed: boolean,
+        public readonly landed: boolean,
         public readonly touchdown: boolean) { }
 }
 
@@ -26,28 +27,53 @@ export class Lander {
  * let the lander run through a full tick; update values and apply physics
  */
 export function tick(no: number, commands: Commands, lander: Lander, terrainGeometry: Geometry): Lander {
+    if (lander.landed) return lander;
     lander = execute(commands, lander);
     let nrotationSpeed = rotate(lander.rotation, lander.rotationSpeed);
     let nangle = angle(lander.angle, nrotationSpeed);
     let nposition = add(lander.position, lander.velocity);
     let nvelocity = accelerate(lander.velocity, THRUST, nangle, lander.engine);
-    let fuel = burn(lander.fuel, lander.engine, lander.rotation);
-    return collide(
-        new Lander(lander.token, lander.color, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel, lander.crashed, lander.touchdown),
+    let nfuel = burn(lander.fuel, lander.engine, lander.rotation);
+    let ncrashed = lander.crashed;
+    let collisionResult = collide(
+        nposition,
+        nvelocity,
         LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle)),
         terrainGeometry);
+    let ntouchdown: boolean = false;
+    if (collisionResult) {
+        nposition = collisionResult.position;
+        nvelocity = collisionResult.velocity;
+        nrotationSpeed = collisionResult.rotationSpeed;
+        ntouchdown = true;
+        ncrashed = length(nvelocity) > 1;
+    }
+    let nlanded = lander.landed || isLanded(ntouchdown, lander.engine, lander.rotation, nangle, nvelocity);
+    return new Lander(lander.token,
+        lander.color,
+        nposition,
+        nvelocity,
+        nangle,
+        lander.rotation,
+        nrotationSpeed,
+        lander.engine,
+        nfuel,
+        ncrashed,
+        nlanded,
+        ntouchdown
+    );
 }
 
 /**
  * check if the lander has landed
  */
-export function landed(lander: Lander): boolean {
-    return lander.touchdown &&
-        lander.engine === 'off' &&
-        lander.rotation === 'off' &&
-        Math.abs(lander.angle) < 0.785398 &&
-        Math.abs(lander.velocity.x) < 0.1 &&
-        Math.abs(lander.velocity.y) < 0.1;
+function isLanded(touchdown: boolean, engine: EngineState, rotation: RotationDirection, angle: number, velocity: Vector): boolean {
+    return touchdown &&
+        engine === 'off' &&
+        rotation === 'off' &&
+        Math.abs(angle) < 0.785398 && // 45°
+        Math.abs(velocity.x) < 0.1 &&
+        Math.abs(velocity.y) < 0.1;
 }
 
 /**
@@ -100,5 +126,6 @@ function execute(commands: Commands, lander: Lander): Lander {
         engine,
         fuel,
         lander.crashed,
+        lander.landed,
         lander.touchdown);
 }

@@ -1,5 +1,5 @@
 import { Commands, Command } from './commands';
-import { Lander, tick, landed } from './lander';
+import { Lander, tick } from './lander';
 import * as seedrandom from 'seedrandom';
 import { terrain, flag } from './terrain';
 import { Vector, Geometry, landerFlameGeometry, length, subtract } from './geometry';
@@ -83,6 +83,7 @@ function loop(tickNo: number, state: GameState) {
         state.phase = GamePhase.OVER;
         UI.gameover(state.players, points(state.landers, state.flagPosition));
     }
+    state.landers.map((l) => send(state.ws, 'to', l.token, l));
     if (state.phase !== GamePhase.TEARDOWN) setTimeout(() => loop(++tickNo, state), 25);
 };
 
@@ -93,7 +94,7 @@ function isGameOver(landers: Lander[]): boolean {
     return landers.filter(lander => {
         if (lander.crashed
             || lander.fuel === 0
-            || landed(lander)) {
+            || lander.landed) {
             return false;
         } else {
             return true;
@@ -134,6 +135,7 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
             0,
             "off",
             1000,
+            false,
             false,
             false));
         UI.addPlayer(data.token, data.name, data.color);

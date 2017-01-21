@@ -4,6 +4,8 @@ A lunar lander clone, controlled via WebSockets.
 
 # TODOs
 
+* freeze lander on touchdown
+* send data updates to clients
 * flag positioning in terrain preview is inconsistent with actual positioning
 * add trails for landers
 * reimplement client-server protocol to change to host

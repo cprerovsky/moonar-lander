@@ -34,7 +34,7 @@ wss.on('connection', function (ws) {
 });
 
 function message(wss: WebSocketServer, ws: WebSocket, data: any) {
-    console.log('message', data);
+    // console.log('message', data);
     if (ws[KEYS.HOST]) {
         let hc = toHostCommand(data);
         switch (hc.cmd) {
