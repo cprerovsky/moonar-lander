@@ -31,11 +31,10 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
     let nangle = angle(lander.angle, nrotationSpeed);
     let nposition = add(lander.position, lander.velocity);
     let nvelocity = accelerate(lander.velocity, THRUST, nangle, lander.engine);
-    let landerGeometry = LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle));
     let fuel = burn(lander.fuel, lander.engine, lander.rotation);
     return collide(
         new Lander(lander.token, lander.color, nposition, nvelocity, nangle, lander.rotation, nrotationSpeed, lander.engine, fuel, lander.crashed, lander.touchdown),
-        landerGeometry,
+        LANDER_GEOMETRY.map((v) => translate(v, nposition, nangle)),
         terrainGeometry);
 }
 
