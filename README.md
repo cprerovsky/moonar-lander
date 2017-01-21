@@ -4,9 +4,7 @@ A lunar lander clone, controlled via WebSockets.
 
 # TODOs
 
-* reimplement collision detection
-!!! FOUND BUG: lander geometry rotation seems not to be accounted for in isOverlap()
-* add physics debugging
+* flag positioning in terrain preview is inconsistent with actual positioning
 * add trails for landers
 * reimplement client-server protocol to change to host
 * implement "victory zone" around flag
