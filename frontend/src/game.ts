@@ -83,7 +83,7 @@ function loop(tickNo: number, state: GameState) {
         state.phase = GamePhase.OVER;
         UI.gameover(state.players, points(state.landers, state.flagPosition));
     }
-    state.landers.map((l) => send(state.ws, 'to', l.token, l));
+    state.landers.map((l) => send(state.ws, 'to', l.token, { tick: tickNo, lander: l }));
     if (state.phase !== GamePhase.TEARDOWN) setTimeout(() => loop(++tickNo, state), 25);
 };
 
