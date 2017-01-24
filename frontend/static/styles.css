@@ -56,6 +56,14 @@ p {
     line-height: 150%;
 }
 
+#ui .player.crashed {
+    color: red;
+}
+
+#ui .player.landed {
+    color: green;
+}
+
 .menu {
     font-size: 24px;
     color: rgb(160,160,160);

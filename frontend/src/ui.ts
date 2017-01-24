@@ -69,8 +69,8 @@ module UI {
     export function addPlayer(token: string, name: string, color: string) {
         let html = `<li id="${token}" class="player">
     <p class="pilot" style="color: ${color}">${name} <span class="on"></span></p>
-    <p>dist <span class="dist">.</span></p>
-    <p>fuel <span class="fuel">.</span></p>
+    <p>dist <span class="dist"></span></p>
+    <p>fuel <span class="fuel"></span></p>
 </li>`;
         $('#ui').innerHTML += html;
     }
@@ -81,6 +81,16 @@ module UI {
     export function update(tick: number, landers: Lander[], flagPosition: Vector) {
         if (tick % 5 === 0) return;
         landers.map((l) => {
+            if (l.landed) {
+                $(`#${l.token}`).classList.add('landed');
+            } else {
+                $(`#${l.token}`).classList.remove('landed');
+            }
+            if (l.crashed) {
+                $(`#${l.token}`).classList.add('crashed');
+            } else {
+                $(`#${l.token}`).classList.remove('crashed');
+            }
             $(`#${l.token} .dist`, Math.floor(length(subtract(flagPosition, l.position))));
             $(`#${l.token} .fuel`, round(l.fuel, 0) + '');
         });
