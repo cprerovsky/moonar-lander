@@ -73,7 +73,7 @@ export function angle(angle: number, rotation: number) {
 /**
  * use the engine to accelerate. returns a new velocity vector
  */
-export function accelerate(velocity: Vector, thrust: number, angle: number, engine: EngineState): Vector {
+export function accelerate(velocity: Vector, thrust: number, angle: number, engine: EngineState, landed: boolean): Vector {
     let vx = velocity.x;
     let vy = velocity.y;
     if (engine !== "off") {
@@ -81,7 +81,8 @@ export function accelerate(velocity: Vector, thrust: number, angle: number, engi
         vx = velocity.x + t * Math.sin(-angle);
         vy = velocity.y + t * Math.cos(angle);
     }
-    vy -= GRAVITY;
+    // gravity is only applied until the lander has landed
+    if (!landed) vy -= GRAVITY;
     return new Vector(vx, vy);
 }
 

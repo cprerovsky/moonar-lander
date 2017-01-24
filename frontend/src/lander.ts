@@ -27,12 +27,11 @@ export class Lander {
  * let the lander run through a full tick; update values and apply physics
  */
 export function tick(no: number, commands: Commands, lander: Lander, terrainGeometry: Geometry): Lander {
-    if (lander.landed) return lander;
     lander = execute(commands, lander);
     let nrotationSpeed = rotate(lander.rotation, lander.rotationSpeed);
     let nangle = angle(lander.angle, nrotationSpeed);
     let nposition = add(lander.position, lander.velocity);
-    let nvelocity = accelerate(lander.velocity, THRUST, nangle, lander.engine);
+    let nvelocity = accelerate(lander.velocity, THRUST, nangle, lander.engine, lander.landed);
     let nfuel = burn(lander.fuel, lander.engine, lander.rotation);
     let ncrashed = lander.crashed;
     let collisionResult = collide(

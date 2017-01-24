@@ -79,7 +79,7 @@ function loop(tickNo: number, state: GameState) {
     state.commands = state.commands.filter((c) => c.tick > tickNo);
     UI.update(tickNo, state.landers, state.flagPosition);
     requestAnimationFrame(() => render(state.ctx, calculateFocus(state.flagPosition, state.landers), state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition));
-    if (state.phase === GamePhase.STARTED && isGameOver(state.landers)) {
+    if (state.phase === GamePhase.STARTED && isGameOver(state.landers, state.flagPosition)) {
         state.phase = GamePhase.OVER;
         UI.gameover(state.players, points(state.landers, state.flagPosition));
     }
@@ -90,9 +90,12 @@ function loop(tickNo: number, state: GameState) {
 /**
  * check whether the game is over
  */
-function isGameOver(landers: Lander[]): boolean {
+function isGameOver(landers: Lander[], flagPos: Vector): boolean {
     return landers.filter(lander => {
-        if (lander.crashed
+        if (lander.landed && length(subtract(flagPos, lander.position)) <= 5) {
+            // immediate win, if landed close enugh to flag
+            return true;
+        } if (lander.crashed
             || lander.fuel === 0
             || lander.landed) {
             return false;
@@ -139,7 +142,7 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
             false,
             false));
         UI.addPlayer(data.token, data.name, data.color);
-        send(state.ws, 'broadcast', '', {
+        send(state.ws, 'to', data.token, {
             terrain: state.fgTerrain,
             flag: state.flagPosition
         });

@@ -61,6 +61,7 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: La
     }).filter((r, i, a) => {
         return r < 5000;
     });
+    circle(ctx, flagPosition, focus, 20, 'red');
     if (circles[circles.length - 1] === 200) circles.push(0);
     draw(ctx, fgTerrain, focus, { stroke: GREY, fill: "black" });
     landers.map((lander) => {
