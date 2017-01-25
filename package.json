@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch-frontend": "node node_modules/.bin/webpack --config ./frontend/webpack.config.js --display-error-details",
-    "watch-backend": "tsc -w -p backend",
+    "watch-backend": "./node_modules/.bin/tsc -w -p backend",
     "supervisor": "node-supervisor ./backend/build/index.js",
     "watch": "concurrently --prefix \"[{name}]\" --names \"frontend,backend,supervisor\" --kill-others \"npm run watch-frontend\" \"npm run watch-backend\" \"npm run supervisor\""
   },

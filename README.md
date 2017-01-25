@@ -13,13 +13,13 @@ by March 2017.
 
 Open todos sorted by priority
 
+* reimplement client-server protocol to change to host
 * allow clients to delete commands
 * flag positioning in terrain preview is inconsistent with actual positioning
 * improve comments
 * add indicators for offscreen landers
 * improve terrain generation
 * add trails for landers
-* reimplement client-server protocol to change to host
 * add auto game mode that starts automatically when enough clients connect
 * add docker container
 
