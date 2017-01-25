@@ -45,7 +45,7 @@ Open todos sorted by priority
 # Implementing a Client
 
 A simple, crappy example client can be found at
-[http://localhost:4711/client.js](http://localhost:4711/client.js).
+[https://github.com/cprerovsky/moonar-lander/blob/master/frontend/static/client.js](https://github.com/cprerovsky/moonar-lander/blob/master/frontend/static/client.js).
 WebSockets are available in a wide variety of programming languages - you are free to choose.
 
 ## Overview
@@ -60,12 +60,16 @@ Your goal is to fly your ```lander``` to the flag and land as close to the flag 
 
 Once the game host has opened a new game, you can connect to the game using WebSockets.
 
-```ws://localhost:4711```
+```
+ws://localhost:4711
+```
 
 After successfully connecting you will receive a token message with your identification
 token.
 
-```{ "token": "[YOUR_TOKEN]" }```
+```
+{ "token": "[YOUR_TOKEN]" }
+```
 
 You need to provide this token with every message you send to the server.
 The server will also send a message with the terrain information and the flag position:
