@@ -25,7 +25,12 @@ Open todos sorted by priority
 
 ## Requirements
 - NodeJS v6.7.0+
-- git
+- git or Docker
+
+## Docker
+```docker run -p 4711:4711 -d blacktarmac/moonar-lander```
+
+**NOTE:** the host and example client are currently hardcoded to port 4711
 
 ## Installing from GIT
 - clone the project
