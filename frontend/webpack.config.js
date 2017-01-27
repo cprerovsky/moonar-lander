@@ -7,7 +7,6 @@ const srcPath = path.join(__dirname, 'src');
 module.exports = {
     target: 'web',
     cache: true,
-    watch: true,
     entry: {
         app: path.join(srcPath, 'index.ts')
     },
