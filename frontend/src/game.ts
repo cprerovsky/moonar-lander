@@ -44,7 +44,7 @@ module GAME {
         let fgTerrain = terrain(10000, 350, rng, 9, 4);
         let bgTerrain = terrain(2500, 350, rng, 8, 3).map((p) => new Vector(p.x * 2, p.y + 50));
         let skybox = sky(3500, 800);
-        let flagPosition = flag(fgTerrain, rng);
+        let flagPosition = flag(fgTerrain);
         let state = new GameState(ctx, rng, fgTerrain, bgTerrain, flagPosition, skybox, ws);
         return state;
     }

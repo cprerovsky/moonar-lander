@@ -71,7 +71,8 @@ function midpoint(numStartVals: number, iterations: number, rng: seedrandom.prng
 /**
  * find a valid spot on the terrain to place the flag
  */
-export function flag(terrain: Geometry, rng: seedrandom.prng): Vector {
+export function flag(terrain: Geometry): Vector {
     let LIMIT = 10;
+    let rng = seedrandom(JSON.stringify(terrain[42]));
     return terrain[Math.round(rng() * (terrain.length - LIMIT)) + LIMIT / 2];
 }

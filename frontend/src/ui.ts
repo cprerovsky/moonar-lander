@@ -42,7 +42,7 @@ module UI {
             $('#main #seed').style.width = w + 'px';
             let rng = seedrandom(seed);
             let pt = terrain(10000, 350, rng, 9, 4);
-            let flagPosition = flag(pt, rng);
+            let flagPosition = flag(pt);
             previewTerrain(ctx, pt, flagPosition);
         }
         $('#main #seed').addEventListener('keyup', seedChange);
