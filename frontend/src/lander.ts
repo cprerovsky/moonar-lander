@@ -45,7 +45,7 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
         nvelocity = collisionResult.velocity;
         nrotationSpeed = collisionResult.rotationSpeed;
         ntouchdown = true;
-        ncrashed = length(nvelocity) > 1;
+        ncrashed = lander.crashed || length(nvelocity) > 1;
     }
     let nlanded = lander.landed || isLanded(ntouchdown, lander.engine, lander.rotation, nangle, nvelocity);
     return new Lander(lander.token,
