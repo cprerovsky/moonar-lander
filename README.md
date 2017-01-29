@@ -15,6 +15,7 @@ Open todos sorted by priority
 
 * reimplement client-server protocol to change to host
 * allow clients to delete commands
+* start game with an initialized velocity vector and a randomized position for landers
 * flag positioning in terrain preview is inconsistent with actual positioning
 * improve comments
 * add indicators for offscreen landers
