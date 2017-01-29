@@ -99,20 +99,19 @@ function burn(fuel: number, engine: EngineState, rotation: RotationDirection) {
  * execute commands for a lander
  */
 function execute(commands: Commands, lander: Lander): Lander {
-    if (lander.crashed) return lander;
     let engine = lander.engine;
     let rotation = lander.rotation;
     let fuel = lander.fuel;
-    if (lander.fuel > 0) {
+    if (fuel < 0) fuel = 0;
+    if (fuel === 0 || lander.crashed) {
+        engine = "off";
+        rotation = "off";
+    } else {
         commands.map((c) => {
             if (c.engine) engine = c.engine;
             if (c.rotation) rotation = c.rotation;
             console.log(c);
         });
-    } else {
-        engine = "off";
-        rotation = "off";
-        fuel = 0;
     }
     return new Lander(
         lander.token,
