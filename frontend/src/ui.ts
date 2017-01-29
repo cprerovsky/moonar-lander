@@ -1,6 +1,6 @@
 import { Lander } from './lander';
 import { length, Vector, subtract } from './geometry';
-import { GameState, Points, PlayerMsg } from './game';
+import { GameState, Points, PlayerMsg, startPosition } from './game';
 import { terrain, flag } from './terrain';
 import * as seedrandom from 'seedrandom';
 import { previewTerrain } from './render';
@@ -41,9 +41,11 @@ module UI {
             if (w > 400) w = 400;
             $('#main #seed').style.width = w + 'px';
             let rng = seedrandom(seed);
-            let pt = terrain(10000, 350, rng, 9, 4);
+            let pt = terrain(10000, seed);
             let flagPosition = flag(pt);
-            previewTerrain(ctx, pt, flagPosition);
+            let startPos = startPosition(pt);
+            console.log(startPos, pt[7]);
+            previewTerrain(ctx, pt, flagPosition, startPos);
         }
         $('#main #seed').addEventListener('keyup', seedChange);
         seedChange();

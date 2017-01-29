@@ -1,8 +1,10 @@
 import { Vector, Geometry } from './geometry';
 import * as seedrandom from 'seedrandom';
 
-export function terrain(width: number, maxHeight: number, rng: seedrandom.prng, midpointInit: number, midpointSub: number): Geometry {
+export function terrain(width: number, seed: string, midpointInit: number = 9, midpointSub: number = 4): Geometry {
+    let rng = seedrandom(seed);
     let heights = midpoint(midpointInit, midpointSub, rng);
+    let maxHeight = 200 + 300 * rng();
     let widthStep = width / (heights.length - 1);
     // scale midpoint displaced heights down
     let heightScaleFactor = rng();

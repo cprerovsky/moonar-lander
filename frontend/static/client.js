@@ -5,13 +5,13 @@ function Client(name, keyboard) {
     var ws = new WebSocket("ws://localhost:4711");
     var $out = document.getElementById('out');
     $out.innerText += "new client: " + name + "\n";
-    console.log(name);
+    // console.log(name);
     ws.onerror = function (e) {
         console.error(this.name, msg.data);
     };
     ws.onmessage = function (msg) {
         let data = JSON.parse(msg.data);
-        console.log(name, msg.data);
+        // console.log(name, msg.data);
         if (data.token) {
             token = data.token;
         } else if (data.game === "start" && !keyboard) {

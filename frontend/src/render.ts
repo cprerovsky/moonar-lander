@@ -61,7 +61,6 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: La
     }).filter((r, i, a) => {
         return r < 5000;
     });
-    circle(ctx, flagPosition, focus, 20, 'red');
     if (circles[circles.length - 1] === 200) circles.push(0);
     draw(ctx, fgTerrain, focus, { stroke: GREY, fill: "black" });
     landers.map((lander) => {
@@ -76,7 +75,7 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: La
     });
 }
 
-export function previewTerrain(ctx: CanvasRenderingContext2D, terrain: Geometry, flag: Vector) {
+export function previewTerrain(ctx: CanvasRenderingContext2D, terrain: Geometry, flag: Vector, start: Vector) {
     let terrainWidth = terrain[terrain.length - 1].x;
     let scale = ctx.canvas.width / terrainWidth;
     let displayTerrain = terrain.map((v) => {
@@ -85,11 +84,14 @@ export function previewTerrain(ctx: CanvasRenderingContext2D, terrain: Geometry,
             v.y * scale + ctx.canvas.height / 5
         );
     });
+    let displayStart = new Vector(start.x * scale, start.y * scale + ctx.canvas.height / 5);
     flag = new Vector(flag.x * scale, flag.y * scale + ctx.canvas.height / 5);
     let focus = new Vector(ctx.canvas.width / 2, ctx.canvas.height / 2);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     draw(ctx, displayTerrain, focus, { stroke: GREY, fill: "black" });
     draw(ctx, FLAG_GEOMETRY.map((v) => add(v, flag)), focus, { stroke: GREY, fill: "black" });
+    ctx.fillStyle = GREY;
+    ctx.fillRect(displayStart.x, ty(displayStart.y, ctx), 4, 4);
 }
 
 function circle(ctx: CanvasRenderingContext2D, center: Vector, focus: Vector, radius: number, strokeStyle: string) {

@@ -16,7 +16,6 @@ export class GameState {
     public commands: Commands = []
     public phase: GamePhase = GamePhase.INITIALIZING
     constructor(public readonly ctx: CanvasRenderingContext2D,
-        public readonly rng: seedrandom.prng,
         public readonly fgTerrain: Geometry,
         public readonly bgTerrain: Geometry,
         public readonly flagPosition: Vector,
@@ -29,7 +28,6 @@ module GAME {
      * setup a new game
      */
     export function setup(ctx: CanvasRenderingContext2D, seed: string) {
-        let rng = seedrandom(seed);
         let ws = new WebSocket("ws://localhost:4711");
         ws.onopen = () => {
             console.log('WebSocket connection established');
@@ -41,11 +39,11 @@ module GAME {
             console.log('WebSocket connection closed', ev);
         };
         ws.onerror = console.error;
-        let fgTerrain = terrain(10000, 350, rng, 9, 4);
-        let bgTerrain = terrain(2500, 350, rng, 8, 3).map((p) => new Vector(p.x * 2, p.y + 50));
+        let fgTerrain = terrain(10000, seed);
+        let bgTerrain = terrain(2500, seed, 8, 3).map((p) => new Vector(p.x * 2, p.y + 50));
         let skybox = sky(3500, 800);
         let flagPosition = flag(fgTerrain);
-        let state = new GameState(ctx, rng, fgTerrain, bgTerrain, flagPosition, skybox, ws);
+        let state = new GameState(ctx, fgTerrain, bgTerrain, flagPosition, skybox, ws);
         return state;
     }
 
@@ -128,12 +126,17 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
     } else if (state.phase === GamePhase.HOST_CONFIRMED && isPlayerMsg(data)) {
         data.color = uniqueColor(data.name);
         state.players = state.players.concat(data);
+        let position = startPosition(state.fgTerrain);
+        console.log(position, state.fgTerrain[7]);
+        let velocity = startVelocity(state.fgTerrain);
+        let angle = seedrandom(JSON.stringify(state.fgTerrain[21]))() * 0.7;
+        angle *= (velocity.x >= 0) ? 1 : -1;
         state.landers = state.landers.concat(new Lander(
             data.token,
             data.color,
-            new Vector(1000, 600),
-            new Vector(0, 0),
-            0,
+            position,
+            velocity,
+            angle,
             "off",
             0,
             "off",
@@ -175,6 +178,33 @@ function points(landers: Lander[], flag: Vector): Points {
 function send(ws: WebSocket, cmd: 'broadcast' | 'to' | 'disconnect', cval: string, data?: any) {
     ws.send(`${cmd}:${cval}
 ${JSON.stringify(data)}`);
+}
+
+/**
+ * generate a start position for landers
+ */
+export function startPosition(terrain: Geometry): Vector {
+    console.log(terrain[7].y);
+    return initVector(JSON.stringify(terrain[7]), 8000, 400, 1000, terrain[7].y + 100);
+}
+
+/**
+ * generate a start position for landers
+ */
+function startVelocity(terrain: Geometry): Vector {
+    return initVector(JSON.stringify(terrain[13]), 4, 4, -2, -3);
+}
+
+/**
+ * generates an initialization vector from a seed within x- and y-limits
+ * adding x- and y-offset
+ */
+function initVector(seed: string, xLimit: number, yLimit: number, xOffset: number = 0, yOffset: number = 0): Vector {
+    let rng = seedrandom(seed);
+    return new Vector(
+        xLimit * rng() + xOffset,
+        yLimit * rng() + yOffset
+    );
 }
 
 /// --- typeguards & interfaces ---
