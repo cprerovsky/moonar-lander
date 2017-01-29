@@ -9,21 +9,6 @@ The game is currently in ```EARLY ACCESS```
 Core game features and mechanics are still subject to change. A stable version is expected
 by March 2017.
 
-## Open Todos
-
-Open todos sorted by priority
-
-* reimplement client-server protocol to change to host
-* allow clients to delete commands
-* start game with an initialized velocity vector and a randomized position for landers
-* flag positioning in terrain preview is inconsistent with actual positioning
-* improve comments
-* add indicators for offscreen landers
-* improve terrain generation
-* add trails for landers
-* add auto game mode that starts automatically when enough clients connect
-* add docker container
-
 ## Requirements
 - NodeJS v6.7.0+
 - git or Docker
