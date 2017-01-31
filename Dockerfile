@@ -6,10 +6,12 @@ WORKDIR /usr/src/moonar-lander
 
 # Install moonar-lander dependencies
 COPY package.json /usr/src/moonar-lander/
-COPY backend/build /usr/src/moonar-lander/backend/build/
-COPY frontend/build /usr/src/moonar-lander/frontend/build/
-COPY frontend/static /usr/src/moonar-lander/frontend/static
+COPY backend /usr/src/moonar-lander/backend/
+COPY frontend /usr/src/moonar-lander/frontend/
+
 RUN npm install
+RUN npm run build
 
 EXPOSE 4711
+
 CMD [ "node", "./backend/build/index.js" ]
