@@ -23,6 +23,8 @@ by March 2017.
 ```git clone git@github.com:cprerovsky/moonar-lander.git```
 - install dependencies
 ```npm install```
+- run
+```npm run watch```
 
 ## Getting Started
 - open [http://localhost:4711](http://localhost:4711) in your browser
