@@ -27,10 +27,11 @@ module GAME {
     /**
      * setup a new game
      */
-    export function setup(ctx: CanvasRenderingContext2D, seed: string) {
-        let ws = new WebSocket("ws://localhost:4711");
+    export function setup(ctx: CanvasRenderingContext2D, seed: string, openCB?: Function) {
+        let ws = new WebSocket(`ws://${location.hostname}:${location.port}`);
         ws.onopen = () => {
             console.log('WebSocket connection established');
+            if (openCB) openCB();
         };
         ws.onmessage = function (this: WebSocket, msg: MessageEvent) {
             handleMessage(this, msg, state);

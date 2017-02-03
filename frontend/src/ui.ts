@@ -9,7 +9,7 @@ module UI {
     /**
      * initialize ui bindings
      */
-    export function init(ctx: CanvasRenderingContext2D, openCB: (seed: string) => void, startCB: Function, cancelCB: Function) {
+    export function init(ctx: CanvasRenderingContext2D, openCB: (seed: string) => void, startCB: Function, startSinglePlayerCB: Function, cancelCB: Function) {
         resize(ctx);
         window.addEventListener('resize', () => { resize(ctx); });
         /*
@@ -20,6 +20,11 @@ module UI {
             $('#main').classList.add('state-open');
             $('#main #seed').setAttribute('readonly', 'true');
             openCB($('#main #seed').getAttribute('value'));
+        });
+        // start singleplayer game
+        $('#main #start-singleplayer').addEventListener('click', () => {
+            $('#main').classList.add('hidden');
+            startSinglePlayerCB($('#main #seed').getAttribute('value'));
         });
         // start game
         $('#main #start').addEventListener('click', () => {

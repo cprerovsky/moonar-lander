@@ -23,6 +23,7 @@ h2 {
 
 p {
     line-height: 150%;
+    margin-top: 10px;
 }
 
 #game {
@@ -94,6 +95,10 @@ p {
 }
 
 #main.state-open #open {
+    display: none;
+}
+
+#main.state-open #open-singleplayer {
     display: none;
 }
 
