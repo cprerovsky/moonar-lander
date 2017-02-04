@@ -64,8 +64,15 @@ token.
 { "token": "[YOUR_TOKEN]" }
 ```
 
-You need to provide this token with every message you send to the server.
-The server will also send a message with the terrain information and the flag position:
+You need to provide this token with every message you send to the server. The first message
+you need to send to the server is the following:
+
+```
+{ "token": "[YOUR_TOKEN]", "name": "[YOUR_NAME]" }
+```
+
+This will register your client with the game. Next you will receive a message containing
+terrain information and the flag position:
 
 ```
 {"terrain":[{"x":0,"y":0},{"x":22.471910112359552,"y":186.160381387663},
@@ -149,10 +156,10 @@ As long as the game is running you can send new commands to your lander:
 ```
 {
     "token": "[YOUR_TOKEN]",
-    commands: [
+    "commands": [
         { "engine": "full", "rotation": "cw" },
         { "rotation": "ccw", "tick": 20 },
-        { "rotation": "cw", "engine": "off", tick: 25 }
+        { "rotation": "cw", "engine": "off", "tick": 25 }
     ]
 }
 ```
