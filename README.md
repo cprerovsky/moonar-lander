@@ -1,6 +1,6 @@
 # Moonar Lander
 
-A [Lunar Lander](https://en.wikipedia.org/wiki/Lunar_Lander_(1979_video_game)) clone, controlled via WebSockets.
+A [Lunar Lander](https://en.wikipedia.org/wiki/Lunar_Lander_(1979_video_game)) clone, controlled via WebSockets. To get a grasp of what the game is about, try the [Atari Arcade Lunar Lander](https://www.atari.com/arcade/lunar_lander).
 
 ## Development State
 
