@@ -20,8 +20,6 @@ export function terrain(width: number, seed: string, midpointInit: number = 9, m
         // .map(sineWave(sin1f))
         .map(sineWave(sin2f))
         .map(sineWave(sin3f));
-    // set first and last point to zero height
-    heights[0] = heights[heights.length - 1] = 0;
     let geometry: Geometry = [];
     heights.map((h, i) => {
         geometry.push(new Vector(
@@ -29,6 +27,9 @@ export function terrain(width: number, seed: string, midpointInit: number = 9, m
             h * maxHeight + 20
         ));
     });
+    // set first and last point to zero height
+    geometry[0] = new Vector(0, 0);
+    geometry[geometry.length - 1] = new Vector(geometry[geometry.length - 1].x, 0);
     return geometry;
 }
 
