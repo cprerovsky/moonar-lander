@@ -1,6 +1,9 @@
 import { Vector, Geometry } from './geometry';
 import * as seedrandom from 'seedrandom';
 
+/**
+ * generates terrain geometry
+ */
 export function terrain(width: number, seed: string, midpointInit: number = 9, midpointSub: number = 4): Geometry {
     let rng = seedrandom(seed);
     let heights = midpoint(midpointInit, midpointSub, rng);
@@ -29,6 +32,9 @@ export function terrain(width: number, seed: string, midpointInit: number = 9, m
     return geometry;
 }
 
+/**
+ * returns a sine wave function for terrain generation
+ */
 function sineWave(waveLengthFactor: number) {
     return (h, i) => {
         return (Math.sin(i / waveLengthFactor) / 2 + 0.5) * h;

@@ -94,27 +94,4 @@ export function bounce(vector: Vector, wall: Vector): Vector {
     let u = multiply(normal, dot(vector, normal) / dot(normal, normal))
     let w = subtract(vector, u);
     return subtract(multiply(w, FRICTION), multiply(u, RESTITUTION));
-
-    // --- TEST IMPLEMENTATION FOR REFERENCE ---
-    // let origin = new Vector();
-    // let v = new Vector(400, 300);
-    // draw(ctx, [origin, v], "white");
-
-    // let off = new Vector(400, 0);
-    // let wall = new Vector(50, 200);
-    // draw(ctx, [off, wall.add(off)], "grey");
-
-    // let n = wall.normalA();
-    // let wallOff = wall.add(off);
-    // draw(ctx, [wallOff, n.add(wallOff)], "red");
-
-    // let u = n.multiply(dot(v, n) / dot(n, n));
-    // draw(ctx, [wallOff, u.add(wallOff)], "blue");
-
-    // let w = v.subtract(u);
-    // draw(ctx, [wallOff, w.add(wallOff)], "green");
-
-    // // So the velocity after the collision is v′ = f w − r u
-    // let va = w.subtract(u);
-    // draw(ctx, [wallOff, va.add(wallOff)], "pink");
 }

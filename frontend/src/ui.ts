@@ -103,6 +103,9 @@ module UI {
         });
     }
 
+    /**
+     * display gameover modal
+     */
     export function gameover(players: PlayerMsg[], points: Points) {
         let html = players.sort((a, b) => {
             return points[b.token] - points[a.token];
@@ -115,10 +118,16 @@ module UI {
         $('#gameover').classList.remove('hidden');
     }
 
+    /**
+     * reset the game ui
+     */
     export function reset() {
         $('#ui').innerHTML = '';
     }
 
+    /**
+     * round number n to p places
+     */
     function round(n: number, p: number): number {
         let places = Math.pow(10, p);
         return (Math.floor(n * places) / places);
@@ -126,8 +135,14 @@ module UI {
 }
 export default UI;
 
+/**
+ * element cache for $ to improve lookup performance
+ */
 let ELEMENTS_CACHE: { [key: string]: HTMLElement; } = {};
 
+/**
+ * jquery like dom selector shortcut
+ */
 function $(query: string, inner?: string | number): HTMLElement {
     let el = ELEMENTS_CACHE[query] || document.querySelector(query) as HTMLElement;
     if (inner) el.innerHTML = inner + "";

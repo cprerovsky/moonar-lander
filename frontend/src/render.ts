@@ -3,6 +3,9 @@ import { Lander } from './lander';
 import { uniqueColor } from './color';
 import { terrain } from './terrain';
 
+/**
+ * draw options for drawing lines
+ */
 interface DrawOptions {
     stroke?: string
     fill?: string
@@ -14,6 +17,7 @@ interface DrawOptions {
     parallax?: number
 }
 
+// color presets
 const GREY = "rgb(160,160,160)";
 const MED_GREY = "rgb(120,120,120)";
 const DARK_GREY = "rgb(50,50,50)";
@@ -75,6 +79,9 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: La
     });
 }
 
+/**
+ * generates a terrain preview for the start screen background
+ */
 export function previewTerrain(ctx: CanvasRenderingContext2D, terrain: Geometry, flag: Vector, start: Vector) {
     let terrainWidth = terrain[terrain.length - 1].x;
     let scale = ctx.canvas.width / terrainWidth;
@@ -94,6 +101,9 @@ export function previewTerrain(ctx: CanvasRenderingContext2D, terrain: Geometry,
     ctx.fillRect(displayStart.x, ty(displayStart.y, ctx), 4, 4);
 }
 
+/**
+ * draw a circle
+ */
 function circle(ctx: CanvasRenderingContext2D, center: Vector, focus: Vector, radius: number, strokeStyle: string) {
     ctx.beginPath();
     ctx.arc(tx(center.x, ctx, focus.x), ty(center.y, ctx), radius, 0, Math.PI * 2);
@@ -103,6 +113,9 @@ function circle(ctx: CanvasRenderingContext2D, center: Vector, focus: Vector, ra
     ctx.closePath();
 }
 
+/**
+ * draw geometry
+ */
 function draw(ctx: CanvasRenderingContext2D, geometry: Geometry, focus: Vector, opts: DrawOptions) {
     if (geometry.length === 0) return;
     let prx = opts.parallax || 1;
@@ -135,6 +148,10 @@ function draw(ctx: CanvasRenderingContext2D, geometry: Geometry, focus: Vector, 
 function tx(x: number, ctx: CanvasRenderingContext2D, focusX: number, parallax: number = 1): number {
     return x - focusX * parallax + (ctx.canvas.width / 2);
 }
+
+/**
+ * translate world y coordinates to drawing coordinates
+ */
 function ty(y: number, ctx: CanvasRenderingContext2D): number {
     return ctx.canvas.height - y;
 }

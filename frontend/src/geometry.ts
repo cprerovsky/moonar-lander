@@ -6,10 +6,16 @@ export class Vector {
     constructor(public readonly x: number, public readonly y: number) { }
 }
 
+/**
+ * represents a collision point between a lander and terrain
+ */
 export class Collision {
     constructor(public readonly point: Vector, public readonly segmentStart: Vector, public readonly segmentEnd: Vector) { }
 }
 
+/**
+ * geometry of terrain or landers
+ */
 export type Geometry = Vector[];
 
 /**
@@ -134,6 +140,7 @@ export function landerFlameGeometry(engine: EngineState): Geometry {
     });
 }
 
+// --- geometries ---
 export const LANDER_GEOMETRY: Geometry = [
     new Vector(-6, -8),
     new Vector(-5, 8),

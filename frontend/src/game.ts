@@ -57,6 +57,9 @@ module GAME {
         loop(0, state);
     }
 
+    /**
+     * cleanup after the game is over
+     */
     export function teardown(state: GameState) {
         state.phase = GamePhase.TEARDOWN;
         UI.reset();
@@ -119,6 +122,9 @@ function calculateFocus(flag: Vector, landers: Lander[]): Vector {
         , 0);
 }
 
+/**
+ * handle incoming messages from clients
+ */
 function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
     let data = JSON.parse(msg.data);
     if (state.phase === GamePhase.INITIALIZING && data.host === true) {
@@ -176,6 +182,9 @@ function points(landers: Lander[], flag: Vector): Points {
     }, {});
 }
 
+/**
+ * send a message over websocket
+ */
 function send(ws: WebSocket, cmd: 'broadcast' | 'to' | 'disconnect', cval: string, data?: any) {
     ws.send(`${cmd}:${cval}
 ${JSON.stringify(data)}`);
@@ -209,6 +218,9 @@ function initVector(seed: string, xLimit: number, yLimit: number, xOffset: numbe
 }
 
 /// --- typeguards & interfaces ---
+/**
+ * holds all phases of the game
+ */
 enum GamePhase {
     INITIALIZING,
     HOST_CONFIRMED,
@@ -217,29 +229,47 @@ enum GamePhase {
     TEARDOWN
 }
 
+/**
+ * incoming player message with which a player registers for a game
+ */
 export interface PlayerMsg {
     token: string
     name: string
     color?: string
 }
 
+/**
+ * typeguard for PlayerMsg
+ */
 function isPlayerMsg(data: any): data is PlayerMsg {
     return (<PlayerMsg>data).token !== undefined &&
         (<PlayerMsg>data).name !== undefined;
 }
 
+/**
+ * a command msg from a player containing lander commands
+ */
 interface CommandsMsg {
     token: string
     commands: Commands
 }
 
+/**
+ * typeguard for CommandsMsg
+ */
 function isCommandsMsg(data: any): data is CommandsMsg {
     return (<CommandsMsg>data).token !== undefined &&
         (<CommandsMsg>data).commands !== undefined;
 }
 
+/**
+ * the msg we receive if the host status was confirmed
+ */
 interface HostConfirmMsg {
     host: boolean
 }
 
+/**
+ * holds the points for players
+ */
 export interface Points { [key: string]: number }

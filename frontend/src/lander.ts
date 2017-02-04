@@ -2,11 +2,24 @@ import { Vector, add, LANDER_GEOMETRY, translate, Geometry, length } from './geo
 import { rotate, angle, accelerate, collide } from './physics';
 import { Commands } from './commands';
 
+/**
+ * states the engine can have
+ */
 export type EngineState = "off" | "half" | "full";
+
+/**
+ * states rotation engines can have
+ */
 export type RotationDirection = "off" | "cw" | "ccw";
 
+/**
+ * thrust of the main engine
+ */
 const THRUST = 0.035;
 
+/**
+ * represents a lander
+ */
 export class Lander {
     constructor(
         public readonly token: string,

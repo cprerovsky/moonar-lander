@@ -28,10 +28,16 @@ export function init(cb: Function) {
     }
 }
 
+/**
+ * send messages through th websocket
+ */
 function send(ws: WebSocket, token: string, cmd: ClientCommand) {
     ws.send(JSON.stringify({ token: token, commands: [cmd] }));
 }
 
+/**
+ * keyup handler
+ */
 function keyup(event: KeyboardEvent): ClientCommand {
     switch (event.keyCode) {
         case 37:
@@ -45,6 +51,9 @@ function keyup(event: KeyboardEvent): ClientCommand {
     }
 }
 
+/**
+ * keydown handler
+ */
 function keydown(event: KeyboardEvent): ClientCommand {
     switch (event.keyCode) {
         case 37:
