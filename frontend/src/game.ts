@@ -8,6 +8,12 @@ import { uniqueColor } from './color';
 import UI from './ui';
 import { Level } from './level';
 
+// time a tick takes in the game
+const TICK_TIME = 25;
+
+// time allowed to score maximum points with a perfect landing
+const MAX_POINTS_MS = 120000;
+
 /**
  * the game state holds all game information
  */
@@ -81,10 +87,10 @@ function loop(tickNo: number, state: GameState) {
     requestAnimationFrame(() => render(state.ctx, calculateFocus(state.level.flagPosition, state.landers), state.landers, state.level.terrain, state.bgTerrain, state.skybox, state.level.flagPosition));
     if (state.phase === GamePhase.STARTED && isGameOver(state.landers, state.level.flagPosition)) {
         state.phase = GamePhase.OVER;
-        UI.gameover(state.players, points(state.landers, state.level.flagPosition));
+        UI.gameover(state.players, points(state.landers, state.level.flagPosition, tickNo));
     }
     state.landers.map((l) => send(state.ws, 'to', l.token, { tick: tickNo, lander: l }));
-    if (state.phase !== GamePhase.TEARDOWN) setTimeout(() => loop(++tickNo, state), 25);
+    if (state.phase !== GamePhase.TEARDOWN) setTimeout(() => loop(++tickNo, state), TICK_TIME);
 };
 
 /**
@@ -92,10 +98,7 @@ function loop(tickNo: number, state: GameState) {
  */
 function isGameOver(landers: Lander[], flagPos: Vector): boolean {
     return landers.filter(lander => {
-        if (lander.landed && length(subtract(flagPos, lander.position)) <= 5) {
-            // immediate win, if landed close enugh to flag
-            return true;
-        } if (lander.crashed
+        if (lander.crashed
             || lander.fuel === 0
             || lander.landed) {
             return false;
@@ -159,14 +162,19 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
     }
 }
 
+
 /**
  * calculate points for each lander
  */
-function points(landers: Lander[], flag: Vector): Points {
+function points(landers: Lander[], flag: Vector, tick: number): Points {
     return landers.reduce((p, l) => {
-        let points = 7000 - length(subtract(l.position, flag));
-        points += Math.floor(l.fuel);
-        if (l.crashed) {
+        let points = 5000 - length(subtract(l.position, flag));
+        points += l.fuel;
+        if (l.landed && length(subtract(flag, l.position)) <= 10) {
+            let multiplier = 2 - tick / (MAX_POINTS_MS / TICK_TIME);
+            if (multiplier < 1) multiplier = 1;
+            points *= multiplier;
+        } else if (l.crashed) {
             points = points / 10;
         }
         if (points < 0) points = 0;

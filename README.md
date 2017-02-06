@@ -201,15 +201,10 @@ might not be possible to land in close proximity to the flag, depending on the m
 
 ## Ending the Game
 
-Ideally you end the game by winning it. The conditions for winning the game are determined as
-follows:
-
-1) The first lander landing in very close proximity (5 units) to the flag will **immediately** win
-the game. Positions and status of other landers does *not* affect the outcome of the game in
-this scenario.
-2) When all landers have landed, crashed or are out of fuel the game ends. The lander landing
-closest to the flag will score the most points. Crashing your lander will bring a severe
-score penalty, while conserving fuel will add some points.
+Ideally you end the game by winning it. When all landers have landed, crashed or are out of fuel
+the game ends. The lander landing closest to the flag will score the most points. Landing within
+ten points of the flag will score you a point multiplier, if you managed to land within two minutes.
+Crashing your lander will bring a severe score penalty, while conserving fuel will add some points.
 
 When the game has ended you will receive a short message:
 
