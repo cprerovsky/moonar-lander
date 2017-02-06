@@ -16,8 +16,6 @@ by March 2017.
 ## Docker
 ```docker run -p 4711:4711 -d blacktarmac/moonar-lander```
 
-**NOTE:** the host and example client are currently hardcoded to port 4711
-
 ## Installing from GIT
 - clone the project
 ```git clone git@github.com:cprerovsky/moonar-lander.git```
