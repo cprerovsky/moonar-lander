@@ -8,7 +8,7 @@
     "watch-frontend": "./node_modules/.bin/webpack --watch --config ./frontend/webpack.config.js --display-error-details",
     "watch-backend": "./node_modules/.bin/tsc -w -p backend",
     "build": "./node_modules/.bin/tsc -p ./backend; ./node_modules/.bin/webpack --config ./frontend/webpack.config.js --display-error-details",
-    "supervisor": "./node_modules/.bin/nodemon ./backend/build/index.js",
+    "supervisor": "./node_modules/.bin/nodemon ./build/backend/index.js",
     "watch": "node node_modules/concurrently/src/main.js --prefix \"[{name}]\" --names \"frontend,backend,supervisor\" --kill-others \"npm run watch-frontend\" \"npm run watch-backend\" \"npm run supervisor\""
   },
   "author": "Clemens Prerovsky <c.prerovsky@gmail.com>",

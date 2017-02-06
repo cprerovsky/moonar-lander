@@ -4,6 +4,6 @@
     "sourceMap": true,
     "target": "es6",
     "moduleResolution": "node",
-    "outDir": "./build"
+    "outDir": "../build/backend"
   }
 }

@@ -1,3 +1,2 @@
 node_modules
-backend/build
-frontend/build
+build

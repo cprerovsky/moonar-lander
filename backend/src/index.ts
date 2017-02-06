@@ -5,7 +5,7 @@ import { Server as WebSocketServer } from 'ws';
 let app = express();
 
 app.use('/', express.static(path.join(__dirname, '/../../frontend/static')));
-app.use('/build', express.static(path.join(__dirname, '/../../frontend/build')));
+app.use('/build', express.static(path.join(__dirname, '/../../build/frontend')));
 
 let server = http.createServer(app);
 server.listen(4711);

@@ -15,7 +15,7 @@ module.exports = {
         modulesDirectories: ['../node_modules']
     },
     output: {
-        path: path.join(__dirname, 'build'),
+        path: path.join(__dirname, '..', 'build', 'frontend'),
         publicPath: '',
         filename: '[name].js',
         pathInfo: true
