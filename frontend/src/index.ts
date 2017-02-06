@@ -9,10 +9,10 @@ let ctx = canvas.getContext("2d");
 let state: GameState;
 
 UI.init(ctx,
-    (seed) => { state = GAME.setup(ctx, seed); },
+    (level) => { state = GAME.setup(ctx, level); },
     () => { GAME.start(state); },
-    (seed) => {
-        state = GAME.setup(ctx, seed, () => {
+    (level) => {
+        state = GAME.setup(ctx, level, () => {
             init(() => { GAME.start(state); });
         });
     },

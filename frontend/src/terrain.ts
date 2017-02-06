@@ -4,8 +4,7 @@ import * as seedrandom from 'seedrandom';
 /**
  * generates terrain geometry
  */
-export function terrain(width: number, seed: string, midpointInit: number = 9, midpointSub: number = 4): Geometry {
-    let rng = seedrandom(seed);
+export function terrain(width: number, rng: seedrandom.prng, midpointInit: number = 9, midpointSub: number = 4): Geometry {
     let heights = midpoint(midpointInit, midpointSub, rng);
     let maxHeight = 200 + 300 * rng();
     let widthStep = width / (heights.length - 1);
@@ -78,10 +77,9 @@ function midpoint(numStartVals: number, iterations: number, rng: seedrandom.prng
 
 
 /**
- * find a valid spot on the terrain to place the flag
+ * find a spot on the terrain to place the flag
  */
-export function flag(terrain: Geometry): Vector {
+export function flag(rng: seedrandom.prng, terrain: Geometry): Vector {
     let LIMIT = 10;
-    let rng = seedrandom(JSON.stringify(terrain[42]));
     return terrain[Math.round(rng() * (terrain.length - LIMIT)) + LIMIT / 2];
 }

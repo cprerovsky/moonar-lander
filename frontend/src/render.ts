@@ -2,6 +2,7 @@ import { Vector, Geometry, translate, LANDER_GEOMETRY, landerFlameGeometry, FLAG
 import { Lander } from './lander';
 import { uniqueColor } from './color';
 import { terrain } from './terrain';
+import { Level } from './level';
 
 /**
  * draw options for drawing lines
@@ -82,17 +83,17 @@ export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: La
 /**
  * generates a terrain preview for the start screen background
  */
-export function previewTerrain(ctx: CanvasRenderingContext2D, terrain: Geometry, flag: Vector, start: Vector) {
-    let terrainWidth = terrain[terrain.length - 1].x;
+export function preview(ctx: CanvasRenderingContext2D, level: Level) {
+    let terrainWidth = level.terrain[level.terrain.length - 1].x;
     let scale = ctx.canvas.width / terrainWidth;
-    let displayTerrain = terrain.map((v) => {
+    let displayTerrain = level.terrain.map((v) => {
         return new Vector(
             v.x * scale,
             v.y * scale + ctx.canvas.height / 5
         );
     });
-    let displayStart = new Vector(start.x * scale, start.y * scale + ctx.canvas.height / 5);
-    flag = new Vector(flag.x * scale, flag.y * scale + ctx.canvas.height / 5);
+    let displayStart = new Vector(level.startPosition.x * scale, level.startPosition.y * scale + ctx.canvas.height / 5);
+    let flag = new Vector(level.flagPosition.x * scale, level.flagPosition.y * scale + ctx.canvas.height / 5);
     let focus = new Vector(ctx.canvas.width / 2, ctx.canvas.height / 2);
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     draw(ctx, displayTerrain, focus, { stroke: GREY, fill: "black" });

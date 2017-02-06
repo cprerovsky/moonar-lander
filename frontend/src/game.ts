@@ -6,6 +6,7 @@ import { Vector, Geometry, landerFlameGeometry, length, subtract } from './geome
 import { sky, render } from './render';
 import { uniqueColor } from './color';
 import UI from './ui';
+import { Level } from './level';
 
 /**
  * the game state holds all game information
@@ -16,9 +17,8 @@ export class GameState {
     public commands: Commands = []
     public phase: GamePhase = GamePhase.INITIALIZING
     constructor(public readonly ctx: CanvasRenderingContext2D,
-        public readonly fgTerrain: Geometry,
+        public readonly level: Level,
         public readonly bgTerrain: Geometry,
-        public readonly flagPosition: Vector,
         public readonly skybox: ImageData,
         public readonly ws?: WebSocket) { }
 }
@@ -27,7 +27,7 @@ module GAME {
     /**
      * setup a new game
      */
-    export function setup(ctx: CanvasRenderingContext2D, seed: string, openCB?: Function) {
+    export function setup(ctx: CanvasRenderingContext2D, level: Level, openCB?: Function) {
         let ws = new WebSocket(`ws://${location.hostname}:${location.port}`);
         ws.onopen = () => {
             console.log('WebSocket connection established');
@@ -40,11 +40,9 @@ module GAME {
             console.log('WebSocket connection closed', ev);
         };
         ws.onerror = console.error;
-        let fgTerrain = terrain(10000, seed);
-        let bgTerrain = terrain(2500, seed, 8, 3).map((p) => new Vector(p.x * 2, p.y + 50));
+        let bgTerrain = terrain(2500, seedrandom(level.seed + 'BG'), 8, 3).map((p) => new Vector(p.x * 2, p.y + 50));
         let skybox = sky(3500, 800);
-        let flagPosition = flag(fgTerrain);
-        let state = new GameState(ctx, fgTerrain, bgTerrain, flagPosition, skybox, ws);
+        let state = new GameState(ctx, level, bgTerrain, skybox, ws);
         return state;
     }
 
@@ -76,14 +74,14 @@ function loop(tickNo: number, state: GameState) {
     state.landers = state.landers.map((lander) => {
         let cmds = state.commands.filter(
             (c) => (!c.tick || c.tick <= tickNo) && c.token === lander.token);
-        return tick(tickNo, cmds, lander, state.fgTerrain)
+        return tick(tickNo, cmds, lander, state.level.terrain)
     });
     state.commands = state.commands.filter((c) => c.tick > tickNo);
-    UI.update(tickNo, state.landers, state.flagPosition);
-    requestAnimationFrame(() => render(state.ctx, calculateFocus(state.flagPosition, state.landers), state.landers, state.fgTerrain, state.bgTerrain, state.skybox, state.flagPosition));
-    if (state.phase === GamePhase.STARTED && isGameOver(state.landers, state.flagPosition)) {
+    UI.update(tickNo, state.landers, state.level.flagPosition);
+    requestAnimationFrame(() => render(state.ctx, calculateFocus(state.level.flagPosition, state.landers), state.landers, state.level.terrain, state.bgTerrain, state.skybox, state.level.flagPosition));
+    if (state.phase === GamePhase.STARTED && isGameOver(state.landers, state.level.flagPosition)) {
         state.phase = GamePhase.OVER;
-        UI.gameover(state.players, points(state.landers, state.flagPosition));
+        UI.gameover(state.players, points(state.landers, state.level.flagPosition));
     }
     state.landers.map((l) => send(state.ws, 'to', l.token, { tick: tickNo, lander: l }));
     if (state.phase !== GamePhase.TEARDOWN) setTimeout(() => loop(++tickNo, state), 25);
@@ -133,17 +131,12 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
     } else if (state.phase === GamePhase.HOST_CONFIRMED && isPlayerMsg(data)) {
         data.color = uniqueColor(data.name);
         state.players = state.players.concat(data);
-        let position = startPosition(state.fgTerrain);
-        console.log(position, state.fgTerrain[7]);
-        let velocity = startVelocity(state.fgTerrain);
-        let angle = seedrandom(JSON.stringify(state.fgTerrain[21]))() * 0.7;
-        angle *= (velocity.x >= 0) ? 1 : -1;
         state.landers = state.landers.concat(new Lander(
             data.token,
             data.color,
-            position,
-            velocity,
-            angle,
+            state.level.startPosition,
+            state.level.startVelocity,
+            state.level.startAngle,
             "off",
             0,
             "off",
@@ -153,8 +146,8 @@ function handleMessage(ws: WebSocket, msg: MessageEvent, state: GameState) {
             false));
         UI.addPlayer(data.token, data.name, data.color);
         send(state.ws, 'to', data.token, {
-            terrain: state.fgTerrain,
-            flag: state.flagPosition
+            terrain: state.level.terrain,
+            flag: state.level.flagPosition
         });
     } else if (state.phase === GamePhase.STARTED && isCommandsMsg(data)) {
         state.commands = state.commands.concat(
@@ -188,33 +181,6 @@ function points(landers: Lander[], flag: Vector): Points {
 function send(ws: WebSocket, cmd: 'broadcast' | 'to' | 'disconnect', cval: string, data?: any) {
     ws.send(`${cmd}:${cval}
 ${JSON.stringify(data)}`);
-}
-
-/**
- * generate a start position for landers
- */
-export function startPosition(terrain: Geometry): Vector {
-    console.log(terrain[7].y);
-    return initVector(JSON.stringify(terrain[7]), 8000, 400, 1000, terrain[7].y + 100);
-}
-
-/**
- * generate a start position for landers
- */
-function startVelocity(terrain: Geometry): Vector {
-    return initVector(JSON.stringify(terrain[13]), 4, 4, -2, -3);
-}
-
-/**
- * generates an initialization vector from a seed within x- and y-limits
- * adding x- and y-offset
- */
-function initVector(seed: string, xLimit: number, yLimit: number, xOffset: number = 0, yOffset: number = 0): Vector {
-    let rng = seedrandom(seed);
-    return new Vector(
-        xLimit * rng() + xOffset,
-        yLimit * rng() + yOffset
-    );
 }
 
 /// --- typeguards & interfaces ---

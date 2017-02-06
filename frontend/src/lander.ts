@@ -123,7 +123,6 @@ function execute(commands: Commands, lander: Lander): Lander {
         commands.map((c) => {
             if (c.engine) engine = c.engine;
             if (c.rotation) rotation = c.rotation;
-            console.log(c);
         });
     }
     return new Lander(

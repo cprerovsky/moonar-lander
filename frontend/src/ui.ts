@@ -1,15 +1,21 @@
 import { Lander } from './lander';
 import { length, Vector, subtract } from './geometry';
-import { GameState, Points, PlayerMsg, startPosition } from './game';
+import { GameState, Points, PlayerMsg } from './game';
 import { terrain, flag } from './terrain';
 import * as seedrandom from 'seedrandom';
-import { previewTerrain } from './render';
+import { preview } from './render';
+import { Level } from './level';
 
 module UI {
     /**
      * initialize ui bindings
      */
-    export function init(ctx: CanvasRenderingContext2D, openCB: (seed: string) => void, startCB: Function, startSinglePlayerCB: Function, cancelCB: Function) {
+    export function init(ctx: CanvasRenderingContext2D,
+        openCB: (level: Level) => void,
+        startCB: () => void,
+        startSinglePlayerCB: (level: Level) => void,
+        cancelCB: () => void) {
+        let level: Level;
         resize(ctx);
         window.addEventListener('resize', () => { resize(ctx); });
         /*
@@ -19,12 +25,12 @@ module UI {
         $('#main #open').addEventListener('click', () => {
             $('#main').classList.add('state-open');
             $('#main #seed').setAttribute('readonly', 'true');
-            openCB($('#main #seed').getAttribute('value'));
+            openCB(level);
         });
         // start singleplayer game
         $('#main #start-singleplayer').addEventListener('click', () => {
             $('#main').classList.add('hidden');
-            startSinglePlayerCB($('#main #seed').getAttribute('value'));
+            startSinglePlayerCB(level);
         });
         // start game
         $('#main #start').addEventListener('click', () => {
@@ -45,12 +51,8 @@ module UI {
             let w = seed.length * 12;
             if (w > 400) w = 400;
             $('#main #seed').style.width = w + 'px';
-            let rng = seedrandom(seed);
-            let pt = terrain(10000, seed);
-            let flagPosition = flag(pt);
-            let startPos = startPosition(pt);
-            console.log(startPos, pt[7]);
-            previewTerrain(ctx, pt, flagPosition, startPos);
+            level = new Level(seed);
+            preview(ctx, level);
         }
         $('#main #seed').addEventListener('keyup', seedChange);
         seedChange();
