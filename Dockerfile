@@ -14,4 +14,4 @@ RUN npm run build
 
 EXPOSE 4711
 
-CMD [ "node", "./backend/build/index.js" ]
+CMD [ "node", "./build/backend/index.js" ]
