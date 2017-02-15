@@ -52,14 +52,11 @@ export function collide(position: Vector, velocity: Vector, landerGeometry: Geom
 export function rotate(rotation: RotationDirection, rotationSpeed: number): number {
     switch (rotation) {
         case "cw":
-            return (rotationSpeed <= MAX_ROTATION_SPEED) ?
-                rotationSpeed - ROTATION_ACCELERATION : rotationSpeed;
+            return Math.max(rotationSpeed - ROTATION_ACCELERATION, -MAX_ROTATION_SPEED);
         case "ccw":
-            return (rotationSpeed >= -MAX_ROTATION_SPEED) ?
-                rotationSpeed + ROTATION_ACCELERATION : rotationSpeed;
+            return Math.min(rotationSpeed + ROTATION_ACCELERATION, MAX_ROTATION_SPEED);
         case "off":
-            return (rotationSpeed > 0) ?
-                rotationSpeed - ROTATION_DAMPING : rotationSpeed + ROTATION_DAMPING;
+            return rotationSpeed > 0 ? Math.max(rotationSpeed - ROTATION_DAMPING, 0) : Math.min(rotationSpeed + ROTATION_DAMPING, 0);
     }
 }
 
