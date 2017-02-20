@@ -1,20 +1,8 @@
-import { Vector } from './geometry';
-import GAME from './game';
-import UI from './ui';
-import { GameState } from './game';
+import { WSClient } from './wsclient';
 import { init } from './keyboard';
+import UI from './ui';
 
-let canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
-let ctx = canvas.getContext("2d");
-let state: GameState;
-
-UI.init(ctx,
-    (level) => { state = GAME.setup(ctx, level); },
-    () => { GAME.start(state); },
-    (level) => {
-        state = GAME.setup(ctx, level, () => {
-            init(() => { GAME.start(state); });
-        });
-    },
-    () => { GAME.teardown(state); state = null; }
-);
+let canvas: HTMLCanvasElement = document.getElementById('game') as HTMLCanvasElement;
+let ctx = canvas.getContext('2d');
+WSClient.init(ctx);
+UI.init(ctx);

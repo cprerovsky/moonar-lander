@@ -1,20 +1,22 @@
 import { Geometry, Vector } from './geometry';
+import { flag, terrain } from './terrain';
 import * as seedrandom from 'seedrandom';
-import { terrain, flag } from './terrain';
 
 /**
  * represents a level with all init values for landers
  */
 export class Level {
     public readonly terrain: Geometry
+    public readonly background: Geometry
     public readonly flagPosition: Vector
     public readonly startPosition: Vector
     public readonly startVelocity: Vector
     public readonly startAngle: number
 
-    constructor (public readonly seed: string) {
+    constructor(public readonly seed: string) {
         let rng = seedrandom(seed);
         this.terrain = terrain(10000, rng);
+        this.background = terrain(2500, rng, 8, 3).map((p) => new Vector(p.x * 2, p.y + 50));
         this.flagPosition = flag(rng, this.terrain);
         this.startPosition = startPosition(rng);
         this.startVelocity = startVelocity(rng);

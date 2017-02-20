@@ -3,7 +3,17 @@
 
 <body>
     <script>
-        
+        var ws = new WebSocket("ws://localhost:4711");
+        ws.onerror = function (e) {
+            console.error(e);
+        };
+        ws.onmessage = function (msg) {
+            console.log(msg);
+        };
+        ws.onopen = function (a) {
+            console.log(a);
+        }
     </script>
 </body>
+
 </html>

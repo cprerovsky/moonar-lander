@@ -1,8 +1,15 @@
-import { Vector, Geometry, translate, LANDER_GEOMETRY, landerFlameGeometry, FLAG_GEOMETRY, add, length } from './geometry';
-import { Lander } from './lander';
-import { uniqueColor } from './color';
-import { terrain } from './terrain';
-import { Level } from './level';
+import {
+    add,
+    FLAG_GEOMETRY,
+    Geometry,
+    LANDER_GEOMETRY,
+    landerFlameGeometry,
+    translate,
+    Vector
+} from '../../backend/src/geometry';
+import { Lander, tick } from '../../backend/src/lander';
+import { Level } from '../../backend/src/level';
+import { flag } from '../../backend/src/terrain';
 
 /**
  * draw options for drawing lines
@@ -26,10 +33,10 @@ const DARK_GREY = "rgb(50,50,50)";
 /**
  * genreates a skybox
  */
-export function sky(width: number, height: number): ImageData {
+function skybox(): ImageData {
     let canvas = document.createElement('canvas');
-    canvas.width = width; // 3500
-    canvas.height = height; // 800
+    let width = canvas.width = 3500;
+    let height = canvas.height = 800;
     let ctx = canvas.getContext('2d');
     for (let i = 0; i < 1000; i++) {
         let x = Math.random() * width;
@@ -43,31 +50,43 @@ export function sky(width: number, height: number): ImageData {
     return ctx.getImageData(0, 0, 3500, ctx.canvas.height);
 }
 
+
+
 // good lord, this is horrible - please refactor me!
 let circles: number[] = [0];
+let level: Level;
+let sky: ImageData;
+
+export function setLevel(l: Level) {
+    level = l;
+    circles = [0];
+    sky = skybox()
+}
+
 /**
  * render state to the canvas
  */
-export function render(ctx: CanvasRenderingContext2D, focus: Vector, landers: Lander[], fgTerrain: Geometry, bgTerrain: Geometry, sky: ImageData, flagPosition: Vector) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+export function render(ctx: CanvasRenderingContext2D, landers: Lander[]) {
+    let focus = calculateFocus(level.flagPosition, landers);
     let off = (focus.x - ctx.canvas.width / 2) / 4;
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.putImageData(sky,
         -off, 0,
         off, 0,
         ctx.canvas.width, ctx.canvas.height
     );
-    draw(ctx, bgTerrain, focus, { stroke: DARK_GREY, fill: "black", parallax: 0.5 });
-    draw(ctx, FLAG_GEOMETRY.map((v) => add(v, flagPosition)), focus, { stroke: GREY, fill: "black" });
+    draw(ctx, level.background, focus, { stroke: DARK_GREY, fill: "black", parallax: 0.5 });
+    draw(ctx, FLAG_GEOMETRY.map((v) => add(v, level.flagPosition)), focus, { stroke: GREY, fill: "black" });
     // poor man's implementation of radar blips
     circles = circles.map((r) => {
         let c = 100 - Math.floor(100 / 5000 * r);
-        circle(ctx, flagPosition, focus, r, `rgb(${c},${c},${c})`);
+        circle(ctx, level.flagPosition, focus, r, `rgb(${c},${c},${c})`);
         return (r <= 200) ? ++r : r + r / 200;
     }).filter((r, i, a) => {
         return r < 5000;
     });
     if (circles[circles.length - 1] === 200) circles.push(0);
-    draw(ctx, fgTerrain, focus, { stroke: GREY, fill: "black" });
+    draw(ctx, level.terrain, focus, { stroke: GREY, fill: "black" });
     landers.map((lander) => {
         draw(ctx, LANDER_GEOMETRY.map((v) =>
             translate(v, lander.position, lander.angle)),
@@ -155,4 +174,19 @@ function tx(x: number, ctx: CanvasRenderingContext2D, focusX: number, parallax: 
  */
 function ty(y: number, ctx: CanvasRenderingContext2D): number {
     return ctx.canvas.height - y;
+}
+
+/**
+ * calculate the camera focus point
+ */
+function calculateFocus(flag: Vector, landers: Lander[]): Vector {
+    return new Vector(
+        landers.reduce((p, c) => {
+            if (Math.abs(flag.x - c.position.x) < Math.abs(flag.x - p.position.x)) {
+                return c;
+            } else {
+                return p;
+            }
+        }).position.x
+        , 0);
 }

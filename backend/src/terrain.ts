@@ -1,4 +1,4 @@
-import { Vector, Geometry } from './geometry';
+import { Geometry, Vector } from './geometry';
 import * as seedrandom from 'seedrandom';
 
 /**

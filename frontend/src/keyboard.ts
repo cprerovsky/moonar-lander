@@ -1,4 +1,5 @@
-import { ClientCommand } from './commands';
+import { ClientCommand } from '../../backend/src/commands';
+
 /**
  * initialize keyboard controls, connect player, then invoke callback
  */

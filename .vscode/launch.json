@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Backend Server",
-            "program": "${workspaceRoot}/backend/build/index.js",
+            "program": "${workspaceRoot}/build/backend/index.js",
             "cwd": "${workspaceRoot}",
             "outFiles": [],
             "sourceMaps": true

@@ -1,7 +1,6 @@
-import { Vector, dot, Geometry, subtract, length, normalA, multiply } from './geometry';
-import { EngineState, RotationDirection } from './lander';
+import { dot, Geometry, length, multiply, normalA, subtract, Vector } from './geometry';
 import { isOverlap } from './geometry';
-import { Lander } from './lander';
+import { EngineState, RotationDirection } from './lander';
 
 const MAX_ROTATION_SPEED = 0.2
 const ROTATION_ACCELERATION = 0.0015
@@ -64,7 +63,7 @@ export function rotate(rotation: RotationDirection, rotationSpeed: number): numb
  * update rotation angle
  */
 export function angle(angle: number, rotation: number) {
-    return angle + rotation;
+    return (angle + rotation) % (2 * Math.PI);
 }
 
 /**

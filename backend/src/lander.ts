@@ -1,6 +1,6 @@
-import { Vector, add, LANDER_GEOMETRY, translate, Geometry, length } from './geometry';
-import { rotate, angle, accelerate, collide } from './physics';
-import { Commands } from './commands';
+import { Command } from './commands';
+import { add, Geometry, LANDER_GEOMETRY, length, translate, Vector } from './geometry';
+import { accelerate, angle, collide, rotate } from './physics';
 
 /**
  * states the engine can have
@@ -22,24 +22,25 @@ const THRUST = 0.035;
  */
 export class Lander {
     constructor(
-        public readonly token: string,
+        public readonly player: string,
         public readonly color: string,
         public readonly position: Vector,
         public readonly velocity: Vector,
         public readonly angle: number,
-        public readonly rotation: RotationDirection,
-        public readonly rotationSpeed: number,
-        public readonly engine: EngineState,
-        public readonly fuel: number,
-        public readonly crashed: boolean,
-        public readonly landed: boolean,
-        public readonly touchdown: boolean) { }
+        public readonly tick: number = 0,
+        public readonly rotation: RotationDirection = 'off',
+        public readonly rotationSpeed: number = 0,
+        public readonly engine: EngineState = 'off',
+        public readonly fuel: number = 1000,
+        public readonly crashed: boolean = false,
+        public readonly landed: boolean = false,
+        public readonly touchdown: boolean = false) { }
 }
 
 /**
  * let the lander run through a full tick; update values and apply physics
  */
-export function tick(no: number, commands: Commands, lander: Lander, terrainGeometry: Geometry): Lander {
+export function tick(tickNo: number, commands: Command[], lander: Lander, terrainGeometry: Geometry): Lander {
     lander = execute(commands, lander);
     let nrotationSpeed = rotate(lander.rotation, lander.rotationSpeed);
     let nangle = angle(lander.angle, nrotationSpeed);
@@ -58,28 +59,27 @@ export function tick(no: number, commands: Commands, lander: Lander, terrainGeom
         nvelocity = collisionResult.velocity;
         nrotationSpeed = collisionResult.rotationSpeed;
         ntouchdown = true;
-        ncrashed = lander.crashed || length(nvelocity) > 1;
+        ncrashed = lander.crashed || length(nvelocity) > 1;
     }
     let nlanded = lander.landed || isLanded(ntouchdown, lander.engine, lander.rotation, nangle, nvelocity);
-    return new Lander(lander.token,
-        lander.color,
-        nposition,
-        nvelocity,
-        nangle,
-        lander.rotation,
-        nrotationSpeed,
-        lander.engine,
-        nfuel,
-        ncrashed,
-        nlanded,
-        ntouchdown
-    );
+    return {
+        ...lander,
+        tick: tickNo,
+        position: nposition,
+        velocity: nvelocity,
+        angle: nangle,
+        fuel: nfuel,
+        crashed: ncrashed,
+        landed: nlanded,
+        touchdown: ntouchdown
+    }
 }
 
 /**
  * check if the lander has landed
  */
-function isLanded(touchdown: boolean, engine: EngineState, rotation: RotationDirection, angle: number, velocity: Vector): boolean {
+function isLanded(touchdown: boolean,
+    engine: EngineState, rotation: RotationDirection, angle: number, velocity: Vector): boolean {
     return touchdown &&
         engine === 'off' &&
         rotation === 'off' &&
@@ -111,7 +111,7 @@ function burn(fuel: number, engine: EngineState, rotation: RotationDirection) {
 /**
  * execute commands for a lander
  */
-function execute(commands: Commands, lander: Lander): Lander {
+function execute(commands: Command[], lander: Lander): Lander {
     let engine = lander.engine;
     let rotation = lander.rotation;
     let fuel = lander.fuel;
@@ -125,17 +125,5 @@ function execute(commands: Commands, lander: Lander): Lander {
             if (c.rotation) rotation = c.rotation;
         });
     }
-    return new Lander(
-        lander.token,
-        lander.color,
-        lander.position,
-        lander.velocity,
-        lander.angle,
-        rotation,
-        lander.rotationSpeed,
-        engine,
-        fuel,
-        lander.crashed,
-        lander.landed,
-        lander.touchdown);
+    return { ...lander, rotation: rotation, engine: engine, fuel: fuel }
 }

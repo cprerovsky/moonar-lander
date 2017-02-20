@@ -3,6 +3,7 @@
     "module": "commonjs",
     "sourceMap": true,
     "target": "es5",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "outDir": "../build/frontend"
   }
 }

@@ -4,7 +4,7 @@ A [Lunar Lander](https://en.wikipedia.org/wiki/Lunar_Lander_(1979_video_game)) c
 
 ## Development State
 
-The game is currently in ```EARLY ACCESS```
+The game is currently in ```BETA```
 
 Core game features and mechanics are still subject to change. A stable version is expected
 by March 2017.
@@ -26,12 +26,9 @@ by March 2017.
 
 ## Getting Started
 - open [http://localhost:4711](http://localhost:4711) in your browser
-- click "open game" to host a new game
-- open [http://localhost:4711/clients.html](http://localhost:4711/clients.html) in your browser
-- click "add client" to add game clients
-- change back to the "Moonar Lander" tab
-- click "start game" to start the game host
-- watch the stupid demo clients battle it out
+- connect your client(s) to ws://localhost:4711
+- update the seed to your liking
+- click "Multiplayer"
 
 # Implementing a Client
 
@@ -47,87 +44,84 @@ A game of Moonar Lander requires
 
 Your goal is to fly your ```lander``` to the flag and land as close to the flag as possible.
 
-## Connecting to the Host
+## Connecting to a game
 
-Once the game host has opened a new game, you can connect to the game using WebSockets.
+Once the backend server is listening, you can connect to the game using WebSockets.
 
 ```
 ws://localhost:4711
 ```
 
-After successfully connecting you will receive a token message with your identification
-token.
-
+After establishing a connection you need to send your player name
 ```
-{ "token": "[YOUR_TOKEN]" }
+{ "player": "Slim Shady" }
 ```
 
-You need to provide this token with every message you send to the server. The first message
-you need to send to the server is the following:
-
-```
-{ "token": "[YOUR_TOKEN]", "name": "[YOUR_NAME]" }
-```
-
-This will register your client with the game. Next you will receive a message containing
-terrain information and the flag position:
-
-```
-{"terrain":[{"x":0,"y":0},{"x":22.471910112359552,"y":186.160381387663},
-// ... a whole load of data points have been left out here
-{"x":10000,"y":0}],"flag":{"x":5910.112359550562,"y":66.68545650329696}}
-```
-
-The ```terrain``` key contains the terrain information - an array of x- and y-coordinates,
-where ```x = 0``` equals the leftmost position on the screen and ```y = 0``` equals the bottom
-of the screen. The data points are sorted by x-coordinates.
-
-The ```flag``` key contains the position where the ```flag``` connects to the ground. You
-want to land as close as possible to this location.
-
-## Game Start
-
-As soon as the game is started by clicking the "Start Game" button you will receive the
-following message:
-
-```{ "game": "start" }```
-
-## Status Information
-
-The host will send you status information about your lander with every tick. A tick is the 
-time unit the game's physics engine operates on and usually lasts 25ms±2ms. The status 
-information you will receive looks like this:
+When the multiplayer button is pressed in the UI or a GET request to ```/game/:seed``` is
+sent, your client will receive the level info:
 
 ```
 {
-    "tick":0,
-    "lander":{
-        "token":"TJ7swUSAHrjfP3HKH5U3",
-        "color":"rgb(255,102,154)",
-        "position":{"x":1000,"y":600},
-        "velocity":{"x":0,"y":-0.01},
-        "angle":0.0001,
-        "rotation":"off",
-        "rotationSpeed":0.0001,
-        "engine":"off",
-        "fuel":1000,
-        "crashed":false,
-        "landed":false,
-        "touchdown":false
-    }
+    "seed": "hello1",
+    "terrain": [{ "x": 0, "y": 0 }, { "x": 22.471910112359552, "y": 54.097081681473 }, { "x": 44.943820224719104, "y": 72.21046855307998 }, { "x": 67.41573033707866, "y": 93.33997027987462 }, { "x": 89.88764044943821, "y": 99.84459689392959 }],
+    "flagPosition": { "x": 4179.775280898877, "y": 25.67618939220219 },
+    "startPosition": { "x": 7644.389915733377, "y": 518.0994963520216 },
+    "startVelocity": { "x": -1.4393545245604147, "y": -2.003063837677062 },
+    "startAngle": 0.09796041374749012
 }
 ```
 
-The ```tick``` key contains the current tick the game is in.
+- ```seed``` is the seed value the current game was initialized with
+- ```terrain``` contains an array of points describing the level geometry, where y is elevation. These points are connected with straight lines to form the landscape.
+- ```flagPosition``` position the flag is located at
+- ```startPosition``` position the game will put your lander when starting
+- ```startVelocity``` initial velocity vector of your lander
+- ```startAngle``` initial angle your lander will be rotated to in radians
 
-The ```lander``` key contains all the information about your lander, which was already updated
-by the physics engine in this tick:
+## Game Start
 
-- ```token```: your token
+100ms after the level info you will receive the game start message, which signals the start of the match:
+
+```
+{
+    "game": "start",
+    "players":[ ... ]
+}
+```
+
+The message also contains other player names and colors, to be used by the UI.
+
+You can begin sending commands now.
+
+## Status Information
+
+The host will send you status information about your lander with every tick. A tick is the time unit the game's physics engine operates on and usually lasts 25ms±2ms. The status 
+information you will receive looks like this:
+
+```
+{ 
+    "player": "Slim Shady",
+    "color": "rgb(255,186,102)",
+    "position": { "x": 7641.511206684257, "y": 514.0833686766675 },
+    "velocity": { "x": -1.4427288896172508, "y": -1.9882268794220246 },
+    "angle": 0.09656041374749012,
+    "tick": 1,
+    "rotation": "cw",
+    "rotationSpeed": 0,
+    "engine": "full",
+    "fuel": 998.85,
+    "crashed": false,
+    "landed": false,
+    "touchdown": false 
+}
+```
+
+- ```player```: your name
 - ```color```: the color that has been assigned to your lander
 - ```position```: your current position
 - ```velocity```: your current velocity
 - ```angle```: your rotation angle in radiens (*not degrees*!)
+- ```tick```: current tick number the game engine has finished processing
 - ```rotation```: state of your rotation thrusters, which can be one of the following:
     - ```off```: thrusters are switched off
     - ```cw```: thrusters are rotating the lander clockwise 
@@ -153,7 +147,7 @@ As long as the game is running you can send new commands to your lander:
 
 ```
 {
-    "token": "[YOUR_TOKEN]",
+    "player": "Slim Shady",
     "commands": [
         { "engine": "full", "rotation": "cw" },
         { "rotation": "ccw", "tick": 20 },
@@ -206,6 +200,6 @@ the game ends. The lander landing closest to the flag will score the most points
 ten points of the flag will score you a point multiplier, if you managed to land within two minutes.
 Crashing your lander will bring a severe score penalty, while conserving fuel will add some points.
 
-When the game has ended you will receive a short message:
+When the game has ended you will receive a short message, which also includes the points scored:
 
-```{ "game": "over" }```
+```{ "game": "over", "points": [ ... ] }```
