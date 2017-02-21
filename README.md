@@ -9,6 +9,18 @@ The game is currently in ```BETA```
 Core game features and mechanics are still subject to change. A stable version is expected
 by March 2017.
 
+## BETA Changes
+
+When you tried the game in Early Access, some significant changes have occured:
+
+- Clients can connect at any time, no need to open a game
+- Clients are identified by their connection and don't need to send a token anymore
+- More verbose info is available 100ms before the game starts
+- Game over information now includes points for all players
+- A game is now started via ```GET http://localhost:4711/game/:seed```
+- Connecting a viewer to the host is optional, allowing for headless games
+- Rotation speed is no longer limited - you can rotate as fast as you want!
+
 ## Requirements
 - NodeJS v6.7.0+
 - git or Docker
