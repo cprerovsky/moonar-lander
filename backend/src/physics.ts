@@ -2,7 +2,6 @@ import { dot, Geometry, length, multiply, normalA, subtract, Vector } from './ge
 import { isOverlap } from './geometry';
 import { EngineState, RotationDirection } from './lander';
 
-const MAX_ROTATION_SPEED = 0.2
 const ROTATION_ACCELERATION = 0.0015
 const ROTATION_DAMPING = 0.0001
 const FRICTION = 0.3
@@ -51,9 +50,9 @@ export function collide(position: Vector, velocity: Vector, landerGeometry: Geom
 export function rotate(rotation: RotationDirection, rotationSpeed: number): number {
     switch (rotation) {
         case "cw":
-            return Math.max(rotationSpeed - ROTATION_ACCELERATION, -MAX_ROTATION_SPEED);
+            return rotationSpeed - ROTATION_ACCELERATION;
         case "ccw":
-            return Math.min(rotationSpeed + ROTATION_ACCELERATION, MAX_ROTATION_SPEED);
+            return rotationSpeed + ROTATION_ACCELERATION;
         case "off":
             return rotationSpeed > 0 ? Math.max(rotationSpeed - ROTATION_DAMPING, 0) : Math.min(rotationSpeed + ROTATION_DAMPING, 0);
     }
