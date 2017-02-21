@@ -83,7 +83,7 @@ function onMessage(wss: WebSocketServer, ws: WebSocket, data: any) {
         // "player" key which would trigger setPlayer() all the time.
         if (message['commands']) {
             (message['commands'] as ClientCommand[]).map((ccommand) => {
-                CommandsBuffer.push({ ...ccommand, player: message['player'] });
+                CommandsBuffer.push({ ...ccommand, player: ws[KEYS.PLAYER] });
             });
         } else if (message['player']) {
             if (isValidPlayerName(message['player'])) {

@@ -147,7 +147,6 @@ As long as the game is running you can send new commands to your lander:
 
 ```
 {
-    "player": "Slim Shady",
     "commands": [
         { "engine": "full", "rotation": "cw" },
         { "rotation": "ccw", "tick": 20 },

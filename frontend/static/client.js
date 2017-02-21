@@ -9,7 +9,7 @@ function Client(player, keyboard) {
         let data = JSON.parse(msg.data);
         if (data.game === 'start') {
             ws.send(JSON.stringify({
-                player: player, commands: [
+                commands: [
                     { engine: "full", rotation: "cw" },
                     { rotation: "ccw", tick: 20 + rndoff() },
                     { rotation: "off", tick: 25 + rndoff() },
