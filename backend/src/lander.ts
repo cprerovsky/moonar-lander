@@ -66,6 +66,7 @@ export function tick(tickNo: number, commands: Command[], lander: Lander, terrai
         ...lander,
         tick: tickNo,
         position: nposition,
+        rotationSpeed: nrotationSpeed,
         velocity: nvelocity,
         angle: nangle,
         fuel: nfuel,
