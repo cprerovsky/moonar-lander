@@ -67,6 +67,7 @@ function loop(tickNo: number, state: GameState) {
     state.commands = state.commands.filter((c) => c.tick > tickNo);
     if (isGameOver(state.landers, state.level.flagPosition)) {
         let pts = points(state.landers, state.level.flagPosition, tickNo);
+        sendLanderInfo(state.landers);
         sendGameOverMsg(pts);
         console.log(pts);
     } else {
