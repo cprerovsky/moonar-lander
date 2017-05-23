@@ -64,9 +64,9 @@ Once the backend server is listening, you can connect to the game using WebSocke
 ws://localhost:4711
 ```
 
-After establishing a connection you need to send your player name
+After establishing a connection you need to send your player name. Note that the player name **must** be a [valid HTML 4 id](https://stackoverflow.com/a/79022/772859), so no spaces are allowed.
 ```
-{ "player": "Slim Shady" }
+{ "player": "Slim-Shady" }
 ```
 
 When the multiplayer button is pressed in the UI or a GET request to ```/game/:seed``` is
@@ -112,7 +112,7 @@ information you will receive looks like this:
 
 ```
 { 
-    "player": "Slim Shady",
+    "player": "Slim-Shady",
     "color": "rgb(255,186,102)",
     "position": { "x": 7641.511206684257, "y": 514.0833686766675 },
     "velocity": { "x": -1.4427288896172508, "y": -1.9882268794220246 },
