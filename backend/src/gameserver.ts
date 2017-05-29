@@ -90,7 +90,9 @@ function onMessage(wss: WebSocketServer, ws: WebSocket, data: any) {
                 setPlayer(wss, ws, message['player']);
                 sendPlayersToViewer();
             } else {
-                ws.close(1009, 'Invalid player name: must be a valid html4 element id');
+                const errorMessage = `"${message['player']}" is not a valid player name. Name must be a valid html4 element id`;
+                log(errorMessage);
+                ws.close(1009, errorMessage);
             }
         } else if (message['viewer']) {
             makeViewer(wss, ws);
