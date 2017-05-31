@@ -15,6 +15,9 @@ const TICK_TIME = 25;
 // time allowed to score maximum points with a perfect landing
 const MAX_POINTS_MS = 120000;
 
+// timeout after which the game just ends
+const TIMEOUT_TICK = 3 * 60 * 1000 / 25;
+
 /**
  * the game state holds all game information
  */
@@ -45,7 +48,7 @@ module GAME {
      * start a game and maintain the game loop
      */
     export function start(state: GameState) {
-        console.log(`Game start ${state.level.seed}`);
+        console.log(`Game start ${state.level.seed} timeout at tick ${TIMEOUT_TICK}`);
         sendGameStart(state.landers);
         loop(0, state);
     }
@@ -65,7 +68,7 @@ function loop(tickNo: number, state: GameState) {
         return tick(tickNo, cmds, lander, state.level.terrain)
     });
     state.commands = state.commands.filter((c) => c.tick > tickNo);
-    if (isGameOver(state.landers, state.level.flagPosition)) {
+    if (isGameOver(state.landers, state.level.flagPosition) || tickNo === TIMEOUT_TICK) {
         let pts = points(state.landers, state.level.flagPosition, tickNo);
         sendLanderInfo(state.landers);
         sendGameOverMsg(pts);
