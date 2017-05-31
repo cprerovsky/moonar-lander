@@ -97,7 +97,7 @@ function onMessage(wss: WebSocketServer, ws: WebSocket, data: any) {
         } else if (message['viewer']) {
             makeViewer(wss, ws);
         }
-        console.log(data);
+        console.log(ws[KEYS.PLAYER], '\n', data);
     } catch (e) {
         onError(e);
     }
@@ -188,6 +188,8 @@ export function sendGameOverMsg(points: Messages.GameOverMsg) {
 function send(to: WebSocket[], msg: Messages.PlayersMsg | Messages.LevelMsg | Messages.GameStartMsg | Messages.LanderMsg | Messages.LandersMsg | Messages.GameOverMsg) {
     try {
         to.map(ws => ws.send(JSON.stringify(msg)));
+        // let receivers = to.reduce((p, c, i) => p.concat(c[KEYS.PLAYER]), []).join(' ');
+        // console.log(receivers, msg);
     } catch (e) {
         console.error(e);
     }
